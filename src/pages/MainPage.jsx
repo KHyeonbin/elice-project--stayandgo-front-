@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import loginState from "../atoms/loginState";
 import { useSetRecoilState, useRecoilValue } from "recoil";
+import Search from "../components/main/Search";
 
 const MainPage = () => {
     const setLoginUser = useSetRecoilState(loginState);
@@ -29,8 +30,10 @@ const MainPage = () => {
     }, [])
 
     return (
-        <Header user={loginUser} />
-
+        <>
+            <Header user={loginUser} />
+            <Search />
+        </>
     )
 
 }
