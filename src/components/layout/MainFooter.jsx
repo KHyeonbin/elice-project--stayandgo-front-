@@ -67,7 +67,7 @@ const Footer = ({user}) => {
             {normalSortImages.map((v, i) => (
                 <Item key={i} onClick={() => onClickImage(i)}>
                     <ItemImg src={menu === menuArr[i] ? clickedImages[i].src : v.src} />
-                    <ItemTitle style={menu === menuArr[i] ? {color: "#E81948", fontWeight: "700"} : {color: "#797979", fontWeight: "500"}}>{menuArr[i]}</ItemTitle>
+                    <ItemTitle style={menu === menuArr[i] ? {color: "#E81948", fontWeight: "bold"} : {color: "#797979", fontWeight: "500"}}>{menuArr[i]}</ItemTitle>
                 </Item>
             ))}
         </Container>

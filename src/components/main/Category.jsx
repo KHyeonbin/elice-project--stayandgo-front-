@@ -84,7 +84,7 @@ const Category = () => {
             {sortedImages.map((v, i) => (
                 <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
                     <ItemImg src={v.src} />
-                    <ItemTitle style={tag === tagArr[i] ? {fontWeight: "700"} : {fontWeight: "500"}}>{tagArr[i]}</ItemTitle>
+                    <ItemTitle style={tag === tagArr[i] ? {fontWeight: "bold"} : {fontWeight: "500"}}>{tagArr[i]}</ItemTitle>
                 </Item>
             ))}
         </Container>

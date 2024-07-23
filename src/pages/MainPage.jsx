@@ -7,6 +7,7 @@ import loginState from "../atoms/loginState";
 import {getDateFormat} from '../util/getDateFormat';
 import Category from "../components/main/Category";
 import Footer from "../components/layout/MainFooter";
+import Items from "../components/main/Items";
 
 
 const MainPage = () => {
@@ -44,153 +45,9 @@ const MainPage = () => {
             <Header user={loginUser} isModal={isModal}/>
             <Search search={search} setSearch={setSearch} isModal={isModal} setIsModal={setIsModal}/>
             <Category search={search} />
+            <Items search={search} />
             <Footer user={loginUser} />
-            asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />asdfasdgasdfasd
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+            
         </>
     )
 

@@ -305,13 +305,13 @@ const ModalFooter = styled.div`
 `
 const FooterDelSpan = styled.span`
     width: 60%;
-    font-size: 16px;
+    font-size: 14px;
     text-decoration: underline;
     cursor: pointer;
 `
 const FooterSearchBtn = styled.button`
     width: 110px;
-    height: 70%;
+    height: 50px;
 
     border: none;
     border-radius: 10px;
@@ -324,7 +324,7 @@ const FooterSearchBtn = styled.button`
     align-items: center;
 
     &:hover{
-        background-color: #F0285B;
+        background-color: #F0586F;
     }
 `
 const WhiteSearchImg = styled(SearchImg)`
