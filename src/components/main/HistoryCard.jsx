@@ -78,7 +78,7 @@ const HistoryCard = ({ title, name, date, price }) => {
   }, []); */
 
   const handleClick = () => {
-    setModalImageIndex(currentImageIndex);
+    setModalImageIndex(0);
     setIsModalOpen(true);
   };
 
@@ -102,6 +102,7 @@ const HistoryCard = ({ title, name, date, price }) => {
       </Container>
       {isModalOpen && (
         <HistoryModal
+          name={name}
           imageUrls={imageUrls}
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}

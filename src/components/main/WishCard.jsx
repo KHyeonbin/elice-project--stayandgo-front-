@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   background-color: white;
   border-radius: 15px;
-  margin: 15px;
+  margin: 0 10px 10px 10px;
   width: 163px;
   height: 253px;
   box-sizing: border-box;

@@ -42,10 +42,11 @@ const HistoryPage = () => {
       <Header user={loginUser} />
       <Title>이전 여행지</Title>
       <HistoryCard />
-      <HistoryCard title="대전의 집" />
-      <HistoryCard title="대구의 집" />
-      <HistoryCard title="광주의 집" />
+      <HistoryCard title="부산의 집" />
       <HistoryCard title="강릉의 집" />
+      <HistoryCard title="제주의 집" />
+      <HistoryCard title="서울의 집" />
+      <HistoryCard title="대전의 집" />
     </>
   );
 };

@@ -1,15 +1,32 @@
-import React, { useState, useEffect } from "react";
+// ImageSlider.js
+import React from "react";
 import styled from "styled-components";
 
-const Image = styled.div`
-  background-color: #d9d9d9;
-  border-radius: 15px;
-  width: 111px;
-  height: 111px;
+const SliderContainer = styled.div`
+  position: relative;
+  width: ${(props) => props.size}px;
+  height: ${(props) => props.size}px;
+  overflow: hidden;
+
+  &:hover .arrow-button {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .arrow-button {
+      opacity: 1;
+      display: block;
+    }
+  }
+`;
+
+const SliderImage = styled.div`
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
   background-position: center;
-  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease-in-out;
 `;
 
 const ArrowButton = styled.button`
@@ -21,17 +38,26 @@ const ArrowButton = styled.button`
   border-radius: 50px;
   padding: 5px;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const PrevButton = styled(ArrowButton)`
   left: 5px;
+  ${(props) => !props.show && "display: none;"}
 `;
 
 const NextButton = styled(ArrowButton)`
   right: 5px;
+  ${(props) => !props.show && "display: none;"}
 `;
 
-const ImageSlider = ({ imageUrls, currentIndex, setCurrentIndex }) => {
+const ImageSlider = ({
+  imageUrls,
+  currentIndex,
+  setCurrentIndex,
+  size = 111,
+}) => {
   const handlePrevClick = (event) => {
     event.stopPropagation();
     setCurrentIndex(
@@ -45,14 +71,29 @@ const ImageSlider = ({ imageUrls, currentIndex, setCurrentIndex }) => {
   };
 
   return (
-    <Image imageUrl={imageUrls[currentIndex]}>
+    <SliderContainer size={size}>
+      <SliderImage imageUrl={imageUrls[currentIndex]} />
       {imageUrls.length > 1 && (
         <>
-          <PrevButton onClick={handlePrevClick}>&lt;</PrevButton>
-          <NextButton onClick={handleNextClick}>&gt;</NextButton>
+          <PrevButton
+            className="arrow-button"
+            show={currentIndex > 0 || window.innerWidth <= 768}
+            onClick={handlePrevClick}
+          >
+            &lt;
+          </PrevButton>
+          <NextButton
+            className="arrow-button"
+            show={
+              currentIndex < imageUrls.length - 1 || window.innerWidth <= 768
+            }
+            onClick={handleNextClick}
+          >
+            &gt;
+          </NextButton>
         </>
       )}
-    </Image>
+    </SliderContainer>
   );
 };
 

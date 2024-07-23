@@ -12,15 +12,10 @@ const Title = styled.h1`
   margin: 25px 15px;
 `;
 
-//그리드?? 플렉스랩?? 기기마다 바뀜,,,
 const WishlistContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 50%);
+  grid-template-columns: 163px 163px;
   grid-column-gap: 17px;
-
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
 `;
 
 const WishPage = () => {
@@ -57,7 +52,6 @@ const WishPage = () => {
         <WishCard title="부산의 집" />
         <WishCard title="강릉의 집" />
         <WishCard title="제주의 집" />
-        <WishCard title="서울의 집" />
         <WishCard title="대전의 집" />
       </WishlistContainer>
     </>

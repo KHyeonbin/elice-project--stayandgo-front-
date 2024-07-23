@@ -1,4 +1,3 @@
-// HistoryModal.js
 import React from "react";
 import styled from "styled-components";
 import ImageSlider from "./ImageSlider";
@@ -22,8 +21,17 @@ const ModalContent = styled.div`
   border-radius: 10px;
   width: 300px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   position: relative;
+`;
+
+const Name = styled.span`
+  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 24.2px;
 `;
 
 const CloseButton = styled.button`
@@ -33,6 +41,7 @@ const CloseButton = styled.button`
 `;
 
 const HistoryModal = ({
+  name,
   imageUrls,
   modalImageIndex,
   setModalImageIndex,
@@ -43,10 +52,12 @@ const HistoryModal = ({
 }) => (
   <ModalOverlay>
     <ModalContent>
+      <Name>{name}님의 숙소</Name>
       <ImageSlider
         imageUrls={imageUrls}
         currentIndex={modalImageIndex}
         setCurrentIndex={setModalImageIndex}
+        size={200}
       />
       <h1>{title}</h1>
       <p>{date}</p>
