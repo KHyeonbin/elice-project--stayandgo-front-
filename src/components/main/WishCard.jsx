@@ -8,7 +8,7 @@ const Container = styled.div`
   background-color: white;
   border-radius: 15px;
   margin: 15px;
-  width: 173px;
+  width: 163px;
   height: 253px;
   box-sizing: border-box;
   display: flex;
@@ -19,8 +19,8 @@ const Container = styled.div`
 const Image = styled.div`
   background-color: #f1f1f1;
   border-radius: 15px;
-  width: 173px;
-  height: 173px;
+  width: 163px;
+  height: 163px;
   position: relative;
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;

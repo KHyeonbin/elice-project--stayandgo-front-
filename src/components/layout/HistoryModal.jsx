@@ -1,5 +1,7 @@
+// HistoryModal.js
 import React from "react";
 import styled from "styled-components";
+import ImageSlider from "./ImageSlider";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -11,6 +13,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 `;
 
 const ModalContent = styled.div`
@@ -19,23 +22,38 @@ const ModalContent = styled.div`
   border-radius: 10px;
   width: 300px;
   text-align: center;
+  justify-content: center;
+  position: relative;
 `;
 
 const CloseButton = styled.button`
   margin-top: 10px;
+  border: none;
+  cursor: pointer;
 `;
 
-const HistoryModal = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <ModalOverlay>
-      <ModalContent>
-        {children}
-        <CloseButton onClick={onClose}>닫기</CloseButton>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
+const HistoryModal = ({
+  imageUrls,
+  modalImageIndex,
+  setModalImageIndex,
+  closeModal,
+  title,
+  date,
+  price,
+}) => (
+  <ModalOverlay>
+    <ModalContent>
+      <ImageSlider
+        imageUrls={imageUrls}
+        currentIndex={modalImageIndex}
+        setCurrentIndex={setModalImageIndex}
+      />
+      <h1>{title}</h1>
+      <p>{date}</p>
+      <h3>총 금액: {price.toLocaleString()}원</h3>
+      <CloseButton onClick={closeModal}>닫기</CloseButton>
+    </ModalContent>
+  </ModalOverlay>
+);
 
 export default HistoryModal;

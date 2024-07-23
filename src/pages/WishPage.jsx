@@ -12,11 +12,15 @@ const Title = styled.h1`
   margin: 25px 15px;
 `;
 
+//그리드?? 플렉스랩?? 기기마다 바뀜,,,
 const WishlistContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 173px);
+  grid-template-columns: repeat(2, 50%);
   grid-column-gap: 17px;
-  grid-row-gap: 5px;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const WishPage = () => {

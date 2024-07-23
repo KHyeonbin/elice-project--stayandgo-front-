@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import HistoryModal from "../layout/HistoryModal";
+import ImageSlider from "../layout/ImageSlider";
 
 const Container = styled.div`
   background-color: white;
@@ -12,16 +14,6 @@ const Container = styled.div`
   display: flex;
   cursor: pointer;
   gap: 20px;
-`;
-
-const Image = styled.div`
-  background-color: #d9d9d9;
-  border-radius: 15px;
-  width: 111px;
-  height: 111px;
-  background-image: url(${(props) => props.imageUrl});
-  background-size: cover;
-  background-position: center;
 `;
 
 const DetailContainer = styled.div`
@@ -46,56 +38,47 @@ const Date = styled.span`
   line-height: 16.94px;
 `;
 
-// 모달 스타일 정의
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContent = styled.div`
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 300px;
-  text-align: center;
-  justify-content: center;
-`;
-
-const CloseButton = styled.button`
-  margin-top: 10px;
-  border: none;
-  cursor: pointer;
-`;
-
 const HistoryCard = ({ title, name, date, price }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [modalImageIndex, setModalImageIndex] = useState(0);
 
   useEffect(() => {
+    // 랜덤 이미지 URL을 생성하는 예시
+    const generateRandomImageUrls = () => {
+      const urls = Array.from(
+        { length: 10 },
+        () =>
+          `https://picsum.photos/111/111?random=${Math.floor(
+            Math.random() * 1000
+          )}`
+      );
+      setImageUrls(urls);
+    };
+
+    generateRandomImageUrls();
+  }, []);
+
+  /*useEffect(() => {
     // 서버에서 이미지 URL을 받아오는 예시
     const fetchImage = async () => {
       try {
-        const response = await fetch("https://api.example.com/image-url"); // 이미지 URL을 가져오는 API 호출
+        const response = await fetch("https://source.unsplash.com/random/111​"); // 이미지 URL을 가져오는 API 호출
         const data = await response.json();
-        setImageUrl(data.imageUrl); // 받아온 이미지 URL을 상태에 저장
+        setImageUrls(data.imageUrl.slice(0, 10)); // 받아온 이미지 URL을 상태에 저장
       } catch (error) {
         console.error("이미지 가져오기 실패:", error);
         // 실패 시 기본 이미지 설정
-        setImageUrl("https://via.placeholder.com/111");
+        setImageUrls("https://via.placeholder.com/111");
       }
     };
 
     fetchImage();
-  }, []);
+  }, []); */
 
   const handleClick = () => {
+    setModalImageIndex(currentImageIndex);
     setIsModalOpen(true);
   };
 
@@ -106,7 +89,11 @@ const HistoryCard = ({ title, name, date, price }) => {
   return (
     <>
       <Container onClick={handleClick}>
-        <Image imageUrl={imageUrl}></Image>
+        <ImageSlider
+          imageUrls={imageUrls}
+          currentIndex={currentImageIndex}
+          setCurrentIndex={setCurrentImageIndex}
+        />
         <DetailContainer>
           <Title>{title}</Title>
           <Name>호스트: {name}님</Name>
@@ -114,15 +101,15 @@ const HistoryCard = ({ title, name, date, price }) => {
         </DetailContainer>
       </Container>
       {isModalOpen && (
-        <ModalOverlay>
-          <ModalContent>
-            <Image imageUrl={imageUrl}></Image>
-            <h1>{title}</h1>
-            <p>{date}</p>
-            <h3>총 금액: {price.toLocaleString()}원</h3>
-            <CloseButton onClick={closeModal}>닫기</CloseButton>
-          </ModalContent>
-        </ModalOverlay>
+        <HistoryModal
+          imageUrls={imageUrls}
+          modalImageIndex={modalImageIndex}
+          setModalImageIndex={setModalImageIndex}
+          closeModal={closeModal}
+          title={title}
+          date={date}
+          price={price}
+        />
       )}
     </>
   );
