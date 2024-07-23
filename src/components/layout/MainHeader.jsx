@@ -12,6 +12,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 100;
 `
 const LeftArea = styled.div`
     width: 200px; 
