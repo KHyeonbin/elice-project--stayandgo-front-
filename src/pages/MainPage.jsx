@@ -1,9 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Header from "../components/layout/Header";
+import Header from "../components/layout/MainHeader";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import Search from "../components/main/Search";
 import loginState from "../atoms/loginState";
+import {getDateFormat} from '../util/getDateFormat';
+import Category from "../components/main/Category";
 
 const MainPage = () => {
     // user 전역 상태 확인 및 변경
@@ -12,6 +14,16 @@ const MainPage = () => {
 
     // main 페이지에서 모달 호출 상태 확인 및 변경
     const [isModal, setIsModal] = useState(false)
+
+    // 검색어 state
+    const [search, setSearch] = useState({
+        city: "지역을 선택하세요",
+        startDate: getDateFormat(new Date()),
+        endDate: getDateFormat(new Date()),
+        adult: 0,
+        child: 0,
+        baby: 0
+    });
 
     useEffect(() => {
         // server 에 getUser 요청 후 결과에 따라 값 부여 !
@@ -28,8 +40,8 @@ const MainPage = () => {
     return (
         <>
             <Header user={loginUser} isModal={isModal}/>
-            <Search isModal={isModal} setIsModal={setIsModal}/>
-            
+            <Search search={search} setSearch={setSearch} isModal={isModal} setIsModal={setIsModal}/>
+            <Category search={search} />
         </>
     )
 

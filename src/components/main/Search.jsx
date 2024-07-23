@@ -13,7 +13,6 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 2px solid #EEEEEE;
 `
 const SearchContainer = styled.div`
     width: 90%;
@@ -254,6 +253,7 @@ const GuestSettingChildPlusText = styled(GuestSettingMinusText).attrs(props => (
         color: props.$child === 10 ? "#EBEBEB" : "#333",
     }
 }))`
+    font-size: 22px;
 `
 const GuestSettingBabyMinus = styled(GuestSettingMinus).attrs(props => ({
     style: {
@@ -278,6 +278,7 @@ const GuestSettingBabyPlusText = styled(GuestSettingMinusText).attrs(props => ({
         color: props.$baby === 10 ? "#EBEBEB" : "#333",
     }
 }))`
+    font-size: 22px;
 `
 
 const ModalFooter = styled.div`
@@ -336,7 +337,7 @@ const SearchBtnSpan = styled.span`
 
 
 
-const Search = ({isModal, setIsModal}) => {
+const Search = ({search, setSearch, isModal, setIsModal}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
     const defaultValue = {
         city: "지역을 선택하세요",
@@ -346,15 +347,6 @@ const Search = ({isModal, setIsModal}) => {
         child: 0,
         baby: 0
     }
-    // 검색어 state
-    const [search, setSearch] = useState({
-        city: "지역을 선택하세요",
-        startDate: getDateFormat(new Date()),
-        endDate: getDateFormat(new Date()),
-        adult: 0,
-        child: 0,
-        baby: 0
-    });
     
     // 시작 날짜, 끝 날짜 state
     const [startDate, setStartDate] = useState(new Date());
