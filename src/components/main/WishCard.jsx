@@ -1,7 +1,8 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import favoriteImg from "../../assets/icons/favorite.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   background-color: white;
@@ -12,6 +13,7 @@ const Container = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const Image = styled.div`
@@ -20,6 +22,9 @@ const Image = styled.div`
   width: 173px;
   height: 173px;
   position: relative;
+  background-image: url(${(props) => props.imageUrl});
+  background-size: cover;
+  background-position: center;
 `;
 
 const FavoriteImg = styled.img`
@@ -56,9 +61,33 @@ const Price = styled.span`
 `;
 
 const WishCard = ({ title, description, price }) => {
+  const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    // 서버에서 이미지 URL을 받아오는 예시
+    const fetchImage = async () => {
+      try {
+        const response = await fetch("https://api.example.com/image-url"); // 이미지 URL을 가져오는 API 호출
+        const data = await response.json();
+        setImageUrl(data.imageUrl); // 받아온 이미지 URL을 상태에 저장
+      } catch (error) {
+        console.error("이미지 가져오기 실패:", error);
+        // 실패 시 기본 이미지 설정
+        setImageUrl("https://via.placeholder.com/173");
+      }
+    };
+
+    fetchImage();
+  }, []);
+
+  const handleClick = () => {
+    navigate(`/detail/${title}`);
+  };
+
   return (
-    <Container>
-      <Image>
+    <Container onClick={handleClick}>
+      <Image imageUrl={imageUrl}>
         <FavoriteImg src={favoriteImg} />
       </Image>
       <DetailContainer>
