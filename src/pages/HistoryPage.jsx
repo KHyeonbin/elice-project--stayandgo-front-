@@ -5,6 +5,7 @@ import loginState from "../atoms/loginState";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import HistoryCard from "../components/main/HistoryCard";
 import styled from "styled-components";
+import No from "../components/layout/No";
 
 const Title = styled.h1`
   font-size: 20px;
@@ -40,6 +41,8 @@ const HistoryPage = () => {
   return (
     <>
       <Header user={loginUser} />
+      <Title>여행</Title>
+      <No></No>
       <Title>이전 여행지</Title>
       <HistoryCard />
       <HistoryCard title="부산의 집" />

@@ -3,19 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import noImg from "../../assets/icons/no.png";
 
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-`;
-
 const NoImg = styled.img`
   width: 100px;
   height: 100 px;
@@ -23,9 +10,12 @@ const NoImg = styled.img`
 
 const Container = styled.div`
   background-color: white;
+  border: solid 1px #bebcbc;
+  border-radius: 5px;
   padding: 20px;
   border-radius: 10px;
-  width: 300px;
+  width: 320px;
+  margin: 5px 15px 0 15px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -66,16 +56,14 @@ const No = () => {
     navigate("/"); // 메인 페이지로 이동
   };
   return (
-    <ModalOverlay>
-      <Container>
-        <NoImg src={noImg} />
-        <Title>아직 예약된 여행이 없습니다!</Title>
-        <Description>
-          여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
-        </Description>
-        <SearchButton onClick={handleClick}>숙소 검색하기</SearchButton>
-      </Container>
-    </ModalOverlay>
+    <Container>
+      <NoImg src={noImg} />
+      <Title>아직 예약된 여행이 없습니다!</Title>
+      <Description>
+        여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
+      </Description>
+      <SearchButton onClick={handleClick}>숙소 검색하기</SearchButton>
+    </Container>
   );
 };
 
