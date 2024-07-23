@@ -5,7 +5,7 @@ const Container = styled.div`
     position: sticky;
     top: 0;
     width: 100%;
-    height: 70px;
+    height: 65px;
     background-color: white;
     padding-bottom: 20px;
     border-bottom: 2px solid #EEEEEE;

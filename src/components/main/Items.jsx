@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 const Container = styled.div`
     width: 90%;
+    height: 100%; // default
     margin: 0 auto;
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 50px;
-    // 임시
-    height: 10000px;
+
 `
 const ItemDiv = styled.div`
     width: 100%;
@@ -51,10 +51,9 @@ const ItemPriceText = styled.span`
 
 const Pagenation_div = styled.div`
     width: 100%;
-    height: 40px;
     font-size: 20px;
     margin: 0 auto;
-    margin-top: 5%;
+    margin-bottom: 100px;
 `
 const Pagenation_ul = styled.ul`
     width: 100%;
@@ -88,6 +87,7 @@ const Pagenation_li = styled.li`
 `
 
 const Items = () => {
+
 
     // IntersectionObserver 를 생성하여 targetRef 가 관찰될 때(.isIntersecting) 투명도를 n 초동안 높이기 위함
     // useRef [] 배열로 관리하기 !

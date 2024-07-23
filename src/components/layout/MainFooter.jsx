@@ -5,7 +5,7 @@ const Container = styled.div`
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: white;
     border-top: 2px solid #EEEEEE;
     display: flex;
