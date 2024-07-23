@@ -86,8 +86,8 @@ const Pagenation_li = styled.li`
     }
 `
 
-const Items = () => {
-
+const Items = ({search}) => {
+    
 
     // IntersectionObserver 를 생성하여 targetRef 가 관찰될 때(.isIntersecting) 투명도를 n 초동안 높이기 위함
     // useRef [] 배열로 관리하기 !

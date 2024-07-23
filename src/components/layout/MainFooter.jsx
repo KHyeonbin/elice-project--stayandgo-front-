@@ -26,13 +26,13 @@ const ItemTitle = styled.span`
     color: #797979;
 `
 const ItemImg = styled.img`
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
 `
 
 const Footer = ({user}) => {
     // footer 메뉴 배열 및 상태 정의
-    const menuArr = ["둘러보기", "여행", "나의숙소", "프로필"];
+    const menuArr = ["둘러보기", "여행", "등록숙소", "프로필"];
     const [menu, setMenu] = useState(menuArr[0]);
 
     // mainCatetory 디렉토리 이미지 가져오기
@@ -66,7 +66,7 @@ const Footer = ({user}) => {
         <Container>
             {normalSortImages.map((v, i) => (
                 <Item key={i} onClick={() => onClickImage(i)}>
-                    <ItemImg src={menu === menuArr[i] ? clickedImages[i].src : v.src} />
+                    <ItemImg src={menu === menuArr[i] ? clickedSortImages[i].src : v.src} />
                     <ItemTitle style={menu === menuArr[i] ? {color: "#E81948", fontWeight: "bold"} : {color: "#797979", fontWeight: "500"}}>{menuArr[i]}</ItemTitle>
                 </Item>
             ))}

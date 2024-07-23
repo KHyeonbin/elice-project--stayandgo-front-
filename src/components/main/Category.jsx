@@ -5,6 +5,14 @@ const Container = styled.div`
     width: 100%;
     height: 60px;
     background-color: white;
+    
+    border-bottom: 2px solid #EEEEEE;
+    padding-top: 2%;
+`
+const ItemDiv = styled.div`
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -17,15 +25,14 @@ const Container = styled.div`
 	scroll-snap-type: x mandatory;
     /* 끝에서 바운스 되도록 */
     -webkit-overflow-scrolling: touch;
-    border-bottom: 2px solid #EEEEEE;
-    padding-top: 2%;
     /* 스크롤바 숨기기 */
     ::-webkit-scrollbar {
         display: none;
     }
     -ms-overflow-style: none;
-    scrollbar-width: none;  
+    scrollbar-width: none; 
 `
+
 const Item = styled.div`
     width: 25%;
     height: 98%;
@@ -34,7 +41,6 @@ const Item = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    font-size: 32px;
     // 스크롤 시 하나씩 넘기기(아이템)
     scroll-snap-align: start;
     // + "이미지 크기 고정" 작업(div > img 구조 + div 에서 flex-frow, shrink, basis(절대 크기) 설정 !)
@@ -44,7 +50,7 @@ const Item = styled.div`
     cursor: pointer;
 `
 const ItemTitle = styled.span`
-    font-size: 13px;
+    font-size: 12px;
     color: #797979;
 `
 const ItemImg = styled.img`
@@ -53,10 +59,10 @@ const ItemImg = styled.img`
 `
 
 
-const Category = () => {
+const Category = ({search}) => {
     // 태그 배열 및 상태 정의
-    const tagArr = ["멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
-        , "국립공원", "방", "호수 근처", "통나무집", "캠핑카"];
+    const tagArr = ["전체", "멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
+        , "산 근처", "방", "호수 근처", "통나무집", "캠핑카", "특이한 숙소", "농장", "디자인", "섬", "예술 공간"];
     const [tag, setTag] = useState(tagArr[0]);
 
     // mainCatetory 디렉토리 이미지 가져오기
@@ -81,12 +87,15 @@ const Category = () => {
 
     return (
         <Container>
-            {sortedImages.map((v, i) => (
-                <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
-                    <ItemImg src={v.src} />
-                    <ItemTitle style={tag === tagArr[i] ? {fontWeight: "bold"} : {fontWeight: "500"}}>{tagArr[i]}</ItemTitle>
-                </Item>
-            ))}
+            <ItemDiv>
+                {sortedImages.map((v, i) => (
+                    <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
+                        <ItemImg src={v.src} />
+                        <ItemTitle style={tag === tagArr[i] ? {fontWeight: "bold"} : {fontWeight: "500"}}>{tagArr[i]}</ItemTitle>
+                    </Item>
+                ))}
+            </ItemDiv>
+
         </Container>
     );
 }
