@@ -18,7 +18,7 @@ const Container = styled.div`
     /* 끝에서 바운스 되도록 */
     -webkit-overflow-scrolling: touch;
     border-bottom: 2px solid #EEEEEE;
-
+    padding-top: 2%;
     /* 스크롤바 숨기기 */
     ::-webkit-scrollbar {
         display: none;
@@ -28,7 +28,7 @@ const Container = styled.div`
 `
 const Item = styled.div`
     width: 25%;
-    height: 100%;
+    height: 98%;
     border: none;
     display: flex;
     flex-direction: column;
@@ -40,7 +40,7 @@ const Item = styled.div`
     // + "이미지 크기 고정" 작업(div > img 구조 + div 에서 flex-frow, shrink, basis(절대 크기) 설정 !)
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 70px;
+    flex-basis: 75px;
     cursor: pointer;
 `
 const ItemTitle = styled.span`
@@ -54,6 +54,7 @@ const ItemImg = styled.img`
 
 
 const Category = () => {
+    // 태그 배열 및 상태 정의
     const tagArr = ["멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
         , "국립공원", "방", "호수 근처", "통나무집", "캠핑카"];
     const [tag, setTag] = useState(tagArr[0]);
@@ -76,7 +77,6 @@ const Category = () => {
     // 아이템 클릭 시 태그 상태 변화
     const onClickImage = (index) => {
         setTag(tagArr[index]);
-        console.log(tagArr[index])
     };
 
     return (
@@ -84,7 +84,7 @@ const Category = () => {
             {sortedImages.map((v, i) => (
                 <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
                     <ItemImg src={v.src} />
-                    <ItemTitle style={tag === tagArr[i] ? {fontWeight: "700"} : {fontWeight: "normal"}}>{tagArr[i]}</ItemTitle>
+                    <ItemTitle style={tag === tagArr[i] ? {fontWeight: "700"} : {fontWeight: "500"}}>{tagArr[i]}</ItemTitle>
                 </Item>
             ))}
         </Container>
