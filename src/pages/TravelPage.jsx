@@ -22,8 +22,25 @@ const TravelPage = () => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
   const [cardData, setCardData] = useState([]);
+  const [pastTravelData, setPastTravelData] = useState([]);
+  const [upcomingTravelData, setUpcomingTravelData] = useState([]);
 
   useEffect(() => {
+    // 서버에서 데이터 가져오기
+    const fetchTravelData = async () => {
+      try {
+        const response = await fetch("/travelData.json"); // 로컬 JSON 파일 경로
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setCardData(data); // 가져온 데이터를 상태에 저장
+      } catch (error) {
+        console.error("Failed to fetch travel data:", error);
+      }
+    };
+
+    fetchTravelData();
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
     // true
     setLoginUser({
@@ -34,19 +51,55 @@ const TravelPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const today = new Date();
+
+    const pastData = cardData.filter((item) => new Date(item.endDate) < today);
+    const upcomingData = cardData.filter(
+      (item) => new Date(item.startDate) >= today
+    );
+
+    setPastTravelData(pastData);
+    setUpcomingTravelData(upcomingData);
+  }, [cardData]);
+
   return (
     <>
       <Header user={loginUser} />
       <Container>
         <Title>여행</Title>
-        <NoReservation></NoReservation>
-        <Title>이전 여행지</Title>
-        <TravelCard />
-        <TravelCard title="부산의 집" />
-        <TravelCard title="강릉의 집" />
-        <TravelCard title="제주의 집" />
-        <TravelCard title="서울의 집" />
-        <TravelCard title="대전의 집" />
+        {upcomingTravelData.length > 0 ? (
+          <>
+            <Title>예약된 여행지</Title>
+            {upcomingTravelData.map((item) => (
+              <TravelCard
+                key={item.id}
+                title={item.title}
+                name={item.name}
+                date={`${item.startDate} ~ ${item.endDate}`}
+                price={item.totalPrice}
+                image={item.image}
+              />
+            ))}
+          </>
+        ) : (
+          <NoReservation />
+        )}
+        {pastTravelData.length > 0 && (
+          <>
+            <Title>이전 여행지</Title>
+            {pastTravelData.map((item) => (
+              <TravelCard
+                key={item.id}
+                title={item.title}
+                name={item.name}
+                date={`${item.startDate} ~ ${item.endDate}`}
+                price={item.totalPrice}
+                image={item.image}
+              />
+            ))}
+          </>
+        )}
       </Container>
       <Footer user={loginUser} />
     </>

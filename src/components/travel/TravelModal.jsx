@@ -38,20 +38,20 @@ const Title = styled.span`
   margin-top: 10px;
   font-weight: bold;
   color: #333333;
-  font-size: 12px;
-  line-height: 14.52px;
+  font-size: 16px;
+  line-height: 19.36px;
 `;
 const Description = styled.span`
   margin-top: 3px;
   color: #555555;
-  font-size: 12px;
-  line-height: 14.52px;
+  font-size: 14px;
+  line-height: 16.94px;
 `;
 const Price = styled.span`
   font-weight: bold;
   margin-top: 7px;
-  font-size: 12px;
-  line-height: 14.52px;
+  font-size: 14px;
+  line-height: 16.94px;
 `;
 
 const CloseButton = styled.button`

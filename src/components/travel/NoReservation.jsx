@@ -50,7 +50,7 @@ const SearchButton = styled.button`
   cursor: pointer;
 `;
 
-const Hand = () => {
+const NoReservation = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleClick = () => {
@@ -68,4 +68,4 @@ const Hand = () => {
   );
 };
 
-export default Hand;
+export default NoReservation;

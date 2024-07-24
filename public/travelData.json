@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1",
+    "title": "부산 서면",
+    "name": "혜림",
+    "startDate": "2024-02-03",
+    "endDate": "2024-02-05",
+    "price": 120000,
+    "totalPrice": 240000,
+    "image": "https://picsum.photos/111/111?random=1"
+  },
+  {
+    "id": "2",
+    "title": "제주도",
+    "name": "지현",
+    "startDate": "2024-03-10",
+    "endDate": "2024-03-15",
+    "price": 200000,
+    "totalPrice": 1200000,
+    "image": "https://picsum.photos/111/111?random=2"
+  },
+  {
+    "id": "3",
+    "title": "강릉",
+    "name": "민수",
+    "startDate": "2024-04-01",
+    "endDate": "2024-04-07",
+    "price": 150000,
+    "totalPrice": 900000,
+    "image": "https://picsum.photos/111/111?random=3"
+  },
+  {
+    "id": "4",
+    "title": "서울",
+    "name": "소영",
+    "startDate": "2024-05-05",
+    "endDate": "2024-05-10",
+    "price": 180000,
+    "totalPrice": 900000,
+    "image": "https://picsum.photos/111/111?random=4"
+  },
+  {
+    "id": "5",
+    "title": "경주",
+    "name": "철수",
+    "startDate": "2024-09-15",
+    "endDate": "2024-10-08",
+    "price": 130000,
+    "totalPrice": 3120000,
+    "image": "https://picsum.photos/111/111?random=5"
+  }
+]

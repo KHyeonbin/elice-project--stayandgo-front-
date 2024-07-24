@@ -38,44 +38,17 @@ const Date = styled.span`
   line-height: 16.94px;
 `;
 
-const TravelCard = ({ title, name, date, price }) => {
+const TravelCard = ({ title, name, date, price, image }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [modalImageIndex, setModalImageIndex] = useState(0);
 
   useEffect(() => {
-    // 랜덤 이미지 URL을 생성하는 예시
-    const generateRandomImageUrls = () => {
-      const urls = Array.from(
-        { length: 10 },
-        () =>
-          `https://picsum.photos/111/111?random=${Math.floor(
-            Math.random() * 1000
-          )}`
-      );
-      setImageUrls(urls);
-    };
-
-    generateRandomImageUrls();
-  }, []);
-
-  /*useEffect(() => {
-    // 서버에서 이미지 URL을 받아오는 예시
-    const fetchImage = async () => {
-      try {
-        const response = await fetch("https://source.unsplash.com/random/111​"); // 이미지 URL을 가져오는 API 호출
-        const data = await response.json();
-        setImageUrls(data.imageUrl.slice(0, 10)); // 받아온 이미지 URL을 상태에 저장
-      } catch (error) {
-        console.error("이미지 가져오기 실패:", error);
-        // 실패 시 기본 이미지 설정
-        setImageUrls("https://via.placeholder.com/111");
-      }
-    };
-
-    fetchImage();
-  }, []); */
+    if (image) {
+      setImageUrls([image]);
+    }
+  }, [image]);
 
   const handleClick = () => {
     setModalImageIndex(0);
