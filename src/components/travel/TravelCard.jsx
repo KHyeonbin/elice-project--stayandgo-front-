@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import HistoryModal from "../layout/HistoryModal";
+import TravelModal from "./TravelModal";
 import ImageSlider from "../layout/ImageSlider";
 
 const Container = styled.div`
@@ -38,7 +38,7 @@ const Date = styled.span`
   line-height: 16.94px;
 `;
 
-const HistoryCard = ({ title, name, date, price }) => {
+const TravelCard = ({ title, name, date, price }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -101,7 +101,7 @@ const HistoryCard = ({ title, name, date, price }) => {
         </DetailContainer>
       </Container>
       {isModalOpen && (
-        <HistoryModal
+        <TravelModal
           name={name}
           imageUrls={imageUrls}
           modalImageIndex={modalImageIndex}
@@ -116,11 +116,11 @@ const HistoryCard = ({ title, name, date, price }) => {
   );
 };
 
-HistoryCard.defaultProps = {
+TravelCard.defaultProps = {
   title: "부산 서면",
   name: "혜림",
   date: "2024년 2월 3일 ~ 2024년 2월 5일",
   price: 120000,
 };
 
-export default HistoryCard;
+export default TravelCard;

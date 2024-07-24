@@ -5,7 +5,12 @@ import { useSetRecoilState, useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
-import WishCard from "../components/wishlist/WishCard";
+import TravelCard from "../components/travel/TravelCard";
+import NoReservation from "../components/travel/NoReservation";
+
+const Container = styled.div`
+  padding-bottom: 60px;
+`;
 
 const Title = styled.h1`
   font-size: 20px;
@@ -13,14 +18,7 @@ const Title = styled.h1`
   margin: 25px 15px;
 `;
 
-const WishlistContainer = styled.div`
-  display: grid;
-  grid-template-columns: 163px 163px;
-  grid-column-gap: 17px;
-  padding-bottom: 60px;
-`;
-
-const WishPage = () => {
+const TravelPage = () => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
   const [cardData, setCardData] = useState([]);
@@ -34,31 +32,25 @@ const WishPage = () => {
       is_admin: false,
       is_logined: false,
     });
-    // false
-    /*
-        setLoginUser({
-            email: "",
-            nickName: "건우",
-            is_admin: false,
-            is_logined: false
-        });
-        */
   }, []);
 
   return (
     <>
       <Header user={loginUser} />
-      <Title>위시 리스트</Title>
-      <WishlistContainer>
-        <WishCard />
-        <WishCard title="부산의 집" />
-        <WishCard title="강릉의 집" />
-        <WishCard title="제주의 집" />
-        <WishCard title="대전의 집" />
-      </WishlistContainer>
+      <Container>
+        <Title>여행</Title>
+        <NoReservation></NoReservation>
+        <Title>이전 여행지</Title>
+        <TravelCard />
+        <TravelCard title="부산의 집" />
+        <TravelCard title="강릉의 집" />
+        <TravelCard title="제주의 집" />
+        <TravelCard title="서울의 집" />
+        <TravelCard title="대전의 집" />
+      </Container>
       <Footer user={loginUser} />
     </>
   );
 };
 
-export default WishPage;
+export default TravelPage;

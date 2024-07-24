@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import noImg from "../../assets/icons/no.png";
+import handImg from "../../assets/icons/hand.png";
 
-const NoImg = styled.img`
+const HandImg = styled.img`
   width: 100px;
   height: 100 px;
 `;
@@ -35,6 +35,7 @@ const Description = styled.span`
   margin-bottom: 8px;
   font-size: 14px;
   line-height: 16.94px;
+  word-break: keep-all; //단어 단위 줄바꿈
 `;
 
 const SearchButton = styled.button`
@@ -49,7 +50,7 @@ const SearchButton = styled.button`
   cursor: pointer;
 `;
 
-const No = () => {
+const Hand = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleClick = () => {
@@ -57,7 +58,7 @@ const No = () => {
   };
   return (
     <Container>
-      <NoImg src={noImg} />
+      <HandImg src={handImg} />
       <Title>아직 예약된 여행이 없습니다!</Title>
       <Description>
         여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
@@ -67,4 +68,4 @@ const No = () => {
   );
 };
 
-export default No;
+export default Hand;

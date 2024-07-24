@@ -1,13 +1,13 @@
-// ReservationInfo.js
 import React from "react";
 import DatePicker from "react-datepicker";
 import { ko } from "date-fns/locale";
 import {
   ColumnBox,
   SectionDetail,
+  SectionDetailBold,
   Flexbox,
   ModifyButton,
-} from "../main/ReservationStyle";
+} from "./ReservationStyle";
 
 const ReservationInfo = ({
   dateRange,
@@ -21,7 +21,7 @@ const ReservationInfo = ({
   <>
     <Flexbox>
       <ColumnBox>
-        <SectionDetail>날짜</SectionDetail>
+        <SectionDetailBold>날짜</SectionDetailBold>
         <SectionDetail>
           {dateRange[0].toLocaleDateString("ko-KR", {
             year: "numeric",
@@ -55,7 +55,7 @@ const ReservationInfo = ({
     )}
     <Flexbox>
       <ColumnBox>
-        <SectionDetail>게스트</SectionDetail>
+        <SectionDetailBold>게스트</SectionDetailBold>
         <SectionDetail>게스트 {guestCount}명</SectionDetail>
       </ColumnBox>
       <ModifyButton onClick={() => setShowGuestModal(true)}>수정</ModifyButton>

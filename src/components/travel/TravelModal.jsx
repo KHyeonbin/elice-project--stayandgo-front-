@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ImageSlider from "./ImageSlider";
+import ImageSlider from "../layout/ImageSlider";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -34,13 +34,33 @@ const Name = styled.span`
   line-height: 24.2px;
 `;
 
+const Title = styled.span`
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333333;
+  font-size: 12px;
+  line-height: 14.52px;
+`;
+const Description = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 12px;
+  line-height: 14.52px;
+`;
+const Price = styled.span`
+  font-weight: bold;
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 14.52px;
+`;
+
 const CloseButton = styled.button`
   margin-top: 10px;
   border: none;
   cursor: pointer;
 `;
 
-const HistoryModal = ({
+const TravelModal = ({
   name,
   imageUrls,
   modalImageIndex,
@@ -59,12 +79,12 @@ const HistoryModal = ({
         setCurrentIndex={setModalImageIndex}
         size={200}
       />
-      <h1>{title}</h1>
-      <p>{date}</p>
-      <h3>총 금액: {price.toLocaleString()}원</h3>
+      <Title>{title}</Title>
+      <Description>{date}</Description>
+      <Price>총 금액: {price.toLocaleString()}원</Price>
       <CloseButton onClick={closeModal}>닫기</CloseButton>
     </ModalContent>
   </ModalOverlay>
 );
 
-export default HistoryModal;
+export default TravelModal;

@@ -13,6 +13,12 @@ export const Flexbox = styled.div`
   justify-content: space-between;
 `;
 
+export const TotalBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
 export const ColumnBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -65,6 +71,13 @@ export const SectionTitle = styled.h2`
 export const SectionDetail = styled.span`
   font-size: 14px;
   line-height: 16.94px;
+  margin-bottom: 4px;
+`;
+
+export const SectionDetailBold = styled.span`
+  font-size: 14px;
+  line-height: 16.94px;
+  font-weight: bold;
   margin-bottom: 4px;
 `;
 
