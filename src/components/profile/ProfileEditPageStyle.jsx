@@ -44,7 +44,7 @@ export const ProfileEditForm = styled.form`
 `;
 
 export const ProfileEditInput = styled.input`
-  margin-bottom: 10px;
+  margin-top: 10px;
   padding: 10px;
   width: 100%;
   height: 50px;
@@ -75,4 +75,10 @@ export const ProfileEditSaveButton = styled.button`
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
+`;
+
+export const ErrorMessage = styled.div`
+  font-size: 12px;
+  color: red;
+  padding: 5px 0;
 `;
