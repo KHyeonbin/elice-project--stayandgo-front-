@@ -19,7 +19,7 @@ const MainPage = () => {
     // main 페이지에서 모달 호출 상태 확인 및 변경
     const [isModal, setIsModal] = useState(false)
 
-    // 검색어 state
+    // 검색어 search state
     const [search, setSearch] = useState({
         city: "지역을 선택하세요",
         startDate: getDateFormat(new Date()),
@@ -27,8 +27,11 @@ const MainPage = () => {
         adult: 0,
         child: 0,
         baby: 0,
-        category: "전체"
+        is_start: false
     });
+
+    // 검색 태그 category state
+    const [category, setCategory] = useState("all");
 
     useEffect(() => {
         // server 에 getUser 요청 후 결과에 따라 값 부여 !
@@ -41,13 +44,12 @@ const MainPage = () => {
         });
     }, [])
 
-
     return (
         <>
             <Header user={loginUser} isModal={isModal}/>
             <Search search={search} setSearch={setSearch} isModal={isModal} setIsModal={setIsModal}/>
-            <Category setSearch={setSearch} />
-            <Items search={search} />
+            <Category setCategory={setCategory} />
+            <Items search={search} category={category} setSearch={setSearch}/>
             <Footer user={loginUser} />
             
         </>

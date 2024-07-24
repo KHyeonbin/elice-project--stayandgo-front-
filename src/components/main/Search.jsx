@@ -345,7 +345,8 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
         endDate: getDateFormat(new Date()),
         adult: 0,
         child: 0,
-        baby: 0
+        baby: 0,
+        is_start: false
     }
     
     // 시작 날짜, 끝 날짜 state
@@ -466,7 +467,16 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
         setSearch(defaultValue);
     };
 
-    console.log(search);
+    // 검색 시작
+    const onClickStartSearch = () => {
+        setIsModal(false);
+        document.body.style.overflowY = "auto";
+        setSearch((current) => {
+            const newSearch = {...current};
+            newSearch.is_start = true;
+            return newSearch;
+        });
+    }
 
     return (
         <>
@@ -579,7 +589,7 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
                         </ModalContainer>
                         <ModalFooter style={isModal ? {animation: "modalOpenAnimation 1s"} : {animation: "none"}}>
                             <FooterDelSpan onClick={onClickSearchReset}>전체 삭제</FooterDelSpan>
-                            <FooterSearchBtn><WhiteSearchImg src={whiteSearchImg}/><SearchBtnSpan>검색</SearchBtnSpan></FooterSearchBtn>
+                            <FooterSearchBtn><WhiteSearchImg src={whiteSearchImg} onClick={onClickStartSearch}/><SearchBtnSpan>검색</SearchBtnSpan></FooterSearchBtn>
                         </ModalFooter>        
                     </ModalOverlay>
                            

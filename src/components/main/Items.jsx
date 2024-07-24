@@ -86,7 +86,7 @@ const Pagenation_li = styled.li`
     }
 `
 
-const Items = ({search}) => {
+const Items = ({search, category, setSearch}) => {
     // 숙소 아이템 목록 상태
     const [posts, setPosts] = useState(null);
     // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
@@ -96,18 +96,29 @@ const Items = ({search}) => {
         total: 0,
         totalPage: 0,
     });
-    // 현재 검색 모드 상태 정의
-    //  ("all" : 검색어 x, "search" : 검색어 o)
-    const [mode, setMode] = useState("all");
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
+    // 1. 일단 페이지 정보를 먼저 세팅
     useEffect(() => {
-        mainPostLoad.importAll({nowpage: page.page})
+        console.log("helklo2")
+        mainPostLoad.getPostsPage({search, category})
         .then(res => {
-            console.log(res);
-            setPosts(res.posts);
-            setPage(res.page)
-        })
-    },[])
+            setPage(res)
+            setSearch((current) => {
+                const newSearch = {...current};
+                newSearch.is_start = false;
+                return newSearch;
+            });
+        });
+    // 검색 고도화 시, [] 안에 props 로 넘어온 search, category 추가 예정
+    },[search.is_start, category]);
+
+    // 2. 이후 페이지 조절 시 페이지에 맞도록 재검색 진행
+    useEffect(() => {
+        mainPostLoad.getPostsRead({nowpage: page.page, search, category})
+        .then(res => {
+            setPosts(res);
+        });
+    },[page]);
 
     // IntersectionObserver 를 생성하여 targetRef 가 관찰될 때(.isIntersecting) 투명도를 n 초동안 높이기 위함
     // useRef [] 배열로 관리하기 !
@@ -130,8 +141,6 @@ const Items = ({search}) => {
             osv.observe(v);
         })
     },[posts]);
-    console.log(posts);
-    console.log(page);
 
 // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
@@ -167,8 +176,7 @@ const Items = ({search}) => {
             newPage.page = i;
             return newPage;
         });
-
-        
+      
     };
 
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
@@ -184,9 +192,7 @@ const Items = ({search}) => {
             newPage.page = i;
             return newPage;
         });
-
-        
-        
+       
     };
 
     // 다음 버튼 클릭 시 최대 5 페이지 이동 기능
@@ -202,9 +208,7 @@ const Items = ({search}) => {
             newPage.page = i;
             return newPage;
         });
-
-        
-        
+      
     };
 
 
