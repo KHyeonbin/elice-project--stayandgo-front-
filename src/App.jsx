@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import MainPage from "./pages/MainPage";
 import WishPage from "./pages/WishPage";
 import HistoryPage from "./pages/HistoryPage";
+import ReservationPage from "./pages/ReservationPage";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/History" element={<HistoryPage />}></Route>
+          <Route path="/Reservation" element={<ReservationPage />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

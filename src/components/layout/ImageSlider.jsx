@@ -7,6 +7,7 @@ const SliderContainer = styled.div`
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   overflow: hidden;
+  border-radius: 15px;
 
   &:hover .arrow-button {
     opacity: 1;
