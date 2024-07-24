@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -59,11 +59,20 @@ const ItemImg = styled.img`
 `
 
 
-const Category = ({search}) => {
+const Category = ({setSearch}) => {
     // 태그 배열 및 상태 정의
     const tagArr = ["전체", "멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
         , "산 근처", "방", "호수 근처", "통나무집", "캠핑카", "특이한 숙소", "농장", "디자인", "섬", "예술 공간"];
     const [tag, setTag] = useState(tagArr[0]);
+
+    // 태그(카테고리) 변경될 때 setSearch 작업으로 search 상태 변경
+    useEffect(() => {
+        setSearch((current) => {
+            const newSearch = {...current};
+            newSearch.category = tag;
+            return newSearch;
+        })
+    },[tag])
 
     // mainCatetory 디렉토리 이미지 가져오기
     const importAllImages = (v) => {

@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
+import mainPostLoad from "../../api/mainPostLoad";
 
 const Container = styled.div`
     width: 90%;
@@ -87,7 +88,23 @@ const Pagenation_li = styled.li`
 `
 
 const Items = ({search}) => {
-    
+    // 숙소 아이템 목록 상태
+    const [posts, setPosts] = useState(null);
+    // 페이지네이션 정의
+    const [page, setPage] = useState({
+        page: 1,
+        total: 0,
+        totalPage: 0,
+    });
+    // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
+    useEffect(() => {
+        mainPostLoad.importAll({nowpage: page.page})
+        .then(res => {
+            console.log(res);
+            setPosts(res.posts);
+            setPage(res.page)
+        })
+    },[])
 
     // IntersectionObserver 를 생성하여 targetRef 가 관찰될 때(.isIntersecting) 투명도를 n 초동안 높이기 위함
     // useRef [] 배열로 관리하기 !
@@ -109,43 +126,112 @@ const Items = ({search}) => {
         targetRef.current.forEach(v => {
             osv.observe(v);
         })
+    },[posts]);
+    console.log(posts);
+    console.log(page);
+
+// page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
+    // 5 페이지만 출력하여야 함
+    // 테스트로 2 개 씩 2 페이지 출력으로 체크 중
+    const pagenationing = useCallback(() => {
+        const pageArray = [];
+
+        // 페이지 시작점 계산
+        let remainpage = page.page;
+        let count = 0;
+        while((remainpage - count) % 5 !== 1){
+            count++;
+        }
+        const startpage = page.page - count;
+
+        // 페이지 끝점 계산
+        remainpage = startpage + 4;
+        if(remainpage > page.totalPage){
+            remainpage = page.totalPage;
+        }
+        const lastpage = remainpage;
+
+        for(let i = startpage;i <= lastpage; i++){
+            pageArray.push(i);
+        }
+        return pageArray;
+    },[page]);
+
+    // 선택한 페이지로 이동 기능
+    const pagenateHandle = useCallback((i) => {
+        setPage((current) => {
+            const newPage = {...current};
+            newPage.page = i;
+            return newPage;
+        });
+
+        
+        setTimeout(() => {
+            
+        }, 200);
     },[]);
 
-    // 임시로 이미지 가져오기(원래 db 에서 조회된 결과 추출)
-    const importAllImages = (v) => {
-        return v.keys().map((key) => ({
-            src: v(key),
-            name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-          }));
-    };
-    const images = importAllImages(require.context('../../assets/images', false, /\.(png|jpe?g|gif|webp)$/));
+    // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
+    const pagePrevHandle = useCallback(() => {
+        // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
+        let i = page.page - 5;
+        if(i < 1){
+            i = 1;
+        }
 
-    // 가져온 이미지를 파일 이름 순으로 정렬
-    const sortedImages = images.sort((a, b) => {
-        const aNumber = parseInt(a.name.split('_')[0], 10);
-        const bNumber = parseInt(b.name.split('_')[0], 10);
-        return aNumber - bNumber;
-    });
+        setPage((current) => {
+            const newPage = {...current};
+            newPage.page = i;
+            return newPage;
+        });
+
+        setMode("loading");
+        setTimeout(() => {
+            setMode("list");
+        }, 200);
+    },[page]);
+
+    // 다음 버튼 클릭 시 최대 5 페이지 이동 기능
+    const pageNextHandle = useCallback(() => {
+        // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 마지막 페이지로)
+        let i = page.page + 5;
+        if(i > page.totalPage){
+            i = page.totalPage;
+        }
+
+        setPage((current) => {
+            const newPage = {...current};
+            newPage.page = i;
+            return newPage;
+        });
+
+        setMode("loading");
+        setTimeout(() => {
+            setMode("list");
+        }, 200);
+    },[page]);
 
 
     return (
         <Container>
-            {sortedImages.map((v, i) => (
+            {posts && posts.map((v, i) => (
                 <ItemDiv key={i} ref={element => targetRef.current[i] = element}>
-                    <ItemBackgroundDiv $background={v.src} />
+                    <ItemBackgroundDiv $background={v.main_image_link} />
                     <ItemTextDiv>
-                        <ItemTitle>엑스 멘션에서 훈련하기<br /></ItemTitle>
+                        <ItemTitle>{v.title}<br /></ItemTitle>
                         <ItemNormalText>호스트: jubilee님<br /></ItemNormalText>
-                        <ItemPriceText>{"₩" + Number("52884").toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
+                        <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
                     </ItemTextDiv>
                 </ItemDiv>
             ))}
             <Pagenation_div>
                 <Pagenation_ul>
                     <Pagenation_span>{"<<"}</Pagenation_span>
-                    <Pagenation_li>1</Pagenation_li>
-                    <Pagenation_li>2</Pagenation_li>
-                    <Pagenation_li>3</Pagenation_li>
+                        {pagenationing().map((v,i) => {
+                            return (
+                                <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
+                            );
+                        })}
                     <Pagenation_span>{">>"}</Pagenation_span>
                 </Pagenation_ul>
             </Pagenation_div>

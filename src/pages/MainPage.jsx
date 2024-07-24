@@ -25,7 +25,8 @@ const MainPage = () => {
         endDate: getDateFormat(new Date()),
         adult: 0,
         child: 0,
-        baby: 0
+        baby: 0,
+        category: "전체"
     });
 
     useEffect(() => {
@@ -44,19 +45,12 @@ const MainPage = () => {
         <>
             <Header user={loginUser} isModal={isModal}/>
             <Search search={search} setSearch={setSearch} isModal={isModal} setIsModal={setIsModal}/>
-            <Category search={search} />
+            <Category setSearch={setSearch} />
             <Items search={search} />
             <Footer user={loginUser} />
             
         </>
-    )
-
-  return (
-    <>
-      <Header user={loginUser} />
-      <Search />
-    </>
-  );
+    );
 };
 
 export default MainPage;
