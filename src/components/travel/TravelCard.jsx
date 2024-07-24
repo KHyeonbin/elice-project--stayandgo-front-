@@ -1,3 +1,4 @@
+//여행 탭에 나오는 개별여행컴포넌트
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TravelModal from "./TravelModal";

@@ -22,13 +22,6 @@ import {
   RequestContainer,
 } from "../components/reservation/ReservationStyle";
 
-// 현재 날짜와 내일 날짜를 계산
-const getDateAfterDays = (days) => {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return date.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 반환
-};
-
 const ReservationPage = ({
   title,
   description,
