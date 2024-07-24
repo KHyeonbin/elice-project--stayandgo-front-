@@ -51,6 +51,12 @@ const MainPage = () => {
         </>
     )
 
-}
+  return (
+    <>
+      <Header user={loginUser} />
+      <Search />
+    </>
+  );
+};
 
 export default MainPage;
