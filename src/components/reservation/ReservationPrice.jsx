@@ -1,4 +1,4 @@
-// PriceDetails.js
+// 예약페이지 내 요금세부정보 부분
 import React from "react";
 import {
   Flexbox,

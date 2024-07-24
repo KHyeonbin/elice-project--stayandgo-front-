@@ -1,6 +1,4 @@
-import React from "react";
-import styled from "styled-components";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import "react-datepicker/dist/react-datepicker.css";
 import Header from "../components/layout/SubHeader";
@@ -20,15 +18,16 @@ import {
   Title,
   Name,
   Description,
+  Container,
+  RequestContainer,
 } from "../components/reservation/ReservationStyle";
 
-const Container = styled.div`
-  padding-bottom: 60px;
-`;
-
-const RequestContainer = styled.div`
-  display: flex;
-`;
+// 현재 날짜와 내일 날짜를 계산
+const getDateAfterDays = (days) => {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 반환
+};
 
 const ReservationPage = ({
   title,
@@ -44,18 +43,18 @@ const ReservationPage = ({
     new Date(initialStartDate),
     new Date(initialEndDate),
   ]);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [nights, setNights] = useState(0);
-  const [guestCount, setGuestCount] = useState(1);
-  const [showGuestModal, setShowGuestModal] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false); //달력 기능
+  const [nights, setNights] = useState(0); //숙박일수 계산
+  const [guestCount, setGuestCount] = useState(1); //게스트 인원 수
+  const [showGuestModal, setShowGuestModal] = useState(false); //게스트 모달
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false); //예약확인 버튼 누를때 모달창 열림
   const [product, setProduct] = useState({
     image: "",
     title: "",
     description: "",
     name: "",
     price: 0,
-  });
+  }); //상품 상태 변수
 
   useEffect(() => {
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
@@ -67,6 +66,7 @@ const ReservationPage = ({
       is_logined: false,
     });
 
+    //숙박일수 계산 함수(시작, 끝)
     calculateNights(new Date(initialStartDate), new Date(initialEndDate));
 
     // 서버에서 상품 정보를 가져오는 함수
@@ -74,7 +74,7 @@ const ReservationPage = ({
       try {
         const response = await fetch("/productData.json"); // 실제 API 엔드포인트로 변경 필요
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("네트워크 응답 오류");
         }
         const data = await response.json();
         setProduct({
@@ -85,13 +85,14 @@ const ReservationPage = ({
           price: data.price,
         });
       } catch (error) {
-        console.error("Failed to fetch product data:", error);
+        console.error("상품정보 불러오기 실패:", error);
       }
     };
 
     fetchProductData();
   }, []);
 
+  //숙박일수 계산 함수
   const calculateNights = (start, end) => {
     if (start && end) {
       const diffTime = Math.abs(end - start);
@@ -102,6 +103,7 @@ const ReservationPage = ({
     }
   };
 
+  //달력에서 시작, 끝 날짜 배열을 받아와서 상태 저장후 숙박일수 계산 및 달력닫기
   const handleDateChange = (dates) => {
     const [start, end] = dates;
     setDateRange([start, end]);
@@ -133,14 +135,14 @@ const ReservationPage = ({
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("네트워크 응답 오류");
       }
 
       const result = await response.json();
-      console.log("Reservation request successful:", result);
+      console.log("예약 요청 성공:", result);
       setShowConfirmationModal(true); // 예약 요청 성공 시 모달창 띄우기
     } catch (error) {
-      console.error("There was a problem with the reservation request:", error);
+      console.error("예약 요청 실패:", error);
     }
   };
 
@@ -209,12 +211,17 @@ const ReservationPage = ({
   );
 };
 
+// 현재 날짜와 내일 날짜를 기본값으로 설정
+const today = new Date();
+const tomorrow = new Date();
+tomorrow.setDate(today.getDate() + 1);
+
 ReservationPage.defaultProps = {
   title: "전주의 집",
   description: "[옥탑방의 하루] 투룸 전주 시내 도보 관광",
   name: "혜림",
-  initialStartDate: "2024-02-03",
-  initialEndDate: "2024-02-05",
+  initialStartDate: today.toISOString().split("T")[0], // 현재 날짜
+  initialEndDate: tomorrow.toISOString().split("T")[0], // 내일 날짜
   price: 120000,
 };
 

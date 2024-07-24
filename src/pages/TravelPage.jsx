@@ -30,12 +30,12 @@ const TravelPage = () => {
       try {
         const response = await fetch("/travelData.json"); // 로컬 JSON 파일 경로
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("네트워크 응답 오류");
         }
         const data = await response.json();
         setCardData(data); // 가져온 데이터를 상태에 저장
       } catch (error) {
-        console.error("Failed to fetch travel data:", error);
+        console.error("데이터 가져오기 실패:", error);
       }
     };
 
