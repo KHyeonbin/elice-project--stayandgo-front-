@@ -1,3 +1,4 @@
+//여행 탭에서 예약된 여행이 없을 때 나오는 UI
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -51,11 +52,12 @@ const SearchButton = styled.button`
 `;
 
 const NoReservation = () => {
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate("/"); // 메인 페이지로 이동
   };
+
   return (
     <Container>
       <HandImg src={handImg} />

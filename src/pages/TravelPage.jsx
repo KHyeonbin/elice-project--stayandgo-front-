@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
@@ -21,9 +20,9 @@ const Title = styled.h1`
 const TravelPage = () => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
-  const [cardData, setCardData] = useState([]);
-  const [pastTravelData, setPastTravelData] = useState([]);
-  const [upcomingTravelData, setUpcomingTravelData] = useState([]);
+  const [cardData, setCardData] = useState([]); //여행아이템 배열로 가져오기
+  const [pastTravelData, setPastTravelData] = useState([]); //여행 날짜 기준 지난 여행
+  const [upcomingTravelData, setUpcomingTravelData] = useState([]); //여행 날짜 기준 다가오는 여행
 
   useEffect(() => {
     // 서버에서 데이터 가져오기
@@ -52,13 +51,16 @@ const TravelPage = () => {
   }, []);
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(); //현재 날짜 가져오기
 
+    //여행 마지막 날짜가 오늘보다 이전일떄 지난여행
     const pastData = cardData.filter((item) => new Date(item.endDate) < today);
+    //여행 시작 날짜가 오늘 이후일떄 다가올 여행
     const upcomingData = cardData.filter(
       (item) => new Date(item.startDate) >= today
     );
 
+    //상태에 저장
     setPastTravelData(pastData);
     setUpcomingTravelData(upcomingData);
   }, [cardData]);

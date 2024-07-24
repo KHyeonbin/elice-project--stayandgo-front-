@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TravelModal from "./TravelModal";
 import ImageSlider from "../layout/ImageSlider";
@@ -39,23 +38,25 @@ const Date = styled.span`
 `;
 
 const TravelCard = ({ title, name, date, price, image }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imageUrls, setImageUrls] = useState([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [modalImageIndex, setModalImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
+  const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); //현재이미지의 index값 첫번째는 0
+  const [modalImageIndex, setModalImageIndex] = useState(0); //모달창에서도 동일
 
   useEffect(() => {
     if (image) {
       setImageUrls([image]);
     }
-  }, [image]);
+  }, [image]); //이미지가 변경될때마다 상태 업데이트
 
   const handleClick = () => {
+    //클릭시 모달창 열기 및 첫번째 이미지 보여주기
     setModalImageIndex(0);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
+    //클릭시 모달창 닫기
     setIsModalOpen(false);
   };
 
@@ -87,13 +88,6 @@ const TravelCard = ({ title, name, date, price, image }) => {
       )}
     </>
   );
-};
-
-TravelCard.defaultProps = {
-  title: "부산 서면",
-  name: "혜림",
-  date: "2024년 2월 3일 ~ 2024년 2월 5일",
-  price: 120000,
 };
 
 export default TravelCard;

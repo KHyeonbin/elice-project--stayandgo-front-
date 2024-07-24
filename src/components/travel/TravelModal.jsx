@@ -1,3 +1,4 @@
+//여행 탭에서 항목 클릭시 나오는 모달 창
 import React from "react";
 import styled from "styled-components";
 import ImageSlider from "../layout/ImageSlider";
@@ -14,7 +15,6 @@ const ModalOverlay = styled.div`
   align-items: center;
   z-index: 1;
 `;
-
 const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
@@ -27,13 +27,11 @@ const ModalContent = styled.div`
   justify-content: center;
   position: relative;
 `;
-
 const Name = styled.span`
   margin-bottom: 8px;
   font-size: 20px;
   line-height: 24.2px;
 `;
-
 const Title = styled.span`
   margin-top: 10px;
   font-weight: bold;
@@ -53,7 +51,6 @@ const Price = styled.span`
   font-size: 14px;
   line-height: 16.94px;
 `;
-
 const CloseButton = styled.button`
   margin-top: 10px;
   border: none;
