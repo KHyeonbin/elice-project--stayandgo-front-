@@ -1,11 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import Header from "../components/layout/Header";
-import loginState from "../atoms/loginState";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import HistoryCard from "../components/main/HistoryCard";
-import styled from "styled-components";
-import No from "../components/layout/No";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import Header from '../components/layout/SubHeader';
+import loginState from '../atoms/loginState';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import HistoryCard from '../components/main/HistoryCard';
+import styled from 'styled-components';
+import No from '../components/layout/No';
 
 const Title = styled.h1`
   font-size: 20px;
@@ -22,8 +22,8 @@ const HistoryPage = () => {
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
     // true
     setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
+      email: 'gudrjsdn8825@naver.com',
+      nickName: '건우',
       is_admin: false,
       is_logined: false,
     });

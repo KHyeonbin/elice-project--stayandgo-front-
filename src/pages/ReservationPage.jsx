@@ -1,13 +1,13 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import "react-datepicker/dist/react-datepicker.css";
-import Header from "../components/layout/Header";
-import loginState from "../atoms/loginState";
-import ReservationModal from "../components/layout/ReservationModal";
-import GuestModal from "../components/layout/GuestModal";
-import ReservationInfo from "../components/layout/ReservationInfo";
-import ReservationPrice from "../components/layout/ReservationPrice";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import 'react-datepicker/dist/react-datepicker.css';
+import Header from '../components/layout/SubHeader';
+import loginState from '../atoms/loginState';
+import ReservationModal from '../components/layout/ReservationModal';
+import GuestModal from '../components/layout/GuestModal';
+import ReservationInfo from '../components/layout/ReservationInfo';
+import ReservationPrice from '../components/layout/ReservationPrice';
 import {
   ImagePlaceholder,
   Flexbox,
@@ -19,22 +19,12 @@ import {
   Title,
   Name,
   Description,
-} from "../components/main/ReservationStyle";
+} from '../components/main/ReservationStyle';
 
-const ReservationPage = ({
-  title,
-  description,
-  name,
-  initialStartDate,
-  initialEndDate,
-  price,
-}) => {
+const ReservationPage = ({ title, description, name, initialStartDate, initialEndDate, price }) => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
-  const [dateRange, setDateRange] = useState([
-    new Date(initialStartDate),
-    new Date(initialEndDate),
-  ]);
+  const [dateRange, setDateRange] = useState([new Date(initialStartDate), new Date(initialEndDate)]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [nights, setNights] = useState(0);
   const [guestCount, setGuestCount] = useState(1);
@@ -45,8 +35,8 @@ const ReservationPage = ({
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
     // true
     setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
+      email: 'gudrjsdn8825@naver.com',
+      nickName: '건우',
       is_admin: false,
       is_logined: false,
     });
@@ -117,34 +107,26 @@ const ReservationPage = ({
       </Section>
       <Section>
         <RefundPolicy>
-          48시간 동안 무료로 취소하실 수 있습니다. 숙박 2일 전에 취소하면 부분
-          환불을 받으실 수 있습니다.
+          48시간 동안 무료로 취소하실 수 있습니다. 숙박 2일 전에 취소하면 부분 환불을 받으실 수 있습니다.
         </RefundPolicy>
         <Button onClick={handleReservationRequest}>예약 요청</Button>
       </Section>
       {showGuestModal && (
-        <GuestModal
-          close={() => setShowGuestModal(false)}
-          guestCount={guestCount}
-          setGuestCount={setGuestCount}
-        />
+        <GuestModal close={() => setShowGuestModal(false)} guestCount={guestCount} setGuestCount={setGuestCount} />
       )}
       {showConfirmationModal && (
-        <ReservationModal
-          message="예약 요청이 완료되었습니다!"
-          onClose={() => setShowConfirmationModal(false)}
-        />
+        <ReservationModal message="예약 요청이 완료되었습니다!" onClose={() => setShowConfirmationModal(false)} />
       )}
     </>
   );
 };
 
 ReservationPage.defaultProps = {
-  title: "전주의 집",
-  description: "[옥탑방의 하루] 투룸 전주 시내 도보 관광",
-  name: "혜림",
-  initialStartDate: "2024-02-03",
-  initialEndDate: "2024-02-05",
+  title: '전주의 집',
+  description: '[옥탑방의 하루] 투룸 전주 시내 도보 관광',
+  name: '혜림',
+  initialStartDate: '2024-02-03',
+  initialEndDate: '2024-02-05',
   price: 120000,
 };
 
