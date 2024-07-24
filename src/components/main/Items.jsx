@@ -3,21 +3,19 @@ import styled from "styled-components";
 import mainPostLoad from "../../api/mainPostLoad";
 
 const Container = styled.div`
-    width: 90%;
+    width: 100%;
     height: 100%; // default
-    margin: 0 auto;
     margin-top: 20px;
     display: flex;
+    gap: 30px;
     flex-direction: column;
-    gap: 50px;
-
+    align-items: center;
 `
 const ItemDiv = styled.div`
-    width: 400px;
-    height: 400px;
+    width: 90%;
+    height: 500px;
     border: none;
     cursor: pointer;
-    margin: 0 auto;
     opacity: 0;
     transition: opacity 1s;
 `
@@ -26,16 +24,17 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
         backgroundImage: `url(${props.$background})`,
     }
 }))`
-    width: 400px;
-    height: 300px;
+    width: 100%;
+    height: 400px;
     border-radius: 20px;
 
     background-size: cover;
-    background-position: center;
+    background-repeat: no-repeat;
+
 `
 const ItemTextDiv = styled.div`
     width: 90%;
-    margin-top: 10px;
+    padding-top: 10px;
 `
 const ItemTitle = styled.span`
     font-size: 15px;
@@ -90,12 +89,16 @@ const Pagenation_li = styled.li`
 const Items = ({search}) => {
     // 숙소 아이템 목록 상태
     const [posts, setPosts] = useState(null);
-    // 페이지네이션 정의
+    // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
     const [page, setPage] = useState({
         page: 1,
+        perPage: 0,
         total: 0,
         totalPage: 0,
     });
+    // 현재 검색 모드 상태 정의
+    //  ("all" : 검색어 x, "search" : 검색어 o)
+    const [mode, setMode] = useState("all");
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
     useEffect(() => {
         mainPostLoad.importAll({nowpage: page.page})
@@ -139,13 +142,13 @@ const Items = ({search}) => {
         // 페이지 시작점 계산
         let remainpage = page.page;
         let count = 0;
-        while((remainpage - count) % 5 !== 1){
+        while((remainpage - count) % 2 !== 1){
             count++;
         }
         const startpage = page.page - count;
 
         // 페이지 끝점 계산
-        remainpage = startpage + 4;
+        remainpage = startpage + 1;
         if(remainpage > page.totalPage){
             remainpage = page.totalPage;
         }
@@ -158,7 +161,7 @@ const Items = ({search}) => {
     },[page]);
 
     // 선택한 페이지로 이동 기능
-    const pagenateHandle = useCallback((i) => {
+    const pagenateHandle = (i) => {
         setPage((current) => {
             const newPage = {...current};
             newPage.page = i;
@@ -166,15 +169,12 @@ const Items = ({search}) => {
         });
 
         
-        setTimeout(() => {
-            
-        }, 200);
-    },[]);
+    };
 
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
-    const pagePrevHandle = useCallback(() => {
+    const pagePrevHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
-        let i = page.page - 5;
+        let i = page.page - page.perPage;
         if(i < 1){
             i = 1;
         }
@@ -185,16 +185,14 @@ const Items = ({search}) => {
             return newPage;
         });
 
-        setMode("loading");
-        setTimeout(() => {
-            setMode("list");
-        }, 200);
-    },[page]);
+        
+        
+    };
 
     // 다음 버튼 클릭 시 최대 5 페이지 이동 기능
-    const pageNextHandle = useCallback(() => {
+    const pageNextHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 마지막 페이지로)
-        let i = page.page + 5;
+        let i = page.page + page.perPage;
         if(i > page.totalPage){
             i = page.totalPage;
         }
@@ -205,11 +203,9 @@ const Items = ({search}) => {
             return newPage;
         });
 
-        setMode("loading");
-        setTimeout(() => {
-            setMode("list");
-        }, 200);
-    },[page]);
+        
+        
+    };
 
 
     return (
@@ -226,13 +222,13 @@ const Items = ({search}) => {
             ))}
             <Pagenation_div>
                 <Pagenation_ul>
-                    <Pagenation_span>{"<<"}</Pagenation_span>
+                    <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
                         {pagenationing().map((v,i) => {
                             return (
                                 <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
                             );
                         })}
-                    <Pagenation_span>{">>"}</Pagenation_span>
+                    <Pagenation_span onClick={pageNextHandle}>{">>"}</Pagenation_span>
                 </Pagenation_ul>
             </Pagenation_div>
         </Container>

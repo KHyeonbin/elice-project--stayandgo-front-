@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Container = styled.div`
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     height: 60px;
     background-color: white;
     border-top: 2px solid #EEEEEE;
