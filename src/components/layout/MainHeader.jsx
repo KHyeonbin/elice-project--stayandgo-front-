@@ -2,13 +2,17 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
+    position: sticky;
+    top: 0;
     width: 100%;
-    height: 70px;
+    height: 65px;
+    background-color: white;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #EEEEEE;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #EEEEEE;
+    z-index: 100;
 `
 const LeftArea = styled.div`
     width: 200px; 
@@ -63,28 +67,37 @@ const LinkText = styled(Link)`
     }
 `
 
-const Header = (props) => {
+const Header = ({user, isModal}) => {
     return (
-        <Container>
-            <LeftArea>
-                <TextLogo>
-                    stayandgo
-                </TextLogo>
-            </LeftArea>
-            <RightArea>
-                {props.user.is_logined &&
-                    <>
-                        <LinkDiv><LinkText to={'/'}>숙소등록</LinkText></LinkDiv>
-                        <LinkDiv><LinkText to={'/'}>로그아웃</LinkText></LinkDiv>
-                    </>
+        <>
+            {isModal && 
+                <></> 
                 ||
-                    <>
-                        <LinkDiv><LinkText to={'/'}>로그인</LinkText></LinkDiv>
-                    </>
-                }
-            </RightArea>
-        </Container>
-    )
+                <>
+                    <Container>
+                    <LeftArea>
+                        <TextLogo>
+                            stayandgo
+                        </TextLogo>
+                    </LeftArea>
+                    <RightArea>
+                        {user.is_logined &&
+                            <>
+                                <LinkDiv><LinkText to={'/'}>숙소등록</LinkText></LinkDiv>
+                                <LinkDiv><LinkText to={'/'}>로그아웃</LinkText></LinkDiv>
+                            </>
+                        ||
+                            <>
+                                <LinkDiv><LinkText to={'/'}>로그인</LinkText></LinkDiv>
+                            </>
+                        }
+                    </RightArea>
+                    </Container>
+                </>
+            }
+        </>
+        
+    );
 }
 
 export default Header;
