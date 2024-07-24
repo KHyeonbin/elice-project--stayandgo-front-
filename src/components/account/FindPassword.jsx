@@ -1,11 +1,18 @@
 import axios from "axios";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import {
+  sendEmailCertification,
+  certificationCode,
+} from "../../api/EmailRequest";
 
 const FlexDiv = styled.div`
   display: flex;
   gap: 10px;
+  & + div {
+    margin-top: 10px;
+  }
 `;
 
 const LoginInput = styled.input`
@@ -30,6 +37,10 @@ const RequestBtn = styled.button`
   width: 120px;
   border: 1px solid #f87878;
   border-radius: 15px;
+  &:disabled {
+    color: #bbb;
+    border-color: #ddd;
+  }
 `;
 
 const LinkUl = styled.ul`
@@ -44,7 +55,7 @@ const LinkLi = styled.li`
   margin: 0 5px;
 `;
 
-const ShowBtn = styled.button`
+const SubmitBtn = styled.button`
   background: #f87878;
   color: #fff;
   font-size: 16px;
@@ -52,29 +63,70 @@ const ShowBtn = styled.button`
   height: 50px;
   border: 0;
   border-radius: 15px;
+  &:disabled {
+    border-color: #ccc;
+    background: #ccc;
+  }
+`;
+
+const JoinBox = styled.div`
+  text-align: center;
+  padding-top: 20px;
+  & a {
+    font-weight: bold;
+    margin-left: 5px;
+    text-decoration: underline;
+  }
 `;
 
 const Findpassword = () => {
-  const [email, setEmail] = useState();
-  const onSubmitHandle = async (e) => {
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const emailRequestBtn = useRef();
+  const navigate = useNavigate();
+  const onEmailRequestHandler = async (e) => {
     e.preventDefault();
-    const response = await axios.get(`/user?email=${email}`);
-    // response.data로 데이터 받아와 사용자 이메일로 비밀번호 전달...?
+    const result = await sendEmailCertification(email);
+    if (result) {
+      // 이메일 인증 요청 시 버튼 비활성화
+      e.target.disabled = true;
+    }
+  };
+
+  // 이메일 인증 확인 버튼 클릭 시
+  const onEmailCheckHandler = async (e) => {
+    e.preventDefault();
+    const result = await certificationCode(email, code);
+    if (result) {
+      navigate("/changePassword");
+    }
   };
 
   return (
-    <form onSubmit={onSubmitHandle}>
+    <form onSubmit={onEmailCheckHandler}>
       <FlexDiv>
         <LoginInput
           type="email"
           placeholder="이메일"
           value={email}
+          ref={emailRequestBtn}
           required
           onChange={(e) => {
             setEmail(e.target.value);
           }}
         />
-        <RequestBtn>인증요청</RequestBtn>
+        <RequestBtn onClick={onEmailRequestHandler}>인증요청</RequestBtn>
+      </FlexDiv>
+      <FlexDiv>
+        <LoginInput
+          type="text"
+          placeholder="인증번호"
+          value={code}
+          required
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+        />
       </FlexDiv>
       <LinkUl>
         <LinkLi>
@@ -85,7 +137,11 @@ const Findpassword = () => {
           <Link to="/login">로그인 하기</Link>
         </LinkLi>
       </LinkUl>
-      <ShowBtn type="submit">인증확인</ShowBtn>
+      <SubmitBtn type="submit">인증확인</SubmitBtn>
+      <JoinBox>
+        아직 회원이 아니세요?
+        <Link to="/join">회원가입</Link>
+      </JoinBox>
     </form>
   );
 };

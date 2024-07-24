@@ -62,6 +62,7 @@ const Login = () => {
     e.preventDefault();
     const response = await axios.post("/login", { email, password });
     // 엑세스 토큰 Recoil 전역 상태에 저장
+    console.log(response.data);
     setAccessToken(response.data.accessToken);
     navigate("/");
   };

@@ -1,6 +1,6 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   sendEmailCertification,
@@ -19,6 +19,10 @@ const RequestBtn = styled.button`
   width: 120px;
   border: 1px solid #f87878;
   border-radius: 15px;
+  &:disabled {
+    color: #bbb;
+    border-color: #ddd;
+  }
 `;
 
 const JoinInput = styled.input`
@@ -46,33 +50,91 @@ const JoinBtn = styled.button`
   margin-top: 15px;
 `;
 
+const MessageDiv = styled.div`
+  font-size: 12px;
+  color: red;
+  padding: 5px 0;
+`;
+
 const Join = () => {
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
+    passwordCheck: "",
     name: "",
     phoneNumber: "",
     code: "",
   });
+  const [passwordCheckError, setPasswordCheckError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordError2, setPasswordError2] = useState("");
   const navigate = useNavigate();
+  const emailRequestBtn = useRef();
 
+  // 인풋 입력 시 상태 변경
   const onChangeHandler = (e) => {
     setUserInfo((userInfoObj) => {
       const inputName = e.target.name;
       let inputValue = e.target.value;
+
       if (inputName === "phoneNumber") {
         inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
         inputValue = inputValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 000-0000-0000 형태로 리턴
       }
+
+      if (inputName === "password") {
+        if (inputValue.length > 0 && inputValue.length < 10) {
+          setPasswordError("10자 이상 입력해주세요.");
+        } else {
+          setPasswordError("");
+
+          /** 영문, 숫자, 특수문자(공백 제외) 포함 여부 확인 / 정규표현식 사용 */
+          const hasLetter = /[a-zA-Z]/.test(inputValue); // 영문자 포함 여부
+          const hasNumber = /[0-9]/.test(inputValue); // 숫자 포함 여부
+          const hasSpecialChar = /[^a-zA-Z0-9]/.test(inputValue); // 특수 문자 포함 여부
+          const isValidCombination =
+            [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
+          // filter() 이용해서 각각 2개 이상 조합 참, 거짓인지 확인
+
+          if (!isValidCombination) {
+            setPasswordError2(
+              "영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합"
+            );
+          } else {
+            setPasswordError2("");
+          }
+        }
+      }
+
+      if (inputName === "passwordCheck") {
+        if (userInfo.password !== inputValue) {
+          setPasswordCheckError("비밀번호가 일치하지 않습니다.");
+        } else {
+          setPasswordCheckError("");
+        }
+      }
+
       return { ...userInfoObj, [inputName]: inputValue };
     });
   };
 
+  // password인풋 값 수정 시 passwordCheck 유효성 검사
+  useEffect(() => {
+    if (userInfo.password !== userInfo.passwordCheck) {
+      setPasswordCheckError("비밀번호가 일치하지 않습니다.");
+    } else {
+      setPasswordCheckError("");
+    }
+  }, [userInfo]);
+
   //회원가입 완료 버튼 클릭 시
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    certificationCode(userInfo.email, userInfo.code);
-
+    if (!!passwordCheckError || !!passwordError2 || !!passwordError) {
+      alert("비밀번호를 확인해주세요.");
+      return false;
+    }
+    console.log(!!passwordCheckError, !!passwordError2, !!passwordError);
     const response = await axios.post("/login", {
       email: userInfo.email,
       password: userInfo.password,
@@ -85,7 +147,24 @@ const Join = () => {
   // 이메일 인증 버튼 클릭 시
   const onEmailRequestHandler = async (e) => {
     e.preventDefault();
-    sendEmailCertification(userInfo.email);
+    const result = await sendEmailCertification(userInfo.email);
+    if (result) {
+      // 이메일 인증 요청 시 버튼 비활성화
+      e.target.disabled = true;
+    }
+  };
+
+  // 이메일 인증 확인 버튼 클릭 시
+  const onEmailCheckHandler = async (e) => {
+    e.preventDefault();
+    const result = await certificationCode(userInfo.email, userInfo.code);
+    if (result) {
+      // 이메일 인증 요청 시 버튼 비활성화
+      e.target.disabled = true;
+    } else {
+      emailRequestBtn.current.disabled = false;
+      e.target.disabled = false;
+    }
   };
 
   return (
@@ -101,21 +180,29 @@ const Join = () => {
           }}
           required
         />
-        <RequestBtn type="button" onClick={onEmailRequestHandler}>
+        <RequestBtn
+          type="button"
+          onClick={onEmailRequestHandler}
+          ref={emailRequestBtn}
+        >
           인증요청
         </RequestBtn>
       </FlexDiv>
-
-      <JoinInput
-        type="text"
-        placeholder="인증번호"
-        name="code"
-        value={userInfo.code}
-        onChange={(e) => {
-          onChangeHandler(e);
-        }}
-        required
-      />
+      <FlexDiv>
+        <JoinInput
+          type="text"
+          placeholder="인증번호"
+          name="code"
+          value={userInfo.code}
+          onChange={(e) => {
+            onChangeHandler(e);
+          }}
+          required
+        />
+        <RequestBtn type="button" onClick={onEmailCheckHandler}>
+          인증확인
+        </RequestBtn>
+      </FlexDiv>
 
       <JoinInput
         type="text"
@@ -138,12 +225,28 @@ const Join = () => {
         }}
         required
       />
+      {passwordError && <MessageDiv>{passwordError}</MessageDiv>}
+      {passwordError2 && <MessageDiv>{passwordError2}</MessageDiv>}
+
+      <JoinInput
+        type="password"
+        placeholder="비밀번호 확인"
+        name="passwordCheck"
+        value={userInfo.passwordCheck}
+        onChange={(e) => {
+          onChangeHandler(e);
+        }}
+        required
+      />
+      {passwordCheckError && <MessageDiv>{passwordCheckError}</MessageDiv>}
+
       <JoinInput
         type="text"
         placeholder="휴대폰번호"
         name="phoneNumber"
         maxLength={13}
-        value={userInfo.phoneNumber}
+        // 정규표현식 사용으로 value값에 undefined가 들어가는 경우가 있어 undefined일 경우 빈 문자열을 값으로 가진다.
+        value={userInfo.phoneNumber || ""}
         onChange={(e) => {
           onChangeHandler(e);
         }}

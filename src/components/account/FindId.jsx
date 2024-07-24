@@ -42,6 +42,17 @@ const ShowBtn = styled.button`
 
 const UserInfoDiv = styled.div`
   text-align: center;
+  padding: 20px 0;
+`;
+
+const JoinBox = styled.div`
+  text-align: center;
+  padding-top: 20px;
+  & a {
+    font-weight: bold;
+    margin-left: 5px;
+    text-decoration: underline;
+  }
 `;
 
 const Findpassword = () => {
@@ -54,7 +65,14 @@ const Findpassword = () => {
     const response = await axios.get(
       `/user?name=${name}&phoneNumber=${phoneNumber}`
     );
-    setUserId(response.data.id);
+    setUserId(response.data.email);
+  };
+
+  const phoneNumberChangeHandler = (e) => {
+    let inputValue = e.target.value;
+    inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
+    inputValue = inputValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 000-0000-0000 형태로 리턴
+    setPhoneNumber(inputValue);
   };
 
   return (
@@ -69,8 +87,12 @@ const Findpassword = () => {
       <LoginInput
         type="text"
         placeholder="핸드폰번호"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        // 정규표현식 사용으로 value값에 undefined가 들어가는 경우가 있어 undefined일 경우 빈 문자열을 값으로 가진다.
+        value={phoneNumber || ""}
+        maxLength={13}
+        onChange={(e) => {
+          phoneNumberChangeHandler(e);
+        }}
         required
       />
       <LinkUl>
@@ -83,7 +105,16 @@ const Findpassword = () => {
         </LinkLi>
       </LinkUl>
       <ShowBtn type="button">확인</ShowBtn>
-      {userId && <UserInfoDiv>아이디 : ${userId}</UserInfoDiv>}
+      <JoinBox>
+        아직 회원이 아니세요?
+        <Link to="/join">회원가입</Link>
+      </JoinBox>
+
+      {userId && (
+        <UserInfoDiv>
+          아이디는 <b>${userId}</b>입니다.
+        </UserInfoDiv>
+      )}
     </form>
   );
 };
