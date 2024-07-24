@@ -38,27 +38,29 @@ const ProfilePage = () => {
   };
 
   return (
-    <SubLayout pageTitle="프로필">
-      <ProfileContainer>
-        <ProfileHeader>
-          <ProfileImage />
-          <ProfileName>{user.name}</ProfileName>
-        </ProfileHeader>
-        <ProfileSection>
-          <ProfileLabel onClick={onClickHandleProfileEdit}>개인정보 수정</ProfileLabel>
-          <ProfileEdit onClick={onClickHandleProfileEdit}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
-              <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
-            </svg>
-          </ProfileEdit>
-        </ProfileSection>
-        <ProfileSection>
-          <ProfileDelete onClick={onClickHandleProfileDelete}>회원 탈퇴</ProfileDelete>
-        </ProfileSection>
-        <ProfileLogout onClick={onClickHandleProfileLogout}>로그아웃</ProfileLogout>
-      </ProfileContainer>
+    <>
+      <SubLayout pageTitle="프로필">
+        <ProfileContainer>
+          <ProfileHeader>
+            <ProfileImage />
+            <ProfileName>{user.name}</ProfileName>
+          </ProfileHeader>
+          <ProfileSection>
+            <ProfileLabel onClick={onClickHandleProfileEdit}>개인정보 수정</ProfileLabel>
+            <ProfileEdit onClick={onClickHandleProfileEdit}>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
+                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+              </svg>
+            </ProfileEdit>
+          </ProfileSection>
+          <ProfileSection>
+            <ProfileDelete onClick={onClickHandleProfileDelete}>회원 탈퇴</ProfileDelete>
+          </ProfileSection>
+          <ProfileLogout onClick={onClickHandleProfileLogout}>로그아웃</ProfileLogout>
+        </ProfileContainer>
+      </SubLayout>
       <MainFooter />
-    </SubLayout>
+    </>
   );
 };
 export default ProfilePage;
