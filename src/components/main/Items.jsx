@@ -176,6 +176,11 @@ const Items = ({search, category, setSearch}) => {
             newPage.page = i;
             return newPage;
         });
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
       
     };
 
@@ -192,6 +197,11 @@ const Items = ({search, category, setSearch}) => {
             newPage.page = i;
             return newPage;
         });
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
        
     };
 
@@ -208,6 +218,11 @@ const Items = ({search, category, setSearch}) => {
             newPage.page = i;
             return newPage;
         });
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
       
     };
 
