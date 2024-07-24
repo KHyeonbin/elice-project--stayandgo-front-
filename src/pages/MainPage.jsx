@@ -21,17 +21,17 @@ const MainPage = () => {
 
     // 검색어 search state
     const [search, setSearch] = useState({
-        city: "지역을 선택하세요",
+        city: "전체",
         startDate: getDateFormat(new Date()),
         endDate: getDateFormat(new Date()),
         adult: 0,
         child: 0,
         baby: 0,
-        is_start: false
+        is_toggle: false
     });
 
     // 검색 태그 category state
-    const [category, setCategory] = useState("all");
+    const [category, setCategory] = useState("전체");
 
     useEffect(() => {
         // server 에 getUser 요청 후 결과에 따라 값 부여 !

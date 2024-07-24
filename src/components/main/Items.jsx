@@ -16,8 +16,6 @@ const ItemDiv = styled.div`
     height: 500px;
     border: none;
     cursor: pointer;
-    opacity: 0;
-    transition: opacity 1s;
 `
 const ItemBackgroundDiv = styled.div.attrs(props => ({
     style: {
@@ -99,48 +97,20 @@ const Items = ({search, category, setSearch}) => {
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
     // 1. 일단 페이지 정보를 먼저 세팅
     useEffect(() => {
-        console.log("helklo2")
         mainPostLoad.getPostsPage({search, category})
         .then(res => {
-            setPage(res)
-            setSearch((current) => {
-                const newSearch = {...current};
-                newSearch.is_start = false;
-                return newSearch;
-            });
+            setPage(res);
         });
     // 검색 고도화 시, [] 안에 props 로 넘어온 search, category 추가 예정
-    },[search.is_start, category]);
+    },[search.is_toggle, category]);
 
-    // 2. 이후 페이지 조절 시 페이지에 맞도록 재검색 진행
+    // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
         mainPostLoad.getPostsRead({nowpage: page.page, search, category})
         .then(res => {
             setPosts(res);
         });
     },[page]);
-
-    // IntersectionObserver 를 생성하여 targetRef 가 관찰될 때(.isIntersecting) 투명도를 n 초동안 높이기 위함
-    // useRef [] 배열로 관리하기 !
-    const targetRef = useRef([]);
-    // scroll animation 동작 구현
-    useEffect(() => {
-        const osv = new IntersectionObserver((e) => {
-            e.forEach(entry => {
-                if(entry.isIntersecting){
-                    entry.target.style.opacity = "1";
-                } else {
-                    entry.target.style.opacity = "0";
-                }
-            })
-        },{
-            threshold: 0.25
-        });
-
-        targetRef.current.forEach(v => {
-            osv.observe(v);
-        })
-    },[posts]);
 
 // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
@@ -230,7 +200,7 @@ const Items = ({search, category, setSearch}) => {
     return (
         <Container>
             {posts && posts.map((v, i) => (
-                <ItemDiv key={i} ref={element => targetRef.current[i] = element}>
+                <ItemDiv key={i}>
                     <ItemBackgroundDiv $background={v.main_image_link} />
                     <ItemTextDiv>
                         <ItemTitle>{v.title}<br /></ItemTitle>
