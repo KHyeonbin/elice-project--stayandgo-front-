@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import SubLayout from '../components/layout/SubLayout';
-import MainFooter from '../components/layout/MainFooter';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SubLayout from "../components/layout/SubLayout";
+import MainFooter from "../components/layout/MainFooter";
 import {
   ProfileContainer,
   ProfileHeader,
@@ -12,29 +12,29 @@ import {
   ProfileEdit,
   ProfileDelete,
   ProfileLogout,
-} from '../components/profile/ProfilePageStyle';
+} from "../components/profile/ProfilePageStyle";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
 
   useEffect(() => {
-    const dummyData = { name: '엘리스', email: 'elice@test.com' };
+    const dummyData = { name: "엘리스", email: "elice@test.com" };
     setUser(dummyData);
   }, []);
 
   const onClickHandleProfileEdit = () => {
-    console.log('개인정보수정 페이지');
-    navigate('/profile/edit');
+    console.log("개인정보수정 페이지");
+    navigate("/profile/edit");
   };
 
   const onClickHandleProfileDelete = () => {
-    console.log('회원 탈퇴');
+    console.log("회원 탈퇴");
   };
 
   const onClickHandleProfileLogout = () => {
-    console.log('로그아웃');
-    navigate('/');
+    console.log("로그아웃");
+    navigate("/");
   };
 
   return (
