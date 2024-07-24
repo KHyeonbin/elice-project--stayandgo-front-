@@ -29,6 +29,7 @@ export const ColumnBox = styled.div`
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 `;
 
 export const Title = styled.span`
@@ -46,7 +47,7 @@ export const Name = styled.span`
 `;
 
 export const Description = styled.span`
-  margin-top: 3px;
+  margin-top: 6px;
   color: #555555;
   font-size: 12px;
   line-height: 14.52px;

@@ -12,7 +12,6 @@ import ReservationInfo from "../components/reservation/ReservationInfo";
 import ReservationPrice from "../components/reservation/ReservationPrice";
 import {
   ImagePlaceholder,
-  Flexbox,
   Section,
   SectionTitle,
   Button,
@@ -25,6 +24,10 @@ import {
 
 const Container = styled.div`
   padding-bottom: 60px;
+`;
+
+const RequestContainer = styled.div`
+  display: flex;
 `;
 
 const ReservationPage = ({
@@ -151,7 +154,7 @@ const ReservationPage = ({
       <Container>
         <Section>
           <SectionTitle>예약 요청</SectionTitle>
-          <Flexbox>
+          <RequestContainer>
             {product.image ? (
               <img src={product.image} alt={product.title} />
             ) : (
@@ -162,7 +165,7 @@ const ReservationPage = ({
               <Description>{product.description}</Description>
               <Name>호스트: {product.name}님</Name>
             </DetailContainer>
-          </Flexbox>
+          </RequestContainer>
         </Section>
         <Section>
           <SectionTitle>예약 정보</SectionTitle>

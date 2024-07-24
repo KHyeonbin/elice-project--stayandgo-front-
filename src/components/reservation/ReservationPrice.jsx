@@ -1,6 +1,11 @@
 // PriceDetails.js
 import React from "react";
-import { Flexbox, SectionDetail, TotalBox } from "./ReservationStyle";
+import {
+  Flexbox,
+  SectionDetail,
+  SectionDetailBold,
+  TotalBox,
+} from "./ReservationStyle";
 
 const ReservationPrice = ({ price, nights }) => (
   <>
@@ -15,7 +20,7 @@ const ReservationPrice = ({ price, nights }) => (
       <SectionDetail>₩{((price * nights) / 10).toLocaleString()}</SectionDetail>
     </Flexbox>
     <TotalBox>
-      <SectionDetail>총 합계</SectionDetail>
+      <SectionDetailBold>총 합계</SectionDetailBold>
       <SectionDetail>
         ₩{(price * nights + (price * nights) / 10).toLocaleString()}
       </SectionDetail>
