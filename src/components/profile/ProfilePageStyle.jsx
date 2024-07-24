@@ -21,7 +21,7 @@ export const ProfileImage = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #ddd;
+  background-color: #d9d9d9;
   margin-right: 20px;
 `;
 
