@@ -7,7 +7,7 @@ const Container = styled.div`
     background-color: white;
     
     border-bottom: 2px solid #EEEEEE;
-    padding-top: 2%;
+    padding-top: 10px;
 `
 const ItemDiv = styled.div`
     width: 90%;

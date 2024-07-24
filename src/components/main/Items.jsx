@@ -12,11 +12,11 @@ const Container = styled.div`
 
 `
 const ItemDiv = styled.div`
-    width: 100%;
+    width: 400px;
     height: 400px;
     border: none;
     cursor: pointer;
-
+    margin: 0 auto;
     opacity: 0;
     transition: opacity 1s;
 `
@@ -25,7 +25,7 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
         backgroundImage: `url(${props.$background})`,
     }
 }))`
-    width: 100%;
+    width: 400px;
     height: 300px;
     border-radius: 20px;
 
