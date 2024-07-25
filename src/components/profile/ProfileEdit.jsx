@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
   ProfileEditSection,
@@ -11,17 +11,40 @@ import {
 } from "./ProfileEditPageStyle";
 import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
+import axios from "axios";
 
 const ProfileEdit = () => {
-  const [profileImg, setProfileImg] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState("");
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [isModal, setIsModal] = useState(false);
 
+  const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
+
   const navigate = useNavigate();
+
+  /** 사용자 정보 불러오기 */
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`users/edit/${id}`); // 임시 엔드포인트
+        const userData = response.data;
+        setProfileImage(userData.profileImage);
+        setEmail(userData.email);
+        setName(userData.name);
+        setPhone(userData.phone);
+      } catch (error) {
+        console.error("사용자 정보를 불러오는데 실패했습니다.");
+      }
+    };
+
+    fetchUserData();
+  }, [id]);
 
   /** 비밀번호 유효성 검사 함수 */
   const validatePassword = (password) => {
@@ -69,7 +92,7 @@ const ProfileEdit = () => {
   }, [passwordCheck, password]);
 
   /** 완료 버튼 클릭 시 */
-  const onClickHandleSave = (e) => {
+  const onClickHandleSave = async (e) => {
     e.preventDefault();
 
     // 아무 입력하지 않고 완료 버튼 클릭 했을 때
@@ -88,7 +111,17 @@ const ProfileEdit = () => {
       return;
     }
 
-    setIsModal(true);
+    /** 서버로 수정된 정보 전송 */
+    try {
+      await axios.put(`/users/${id}`, {
+        // 임시 엔드포인트
+        password,
+        phone,
+        profileImage,
+      });
+    } catch (error) {
+      console.error("사용자 정보를 수정하는데 실패했습니다.");
+    }
   };
 
   /** 모달 닫기 함수 */
@@ -101,9 +134,9 @@ const ProfileEdit = () => {
     <>
       <ProfileEditContainer>
         <ProfileEditSection>
-          <ProfileImageUpload profileImg={profileImg} setProfileImg={setProfileImg} />
+          <ProfileImageUpload profileImage={profileImage} setProfileImage={setProfileImage} />
           <ProfileEditForm>
-            <ProfileEditInput type="email" id="email" name="email" value="elice@test.com" disabled />
+            <ProfileEditInput type="email" id="email" name="email" value={email} disabled />
             <ProfileEditInput
               type="password"
               id="password"
@@ -124,7 +157,7 @@ const ProfileEdit = () => {
               onChange={onChangeHandler}
             />
             {passwordCheck.length > 0 && passwordCheckError && <ErrorMessage>{passwordCheckError}</ErrorMessage>}
-            <ProfileEditInput type="text" id="name" name="name" value="엘리스" disabled />
+            <ProfileEditInput type="text" id="name" name="name" value={name} disabled />
             <ProfileEditInput
               type="tel"
               id="phone"

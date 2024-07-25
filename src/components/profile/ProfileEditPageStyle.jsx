@@ -16,11 +16,11 @@ export const ProfileEditSection = styled.section`
   flex: 1;
 `;
 
-export const ProfileEditImgContainer = styled.div`
+export const ProfileEditImageContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const ProfileEditImgPlaceholder = styled.div`
+export const ProfileEditImagePlaceholder = styled.div`
   width: 100px;
   height: 100px;
   background-color: #d9d9d9;
@@ -31,9 +31,19 @@ export const ProfileEditImgPlaceholder = styled.div`
   margin-bottom: 30px;
   cursor: pointer;
 
+  &:hover {
+    background-color: #ccc;
+  }
+
   svg {
     color: white;
   }
+`;
+
+export const ProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 `;
 
 export const ProfileEditForm = styled.form`
