@@ -35,9 +35,13 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
                 key={item.id}
                 title={item.title}
                 name={item.name}
-                date={`${item.startDate} ~ ${item.endDate}`}
+                startDate={item.startDate}
+                endDate={item.endDate}
                 price={item.totalPrice}
                 image={item.image}
+                adult={item.adult}
+                child={item.child}
+                baby={item.baby}
               />
             ))}
           </CategoryBox>

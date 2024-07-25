@@ -39,7 +39,17 @@ const Date = styled.span`
   line-height: 16.94px;
 `;
 
-const TravelCard = ({ title, name, date, price, image }) => {
+const TravelCard = ({
+  title,
+  name,
+  adult,
+  child,
+  baby,
+  startDate,
+  endDate,
+  price,
+  image,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
   const [currentImageIndex, setCurrentImageIndex] = useState(0); //현재이미지의 index값 첫번째는 0
@@ -73,7 +83,9 @@ const TravelCard = ({ title, name, date, price, image }) => {
         <DetailContainer>
           <Title>{title}</Title>
           <Name>호스트: {name}님</Name>
-          <Date>{date}</Date>
+          <Date>
+            {startDate} ~ {endDate}
+          </Date>
         </DetailContainer>
       </Container>
       {isModalOpen && (
@@ -84,8 +96,12 @@ const TravelCard = ({ title, name, date, price, image }) => {
           setModalImageIndex={setModalImageIndex}
           closeModal={closeModal}
           title={title}
-          date={date}
+          startDate={startDate}
+          endDate={endDate}
           price={price}
+          adult={adult}
+          child={child}
+          baby={baby}
         />
       )}
     </>

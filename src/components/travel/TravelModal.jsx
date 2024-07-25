@@ -2,6 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import ImageSlider from "../layout/ImageSlider";
+import closeImg from "../../assets/icons/close.png";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -27,34 +28,74 @@ const ModalContent = styled.div`
   justify-content: center;
   position: relative;
 `;
+const CloseButton = styled.button`
+  margin: 10px 10px 0 0;
+  top: 5px;
+  right: 5px;
+  background-color: white;
+  position: absolute;
+  border: none;
+  cursor: pointer;
+`;
+const CloseIcon = styled.img`
+  width: 16px;
+  height: 16px;
+`;
 const Name = styled.span`
-  margin-bottom: 8px;
+  margin: 20px;
   font-size: 20px;
   line-height: 24.2px;
 `;
 const Title = styled.span`
-  margin-top: 10px;
+  margin: 10px 0;
   font-weight: bold;
   color: #333333;
   font-size: 16px;
   line-height: 19.36px;
 `;
-const Description = styled.span`
+const DateContainer = styled.div`
+  width: 80%;
+  display: flex;
+  padding-bottom: 10px;
+`;
+const StartDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  width: 50%;
+  color: #555555;
+  font-size: 14px;
+  line-height: 16.94px;
+  border-right: 2px solid #dddddd;
+`;
+const EndDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: end;
+  width: 50%;
+  color: #555555;
+  font-size: 14px;
+  line-height: 16.94px;
+`;
+
+const DescriptionBold = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 14px;
   line-height: 16.94px;
+`;
+
+const Description = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 12px;
+  line-height: 14.52px;
 `;
 const Price = styled.span`
   font-weight: bold;
   margin-top: 7px;
   font-size: 14px;
   line-height: 16.94px;
-`;
-const CloseButton = styled.button`
-  margin-top: 10px;
-  border: none;
-  cursor: pointer;
 `;
 
 const TravelModal = ({
@@ -64,11 +105,18 @@ const TravelModal = ({
   setModalImageIndex,
   closeModal,
   title,
-  date,
+  startDate,
+  endDate,
+  adult,
+  child,
+  baby,
   price,
 }) => (
   <ModalOverlay>
     <ModalContent>
+      <CloseButton onClick={closeModal}>
+        <CloseIcon src={closeImg} alt="닫기" />
+      </CloseButton>
       <Name>{name}님의 숙소</Name>
       <ImageSlider
         imageUrls={imageUrls}
@@ -77,9 +125,22 @@ const TravelModal = ({
         size={200}
       />
       <Title>{title}</Title>
-      <Description>{date}</Description>
+      <DateContainer>
+        <StartDate>
+          <DescriptionBold>체크인</DescriptionBold>
+          <Description>{startDate}</Description>
+          <Description>오전 11:00</Description>
+        </StartDate>
+        <EndDate>
+          <DescriptionBold>체크아웃</DescriptionBold>
+          <Description>{endDate}</Description>
+          <Description>오후 14:00</Description>
+        </EndDate>
+      </DateContainer>
+      <Description>
+        게스트 수: 성인 {adult}명, 어린이 {child}명, 유아 {baby}명
+      </Description>
       <Price>총 금액: {price.toLocaleString()}원</Price>
-      <CloseButton onClick={closeModal}>닫기</CloseButton>
     </ModalContent>
   </ModalOverlay>
 );
