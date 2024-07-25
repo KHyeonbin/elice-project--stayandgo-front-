@@ -5,81 +5,60 @@ import styled from "styled-components";
 import handImg from "../../assets/icons/hand.png";
 import travelImg from "../../assets/images/travel.png";
 
-const HandImg = styled.img`
-  width: 100px;
-  height: 100 px;
-`;
-
 const Container = styled.div`
-  background-color: white;
   border: solid 1px #bebcbc;
-  border-radius: 5px;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
-  margin: 25px auto 0;
-  text-align: center;
+  margin: 25px auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  text-align: center;
 
   @media (min-width: 500px) {
     flex-direction: row;
-    width: 90%;
     padding: 0;
-    text-align: left;
   }
 `;
-
 const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100%;
 
   @media (min-width: 500px) {
     width: 50%;
-    margin: 0 20px;
     justify-content: center;
   }
 `;
-
 const ImageContainer = styled.div`
-  width: 100%;
   height: 0;
-  margin-top: 20px;
-  background-color: red;
-  background-image: url(${travelImg});
-  background-size: cover;
-  background-position: center;
-  border-radius: 0 5px 5px 0;
   opacity: 0;
 
   @media (min-width: 500px) {
+    background-image: url(${travelImg});
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 10px 10px 0;
     width: 50%;
     height: 320px;
-    margin: 0;
     opacity: 1;
   }
 `;
-
+const HandImg = styled.img`
+  width: 100px;
+`;
 const Title = styled.span`
   margin-bottom: 12px;
   font-weight: bold;
   font-size: 16px;
   line-height: 19.36px;
 `;
-
 const Description = styled.span`
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   font-size: 14px;
   line-height: 16.94px;
   word-break: keep-all; //단어 단위 줄바꿈
 `;
-
 const SearchButton = styled.button`
   margin-top: 10px;
   width: 250px;
@@ -88,8 +67,14 @@ const SearchButton = styled.button`
   border-radius: 10px;
   background-color: #dc0f62;
   color: white;
+  font-size: 16px;
+  line-height: 19.36px;
   font-weight: bold;
   cursor: pointer;
+
+  &:hover {
+    background-color: #e43078;
+  }
 `;
 
 const NoReservation = () => {

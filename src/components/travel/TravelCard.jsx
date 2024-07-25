@@ -9,12 +9,11 @@ const Container = styled.div`
   border-radius: 15px;
   margin: 15px;
   width: 300px;
-  align-items: center;
   height: 111px;
-  box-sizing: border-box;
   display: flex;
-  cursor: pointer;
+  align-items: center;
   gap: 20px;
+  cursor: pointer;
 `;
 const DetailContainer = styled.div`
   display: flex;
@@ -23,7 +22,6 @@ const DetailContainer = styled.div`
 const Title = styled.span`
   margin-top: 16px;
   font-weight: bold;
-  color: #000000;
   font-size: 16px;
   line-height: 19.36px;
 `;
@@ -40,36 +38,37 @@ const Date = styled.span`
 
 const TravelCard = ({
   title,
+  image,
   name,
+  startDate,
+  endDate,
   adult,
   child,
   baby,
-  startDate,
-  endDate,
-  price,
-  image,
+  totalPrice,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
   const [currentImageIndex, setCurrentImageIndex] = useState(0); //현재이미지의 index값 첫번째는 0
   const [modalImageIndex, setModalImageIndex] = useState(0); //모달창에서도 동일
 
+  //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
     if (Array.isArray(image)) {
       setImageUrls(image);
     } else if (image) {
       setImageUrls([image]);
     }
-  }, [image]); //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
+  }, [image]);
 
   const handleClick = () => {
-    //클릭시 모달창 열기 및 첫번째 이미지 보여주기
+    //모달창 열기 및 첫번째 이미지 보여주기
     setModalImageIndex(0);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    //클릭시 모달창 닫기
+    //모달창 닫기
     setIsModalOpen(false);
   };
 
@@ -91,18 +90,18 @@ const TravelCard = ({
       </Container>
       {isModalOpen && (
         <TravelModal
-          name={name}
-          imageUrls={imageUrls}
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           closeModal={closeModal}
+          name={name}
+          imageUrls={imageUrls}
           title={title}
           startDate={startDate}
           endDate={endDate}
-          price={price}
           adult={adult}
           child={child}
           baby={baby}
+          totalPrice={totalPrice}
         />
       )}
     </>

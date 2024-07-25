@@ -3,10 +3,6 @@ import React from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 const CategoryTitle = styled.h2`
   font-size: 18px;
   margin: 25px 0 0 25px;
@@ -25,7 +21,7 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
   return (
     <>
       {travelData.length > 0 ? (
-        <Container>
+        <>
           <CategoryTitle>{title}</CategoryTitle>
           <CategoryBox>
             {travelData.map((item) => (
@@ -35,7 +31,7 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
                 name={item.name}
                 startDate={item.startDate}
                 endDate={item.endDate}
-                price={item.totalPrice}
+                totalPrice={item.totalPrice}
                 image={item.image}
                 adult={item.adult}
                 child={item.child}
@@ -43,7 +39,7 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
               />
             ))}
           </CategoryBox>
-        </Container>
+        </>
       ) : (
         noReservation
       )}

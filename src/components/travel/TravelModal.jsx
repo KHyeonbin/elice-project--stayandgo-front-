@@ -97,18 +97,18 @@ const Price = styled.span`
 `;
 
 const TravelModal = ({
-  name,
-  imageUrls,
   modalImageIndex,
   setModalImageIndex,
   closeModal,
+  name,
+  imageUrls,
   title,
   startDate,
   endDate,
   adult,
   child,
   baby,
-  price,
+  totalPrice,
 }) => (
   <ModalOverlay>
     <ModalContent>
@@ -138,7 +138,7 @@ const TravelModal = ({
       <Description>
         게스트 수: 성인 {adult}명, 어린이 {child}명, 유아 {baby}명
       </Description>
-      <Price>총 금액: {price.toLocaleString()}원</Price>
+      <Price>총 금액: {totalPrice.toLocaleString()}원</Price>
     </ModalContent>
   </ModalOverlay>
 );
