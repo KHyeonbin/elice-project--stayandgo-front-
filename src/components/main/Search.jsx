@@ -324,14 +324,23 @@ const SearchBtnSpan = styled.span`
 `
 // react-select css
 const selectCustom = {
-    option: (provided, state) => ({
+    option: (provided, state) => {
+        let backgroundColor = 'white';
+        let color = '#333';
+        if(state.isSelected){
+            backgroundColor = '#F0586F';
+            color = 'white';
+        } else if(state.isFocused){
+            backgroundColor = '#F07C8C';
+            color = 'white';
+        }
+    return {
       ...provided,
-      backgroundColor: state.isSelected ? '#F0586F' : 'white',
-      color: state.isSelected ? 'white' : '#333',
+      backgroundColor,
+      color,
       padding: 20,
-      border: "none",
-
-    }),
+      border: "none" 
+    }},
     control: (provided) => ({
       ...provided,
       border: "none",
@@ -346,7 +355,7 @@ const selectCustom = {
       ...provided,
       color: '#333',
     }),
-  };
+};
 
 
 const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
