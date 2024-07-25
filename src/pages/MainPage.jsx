@@ -8,7 +8,6 @@ import {getDateFormat} from '../util/getDateFormat';
 import Category from "../components/main/Category";
 import Footer from "../components/layout/MainFooter";
 import Items from "../components/main/Items";
-import styled from "styled-components";
 
 
 const MainPage = () => {
@@ -60,7 +59,6 @@ const MainPage = () => {
             <Category setCategory={setCategory} />
             <Items startSearch={startSearch} category={category}/>
             <Footer user={loginUser} />
-            
         </>
     );
 };

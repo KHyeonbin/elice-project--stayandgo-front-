@@ -111,7 +111,7 @@ const Items = ({startSearch, category}) => {
         });
     },[page]);
 
-// page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
+    // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
     // 테스트로 2 개 씩 2 페이지 출력으로 체크 중
     const pagenationing = useCallback(() => {

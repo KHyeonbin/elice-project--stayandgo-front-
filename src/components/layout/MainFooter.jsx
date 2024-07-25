@@ -1,5 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import footerState from "../../atoms/footerState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
     position: fixed;
@@ -31,10 +35,30 @@ const ItemImg = styled.img`
 `
 
 const Footer = ({user}) => {
-    // footer 메뉴 배열 및 상태 정의
-    const menuArr = ["둘러보기", "여행", "등록숙소", "프로필"];
-    const [menu, setMenu] = useState(menuArr[0]);
+    // footer menu 전역 상태 확인 및 변경
+    const setMenu = useSetRecoilState(footerState);
+    const menu = useRecoilValue(footerState);
 
+    // 클릭 시 해당 메뉴로 이동하기 위함
+    const navigate = useNavigate();
+
+    // 메뉴 페이지로 진입할 시 setMenu 를 적용하기 위함
+    const location = useLocation();
+    useEffect(() => {
+        setMenu((current) => {
+            const newMenu = {...current};
+            const path = location.pathname;
+            if(path === "/"){
+                newMenu.menu = menu.menuArr[0];
+            } else if(path === "/reservation"){
+                newMenu.menu = menu.menuArr[1];
+            } else if(path === "/history"){
+                newMenu.menu = menu.menuArr[2];
+            }
+            return newMenu;
+        });
+    },[])
+    console.log(location.pathname)
     // mainCatetory 디렉토리 이미지 가져오기
     const importAllImages = (v) => {
         return v.keys().map((key) => ({
@@ -57,17 +81,24 @@ const Footer = ({user}) => {
     const clickedSortImages = sortedImages(clickedImages);
 
 
-    // 아이템 클릭 시 태그 상태 변화
+    // 아이템 클릭 시 해당 메뉴 페이지로 이동
     const onClickImage = (index) => {
-        setMenu(menuArr[index]);
+        // navigate 추가
+        if(index === 0){
+            navigate('/');
+        } else if(index === 1){
+            navigate('/reservation');
+        } else if(index === 2){
+            navigate('/history');
+        }
     };
 
     return (
         <Container>
             {normalSortImages.map((v, i) => (
-                <Item key={i} onClick={() => onClickImage(i)}>
-                    <ItemImg src={menu === menuArr[i] ? clickedSortImages[i].src : v.src} />
-                    <ItemTitle style={menu === menuArr[i] ? {color: "#E81948", fontWeight: "bold"} : {color: "#797979", fontWeight: "500"}}>{menuArr[i]}</ItemTitle>
+                <Item key={i} id={menu.menuArr[i]} onClick={() => onClickImage(i)}>
+                    <ItemImg src={menu.menu === menu.menuArr[i] ? clickedSortImages[i].src : v.src} />
+                    <ItemTitle style={menu.menu === menu.menuArr[i] ? {color: "#E81948", fontWeight: "bold"} : {color: "#797979", fontWeight: "500"}}>{menu.menuArr[i]}</ItemTitle>
                 </Item>
             ))}
         </Container>
