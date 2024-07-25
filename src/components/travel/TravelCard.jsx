@@ -8,7 +8,8 @@ const Container = styled.div`
   background-color: white;
   border-radius: 15px;
   margin: 15px;
-  width: 320px;
+  width: 300px;
+  align-items: center;
   height: 111px;
   box-sizing: border-box;
   display: flex;

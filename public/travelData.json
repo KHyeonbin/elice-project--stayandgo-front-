@@ -38,15 +38,5 @@
     "price": 180000,
     "totalPrice": 900000,
     "image": "https://picsum.photos/111/111?random=4"
-  },
-  {
-    "id": "5",
-    "title": "경주",
-    "name": "철수",
-    "startDate": "2024-09-15",
-    "endDate": "2024-10-08",
-    "price": 130000,
-    "totalPrice": 3120000,
-    "image": "https://picsum.photos/111/111?random=5"
   }
 ]

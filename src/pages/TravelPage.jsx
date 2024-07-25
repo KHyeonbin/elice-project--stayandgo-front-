@@ -14,7 +14,8 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 20px;
   line-height: 24.2px;
-  margin: 25px 15px;
+  margin: 25px 0 0 25px;
+  width: 320px;
 `;
 
 const TravelPage = () => {

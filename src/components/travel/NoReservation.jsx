@@ -15,8 +15,8 @@ const Container = styled.div`
   border-radius: 5px;
   padding: 20px;
   border-radius: 10px;
-  width: 320px;
-  margin: 5px 15px 0 15px;
+  width: 90%;
+  margin: 25px auto 0;
   text-align: center;
   display: flex;
   flex-direction: column;
