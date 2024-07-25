@@ -7,13 +7,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 const CategoryTitle = styled.h2`
   font-size: 18px;
   margin: 25px 0 0 25px;
   width: 90%;
 `;
-
 const CategoryBox = styled.div`
   display: flex;
   margin-left: 15px;

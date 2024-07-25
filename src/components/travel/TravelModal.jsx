@@ -77,14 +77,12 @@ const EndDate = styled.div`
   font-size: 14px;
   line-height: 16.94px;
 `;
-
 const DescriptionBold = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 14px;
   line-height: 16.94px;
 `;
-
 const Description = styled.span`
   margin-top: 3px;
   color: #555555;

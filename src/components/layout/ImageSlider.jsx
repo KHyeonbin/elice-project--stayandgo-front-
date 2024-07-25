@@ -8,17 +8,6 @@ const SliderContainer = styled.div`
   height: ${(props) => props.size}px;
   overflow: hidden;
   border-radius: 15px;
-  //마우스 올렸을때만 화살표 나오게(pc버전)
-  &:hover .arrow-button {
-    opacity: 1;
-  }
-  //모바일 버전에서는 항상 화살표 나오게
-  @media (max-width: 768px) {
-    .arrow-button {
-      opacity: 1;
-      display: block;
-    }
-  }
 `;
 
 const SliderImage = styled.div`
@@ -39,7 +28,7 @@ const ArrowButton = styled.button`
   border-radius: 50px;
   padding: 5px;
   cursor: pointer;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -79,18 +68,16 @@ const ImageSlider = ({
         <>
           <PrevButton
             className="arrow-button"
-            //현재 이미지가 첫번째일때, 모바일버전일때 show 상태(버튼보여주기)
-            show={currentIndex > 0 || window.innerWidth <= 768}
+            //현재 이미지가 첫번째일때 show 상태
+            show={currentIndex > 0}
             onClick={handlePrevClick}
           >
             &lt;
           </PrevButton>
           <NextButton
             className="arrow-button"
-            //현재 이미지가 마지막이 아닐때, 모바일버전일때 show 상태(버튼보여주기)
-            show={
-              currentIndex < imageUrls.length - 1 || window.innerWidth <= 768
-            }
+            //현재 이미지가 마지막이 아닐때  show 상태
+            show={currentIndex < imageUrls.length - 1}
             onClick={handleNextClick}
           >
             &gt;

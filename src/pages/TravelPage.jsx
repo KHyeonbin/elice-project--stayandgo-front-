@@ -10,7 +10,6 @@ import TravelCategory from "../components/travel/TravelCategory";
 const Container = styled.div`
   padding-bottom: 60px;
 `;
-
 const Title = styled.h1`
   font-size: 20px;
   line-height: 24.2px;
