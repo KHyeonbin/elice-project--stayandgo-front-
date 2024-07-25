@@ -14,14 +14,16 @@ import ProfileModal from "./ProfileModal"; // 수정 완료 모달
 import axios from "axios";
 
 const ProfileEdit = () => {
-  const [profileImage, setProfileImage] = useState("");
-  const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState(
+    "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTEyNjE4NTg5MzIzNjI0NjI2MA%3D%3D/original/e6b26733-2c15-47d9-b097-6968b39bb697.jpeg?im_w=1440&im_q=highq",
+  );
+  const [email, setEmail] = useState("elice@test.com");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("엘리스");
+  const [phone, setPhone] = useState("010-1234-5678");
   const [isModal, setIsModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
@@ -32,7 +34,7 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`users/edit/${id}`); // 임시 엔드포인트
+        const response = await axios.get(`/users/edit/${id}`); // 임시 엔드포인트
         const userData = response.data;
         setProfileImage(userData.profileImage);
         setEmail(userData.email);
@@ -119,9 +121,17 @@ const ProfileEdit = () => {
         phone,
         profileImage,
       });
+      setIsModal(true);
+      navigate("/");
     } catch (error) {
       console.error("사용자 정보를 수정하는데 실패했습니다.");
     }
+    // 수정완료 테스트 코드(await ~ console.error } 주석 처리 후 테스트)
+    //   console.log("수정완료", { password, phone, profileImage });
+    //   setIsModal(true);
+    // } catch (error) {
+    //   console.error("사용자 정보를 수정하는데 실패했습니다.", error);
+    // }
   };
 
   /** 모달 닫기 함수 */
