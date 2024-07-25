@@ -84,7 +84,7 @@ const Pagenation_li = styled.li`
     }
 `
 
-const Items = ({search, category, setSearch}) => {
+const Items = ({startSearch, category}) => {
     // 숙소 아이템 목록 상태
     const [posts, setPosts] = useState(null);
     // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
@@ -97,16 +97,15 @@ const Items = ({search, category, setSearch}) => {
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
     // 1. 일단 페이지 정보를 먼저 세팅
     useEffect(() => {
-        mainPostLoad.getPostsPage({search, category})
+        mainPostLoad.getPostsPage({search: startSearch, category})
         .then(res => {
             setPage(res);
         });
-    // 검색 고도화 시, [] 안에 props 로 넘어온 search, category 추가 예정
-    },[search.is_toggle, category]);
+    },[startSearch, category]);
 
     // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
-        mainPostLoad.getPostsRead({nowpage: page.page, search, category})
+        mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category})
         .then(res => {
             setPosts(res);
         });
@@ -153,7 +152,8 @@ const Items = ({search, category, setSearch}) => {
           });
       
     };
-
+    console.log(page)
+    console.log(posts)
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
     const pagePrevHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
@@ -201,7 +201,7 @@ const Items = ({search, category, setSearch}) => {
         <Container>
             {posts && posts.map((v, i) => (
                 <ItemDiv key={i}>
-                    <ItemBackgroundDiv $background={v.main_image_link} />
+                    <ItemBackgroundDiv $background={v.main_image/*v.main_image_link*/} />
                     <ItemTextDiv>
                         <ItemTitle>{v.title}<br /></ItemTitle>
                         <ItemNormalText>호스트: jubilee님<br /></ItemNormalText>

@@ -338,7 +338,7 @@ const SearchBtnSpan = styled.span`
 
 
 
-const Search = ({search, setSearch, isModal, setIsModal}) => {
+const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
     const defaultValue = {
         city: "전체",
@@ -346,8 +346,7 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
         endDate: getDateFormat(getNextDate()),
         adult: 0,
         child: 0,
-        baby: 0,
-        is_toggle: search.is_toggle
+        baby: 0
     };
     // 지역 정의 배열
     const korCity = ["서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
@@ -490,11 +489,7 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
         } else {
             setIsModal(false);
             document.body.style.overflowY = "auto";
-            setSearch((current) => {
-                const newSearch = {...current};
-                newSearch.is_toggle = !search.is_toggle;
-                return newSearch;
-            });
+            setStartSearch(search);
         }
     }
 

@@ -24,7 +24,8 @@ class MainPostLoad {
                 search,
                 category
             });
-
+            // 기존 db 방식일 때 
+            /*
             const posts = res.data.result.map(v => {
                 const main_image_link = `data:${v.main_image.contentType};base64,${v.main_image.data}`;
                 const sub_image_links = v.sub_images ? v.sub_images.map(i => `data:${i.contentType};base64,${i.data}`) : [];
@@ -34,7 +35,9 @@ class MainPostLoad {
                     sub_image_links
                 } 
             });
-            return posts;
+            */
+            console.log(res.data);
+            return /*posts*/ res.data.result;
         } catch (e) {
             console.log(e);
             return;
