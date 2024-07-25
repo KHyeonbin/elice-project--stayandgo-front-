@@ -55,7 +55,7 @@ export const Image = styled.div`
   width: 100%;
   height: 173px;
   border-radius: 15px;
-  background-image: url(${(props) => props.imageUrl});
+  background-image: url(${(props) => props.$imageUrl});
   background-size: cover;
   background-position: center;
 `;
