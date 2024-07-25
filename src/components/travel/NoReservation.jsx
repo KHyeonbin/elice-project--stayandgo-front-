@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import handImg from "../../assets/icons/hand.png";
+import travelImg from "../../assets/images/travel.png";
 
 const HandImg = styled.img`
   width: 100px;
@@ -23,6 +24,46 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+
+  @media (min-width: 500px) {
+    flex-direction: row;
+    width: 90%;
+    padding: 0;
+    text-align: left;
+  }
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @media (min-width: 500px) {
+    width: 50%;
+    margin: 0 20px;
+    justify-content: center;
+  }
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 0;
+  margin-top: 20px;
+  background-color: red;
+  background-image: url(${travelImg});
+  background-size: cover;
+  background-position: center;
+  border-radius: 0 5px 5px 0;
+  opacity: 0;
+
+  @media (min-width: 500px) {
+    width: 50%;
+    height: 320px;
+    margin: 0;
+    opacity: 1;
+  }
 `;
 
 const Title = styled.span`
@@ -60,12 +101,15 @@ const NoReservation = () => {
 
   return (
     <Container>
-      <HandImg src={handImg} />
-      <Title>아직 예약된 여행이 없습니다!</Title>
-      <Description>
-        여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
-      </Description>
-      <SearchButton onClick={handleClick}>숙소 검색하기</SearchButton>
+      <Content>
+        <HandImg src={handImg} />
+        <Title>아직 예약된 여행이 없습니다!</Title>
+        <Description>
+          여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
+        </Description>
+        <SearchButton onClick={handleClick}>숙소 검색하기</SearchButton>
+      </Content>
+      <ImageContainer />
     </Container>
   );
 };
