@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import footerState from "../../atoms/footerState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
@@ -45,6 +45,7 @@ const Footer = ({user}) => {
     // 메뉴 페이지로 진입할 시 setMenu 를 적용하기 위함
     const location = useLocation();
     useEffect(() => {
+        console.log(location.pathname)
         setMenu((current) => {
             const newMenu = {...current};
             const path = location.pathname;
@@ -58,7 +59,7 @@ const Footer = ({user}) => {
             return newMenu;
         });
     },[])
-    console.log(location.pathname)
+
     // mainCatetory 디렉토리 이미지 가져오기
     const importAllImages = (v) => {
         return v.keys().map((key) => ({

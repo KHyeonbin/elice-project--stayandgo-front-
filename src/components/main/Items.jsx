@@ -49,7 +49,7 @@ const ItemPriceText = styled.span`
 
 const Pagenation_div = styled.div`
     width: 100%;
-    font-size: 20px;
+    font-size: 17px;
     margin: 0 auto;
     margin-bottom: 100px;
 `
