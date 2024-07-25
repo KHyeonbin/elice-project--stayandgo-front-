@@ -1,0 +1,79 @@
+import React from "react";
+import styled from "styled-components";
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContent = styled.div`
+  width: 290px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  position: fixed;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 10px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+`;
+
+const ModalButton = styled.button`
+  width: 100px;
+  height: 38px;
+  border: 1px solid #f87878;
+  border-radius: 10px;
+  padding: 10px 10px;
+  text-align: center;
+  font-size: 12px;
+  color: ${(props) => (props.cancel ? "white" : "black")};
+  background-color: ${(props) => (props.cancel ? "#f87878" : "white")};
+  cursor: pointer;
+`;
+
+/** 공통 모달 컴포넌트 */
+const ProfileModal = ({ message, onClose, onConfirm, onCancel }) => {
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        <ModalTitle>{message}</ModalTitle>
+        {onConfirm && onCancel ? (
+          <ButtonContainer>
+            <ModalButton onClick={onConfirm}>예</ModalButton>
+            <ModalButton cancel onClick={onCancel}>
+              아니오
+            </ModalButton>
+          </ButtonContainer>
+        ) : (
+          <ModalButton cancel onClick={onClose}>
+            닫기
+          </ModalButton>
+        )}
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
+
+export default ProfileModal;

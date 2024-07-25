@@ -17,12 +17,13 @@ export const ProfileHeader = styled.header`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-export const ProfileImage = styled.div`
+export const ProfileImage = styled.img`
   width: 60px;
   height: 60px;
   border-radius: 50%;
   background-color: #d9d9d9;
   margin-right: 20px;
+  object-fit: cover;
 `;
 
 export const ProfileName = styled.h3`
@@ -60,7 +61,7 @@ export const ProfileDelete = styled.button`
   background: none;
   border: none;
   font-size: 14px;
-  color: #333333;
+  color: #aaa;
   cursor: pointer;
 `;
 

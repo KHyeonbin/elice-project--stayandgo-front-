@@ -10,7 +10,7 @@ import {
   ErrorMessage,
 } from "./ProfileEditPageStyle";
 import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
-import ProfileEditSuccessModal from "./ProfileEditSuccessModal"; // 수정 완료 모달
+import ProfileModal from "./ProfileModal"; // 수정 완료 모달
 
 const ProfileEdit = () => {
   const [profileImg, setProfileImg] = useState("");
@@ -141,7 +141,7 @@ const ProfileEdit = () => {
           </ProfileEditForm>
         </ProfileEditSection>
       </ProfileEditContainer>
-      {isModal && <ProfileEditSuccessModal message="수정이 완료되었습니다!" onClose={onClickHandleCloseModal} />}
+      {isModal && <ProfileModal message="수정이 완료되었습니다!" onClose={onClickHandleCloseModal} />}
     </>
   );
 };

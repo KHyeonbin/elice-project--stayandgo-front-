@@ -19,7 +19,7 @@ const App = () => {
           <Route path="/History" element={<HistoryPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
           <Route path="/Profile" element={<ProfilePage />}></Route>
-          <Route path="/Profile/Edit" element={<ProfileEditPage />}></Route>
+          <Route path="/Profile/Edit/:id" element={<ProfileEditPage />}></Route>
           <Route path="/MyAccommodation" element={<MyAccommodationsPage />}></Route>
         </Routes>
       </BrowserRouter>
