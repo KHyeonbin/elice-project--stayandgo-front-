@@ -127,12 +127,10 @@ const TravelModal = ({
         <StartDate>
           <DescriptionBold>체크인</DescriptionBold>
           <Description>{startDate}</Description>
-          <Description>오전 11:00</Description>
         </StartDate>
         <EndDate>
           <DescriptionBold>체크아웃</DescriptionBold>
           <Description>{endDate}</Description>
-          <Description>오후 14:00</Description>
         </EndDate>
       </DateContainer>
       <Description>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSetRecoilState, useRecoilValue } from "recoil";
+import axios from "axios";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
@@ -30,12 +31,8 @@ const TravelPage = () => {
   useEffect(() => {
     const fetchTravelData = async () => {
       try {
-        const response = await fetch("/travelData.json");
-        if (!response.ok) {
-          throw new Error("네트워크 응답 오류");
-        }
-        const data = await response.json();
-        setCardData(data);
+        const response = await axios.get("/travelData.json");
+        setCardData(response.data);
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
       }

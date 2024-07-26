@@ -65,7 +65,7 @@ const SearchButton = styled.button`
   height: 50px;
   border: none;
   border-radius: 10px;
-  background-color: #dc0f62;
+  background-color: #f87878;
   color: white;
   font-size: 16px;
   line-height: 19.36px;
@@ -73,7 +73,7 @@ const SearchButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #e43078;
+    background-color: #fb9d9d;
   }
 `;
 
