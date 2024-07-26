@@ -3,8 +3,10 @@ import { atom } from "recoil";
 const loginState = atom({
     key: 'user',
     default: {
-        nickName: '',
+        name: '',
+        nickname: '',
         email: '',
+        phone: '',
         is_admin: false,
         is_logined: false
     }

@@ -11,8 +11,7 @@ import Items from "../components/main/Items";
 
 
 const MainPage = () => {
-    // user 전역 상태 확인 및 변경
-    const setLoginUser = useSetRecoilState(loginState);
+    // user 전역 상태(app.jsx 에서 체크됨) 확인 및 변경
     const loginUser = useRecoilValue(loginState);
 
     // main 페이지에서 모달 호출 상태 확인 및 변경
@@ -40,17 +39,6 @@ const MainPage = () => {
 
     // 검색 태그 category state
     const [category, setCategory] = useState("전체");
-
-    useEffect(() => {
-        // server 에 getUser 요청 후 결과에 따라 값 부여 !
-        // true
-        setLoginUser({
-            email: "gudrjsdn8825@naver.com",
-            nickName: "건우",
-            is_admin: false,
-            is_logined: true
-        });
-    }, [])
 
     return (
         <>

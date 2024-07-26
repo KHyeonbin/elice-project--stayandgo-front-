@@ -10,8 +10,36 @@ import PostUpload from "./pages/PostUpload";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import MyAccommodationsPage from "./pages/MyAccommodationsPage";
+import { loginUserCheck } from "./api/loginUserCheck";
+import {useEffect} from "react";
+import { useSetRecoilState } from "recoil";
+import loginState from "./atoms/loginState";
+
+
 
 const App = () => {
+  // user 로그인 상태 확인 및 변경 -> 새로고침을 하더라도 바로 유저의 정보를 프론트에서 쉽게 관리 가능
+  const setLoginUser = useSetRecoilState(loginState);
+
+  useEffect(() => {
+    loginUserCheck()
+    .then(res => {
+        if(res && res.code === 200){
+            setLoginUser((current) => {
+                const newUser = {...current};
+                newUser.email = res.data.email;
+                newUser.is_admin = res.data.is_admin;
+                newUser.is_logined = true;
+                newUser.name = res.data.name;
+                newUser.nickname = res.data.nickname;
+                newUser.phone = res.data.phone;
+            });
+        } else if(res && res.code === 411){
+          console.log(res.message);
+        }
+      });
+  }, []);
+
   return (
     <RecoilRoot>
       <BrowserRouter>

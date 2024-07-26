@@ -145,6 +145,7 @@ const DatepickerCustom = styled(DatePicker)`
     border: none;
     text-decoration: underline;
     font-size: 19px;
+    cursor: pointer;
 `
 // 인원 선택 부분
 const ModalContentBigger2 = styled(ModalContentBigger)`
@@ -377,7 +378,8 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     });
     // react-select box value 설정하기 위함
     const [selectValue, setSelectValue] = useState(option[0]);
-
+    console.log(search)
+    
     // 시작 날짜, 끝 날짜 state
     const [startDate, setStartDate] = useState(() => {
         const date = new Date();
@@ -506,6 +508,7 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     // 전체 삭제 클릭 시 이벤트 핸들러
     const onClickSearchReset = () => {
         setSearch(defaultValue);
+        setSelectValue(option[0])
     };
 
     // 검색 시작

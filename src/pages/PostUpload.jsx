@@ -6,7 +6,7 @@ import addImg from '../assets/icons/addImg.png';
 import Select from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostUpload } from "../api/myPostUpload";
-import ReservationModal from "../components/layout/ReservationModal";
+import ReservationModal from "../components/reservation/ReservationModal";
 
 
 const Container = styled.div`
