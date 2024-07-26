@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import mainPostLoad from "../../api/mainPostLoad";
+import main_no_data from '../../assets/images/main_no_data.png';
 
 const Container = styled.div`
     width: 100%;
@@ -210,19 +211,23 @@ const Items = ({startSearch, category}) => {
                 </ItemDiv>
             ))}
             {posts && posts.length === 0 &&
-                <div>데이터가 존재하지 않습니다 !</div>
+                <div style={{paddingTop:"40%", display: "flex", flexDirection: "column", alignItems: "center"}}>
+                    <div style={{width:"100px", height:"100px", backgroundImage:`url(${main_no_data})`}}></div>
+                    <span style={{fontSize:"20px", color: "#E61E51"}}>데이터가 존재하지 않습니다</span>
+                </div>  
+            ||
+                <Pagenation_div>
+                    <Pagenation_ul>
+                        <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
+                            {pagenationing().map((v,i) => {
+                                return (
+                                    <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
+                                );
+                            })}
+                        <Pagenation_span onClick={pageNextHandle}>{">>"}</Pagenation_span>
+                    </Pagenation_ul>
+                </Pagenation_div>
             }
-            <Pagenation_div>
-                <Pagenation_ul>
-                    <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
-                        {pagenationing().map((v,i) => {
-                            return (
-                                <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
-                            );
-                        })}
-                    <Pagenation_span onClick={pageNextHandle}>{">>"}</Pagenation_span>
-                </Pagenation_ul>
-            </Pagenation_div>
         </Container>
     );
 };
