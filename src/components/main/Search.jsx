@@ -6,6 +6,9 @@ import closeImg from "../../assets/icons/close.png";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {getDateFormat} from '../../util/getDateFormat';
+import { getNextDate } from "../../util/getNextDate";
+import {ko} from 'date-fns/locale';
+import Select from 'react-select';
 
 const Container = styled.div`
     width: 100%;
@@ -106,24 +109,8 @@ const ModalContent = styled.div`
     margin-top: 10px;
 
     display: flex;
+    justify-content: space-around;
     align-items: center;
-`
-
-const SearchSelect = styled.select`
-    margin: 0 auto;
-    width: 60%;
-    height: 35%;
-    border: none;
-    font-size: 15px;
-    color: #666666;
-    background-color: white;
-
-    &:focus{
-        outline: none;
-        box-shadow: none;
-    }
-`
-const SearchSelectOption = styled.option`
 `
 // date 선택 부분
 const ModalContentBigger = styled(ModalContent)`
@@ -151,12 +138,13 @@ const BiggerDivSubTitle = styled.span`
     color: #6E6E6E;
 `
 const DatepickerCustom = styled(DatePicker)`
-    width: 100px;
+    width: 200px;
+    text-align: center;
     background-color: white;
     color: #E61E51;
     border: none;
     text-decoration: underline;
-    font-size: 15px;
+    font-size: 19px;
 `
 // 인원 선택 부분
 const ModalContentBigger2 = styled(ModalContentBigger)`
@@ -334,23 +322,73 @@ const SearchBtnSpan = styled.span`
     font-size: 16px;
     color: white;
 `
+// react-select css
+const selectCustom = {
+    option: (provided, state) => {
+        let backgroundColor = 'white';
+        let color = '#333';
+        if(state.isSelected){
+            backgroundColor = '#F0586F';
+            color = 'white';
+        } else if(state.isFocused){
+            backgroundColor = '#F07C8C';
+            color = 'white';
+        }
+    return {
+      ...provided,
+      backgroundColor,
+      color,
+      padding: 20,
+      border: "none" 
+    }},
+    control: (provided) => ({
+      ...provided,
+      border: "none",
+      boxShadow: 'none',
+      width: "220px",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      border: "none",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: '#333',
+    }),
+};
 
 
-
-const Search = ({search, setSearch, isModal, setIsModal}) => {
+const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
     const defaultValue = {
-        city: "지역을 선택하세요",
-        startDate: getDateFormat(new Date()),
-        endDate: getDateFormat(new Date()),
+        city: "전체",
+        startDate: getDateFormat(getNextDate()),
+        endDate: getDateFormat(getNextDate()),
         adult: 0,
         child: 0,
         baby: 0
-    }
-    
+    };
+    // 지역 정의 배열
+    const korCity = ["전체", "서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
+        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도"];
+    // react-select 에는 key 값이 없어서 미리 option 정의
+    const option = korCity.map((v) => {
+        return {value: v, label: v}
+    });
+    // react-select box value 설정하기 위함
+    const [selectValue, setSelectValue] = useState(option[0]);
+
     // 시작 날짜, 끝 날짜 state
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        return date;
+    });
+    const [endDate, setEndDate] = useState(() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        return date;
+    });
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
         setSearch((current) => {
@@ -389,8 +427,12 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
     const onChangeSelect = (e) => {
         setSearch((current) => {
             const newSearch = {...current};
-            newSearch.city = e.target.value;
+            newSearch.city = e.value;
             return newSearch;
+        });
+        // react-select value 설정
+        setSelectValue(() => {
+            return option.filter(v => v.value === e.value);
         });
     };
     // adult minus 핸들러
@@ -466,7 +508,24 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
         setSearch(defaultValue);
     };
 
-    console.log(search);
+    // 검색 시작
+    const onClickStartSearch = () => {
+        if(new Date(search.startDate) > new Date(search.endDate)){
+            alert("시작 날짜가 끝 날짜보다 더 큽니다.");
+            return;
+        } else if (search.adult === 0){
+            alert("성인 1명 이상 지정 후 조회 및 예약할 수 있습니다.");
+            return;
+        } else {
+            setIsModal(false);
+            document.body.style.overflowY = "auto";
+            setStartSearch(search);
+        }
+    }
+
+
+    
+
 
     return (
         <>
@@ -476,27 +535,8 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
                         <ModalContainer style={isModal ? {animation: "modalOpenAnimation 1s"} : {animation: "none"}}>
                             <CloseDiv onClick={onClickModalClose}><CloseImg src={closeImg}/></CloseDiv>
                             <ModalContent>
-                                <SearchImg src={searchImg} style={{margin: "0 auto"}}/>
-                                <SearchSelect onChange={onChangeSelect} value={search.city}>
-                                    <SearchSelectOption value="지역을 선택하세요" disabled>지역을 선택하세요</SearchSelectOption>
-                                    <SearchSelectOption value="서울">서울</SearchSelectOption>
-                                    <SearchSelectOption value="제주도">제주도</SearchSelectOption>
-                                    <SearchSelectOption value="부산">부산</SearchSelectOption>
-                                    <SearchSelectOption value="대구">대구</SearchSelectOption>
-                                    <SearchSelectOption value="인천">인천</SearchSelectOption>
-                                    <SearchSelectOption value="광주">광주</SearchSelectOption>
-                                    <SearchSelectOption value="대전">대전</SearchSelectOption>
-                                    <SearchSelectOption value="울산">울산</SearchSelectOption>
-                                    <SearchSelectOption value="세종">세종</SearchSelectOption>
-                                    <SearchSelectOption value="경기도">경기도</SearchSelectOption>
-                                    <SearchSelectOption value="강원도">강원도</SearchSelectOption>
-                                    <SearchSelectOption value="충청북도">충청북도</SearchSelectOption>
-                                    <SearchSelectOption value="충청남도">충청남도</SearchSelectOption>
-                                    <SearchSelectOption value="전라북도">전라북도</SearchSelectOption>
-                                    <SearchSelectOption value="전라남도">전라남도</SearchSelectOption>
-                                    <SearchSelectOption value="경상북도">경상북도</SearchSelectOption>
-                                    <SearchSelectOption value="경상남도">경상남도</SearchSelectOption>
-                                </SearchSelect>
+                                <SearchImg src={searchImg} />
+                                <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
                             </ModalContent>
                             <ModalContentBigger>
                                 <ModalcontentBiggerTitle>여행 날짜는 언제인가요?</ModalcontentBiggerTitle>
@@ -504,10 +544,11 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
                                         <DatepickerCustom value={search.startDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                            minDate={new Date()} // minDate 이전 날짜 선택 불가
+                                            minDate={defaultValue.startDate} // minDate 이전 날짜 선택 불가
                                             maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
                                             selected={startDate}
                                             onChange={(date) => setStartDate(date)}
+                                            locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 키보드 비활성화
                                         />
@@ -519,6 +560,7 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
                                             maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
                                             selected={endDate}
                                             onChange={(date) => setEndDate(date)}
+                                            locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 포커스를 받을 때 자동으로 blur() 호출하여 키보드 비활성화
                                         />
@@ -579,7 +621,7 @@ const Search = ({search, setSearch, isModal, setIsModal}) => {
                         </ModalContainer>
                         <ModalFooter style={isModal ? {animation: "modalOpenAnimation 1s"} : {animation: "none"}}>
                             <FooterDelSpan onClick={onClickSearchReset}>전체 삭제</FooterDelSpan>
-                            <FooterSearchBtn><WhiteSearchImg src={whiteSearchImg}/><SearchBtnSpan>검색</SearchBtnSpan></FooterSearchBtn>
+                            <FooterSearchBtn onClick={onClickStartSearch}><WhiteSearchImg src={whiteSearchImg}/><SearchBtnSpan>검색</SearchBtnSpan></FooterSearchBtn>
                         </ModalFooter>        
                     </ModalOverlay>
                            

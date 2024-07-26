@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import "react-datepicker/dist/react-datepicker.css";
-import Header from "../components/layout/Header";
+import Header from "../components/layout/SubHeader";
 import loginState from "../atoms/loginState";
 import ReservationModal from "../components/layout/ReservationModal";
 import GuestModal from "../components/layout/GuestModal";

@@ -18,15 +18,28 @@ const MainPage = () => {
     // main 페이지에서 모달 호출 상태 확인 및 변경
     const [isModal, setIsModal] = useState(false)
 
-    // 검색어 state
+    // 검색어 search state (실시간)
     const [search, setSearch] = useState({
-        city: "지역을 선택하세요",
+        city: "전체",
         startDate: getDateFormat(new Date()),
         endDate: getDateFormat(new Date()),
         adult: 0,
         child: 0,
-        baby: 0
+        baby: 0,
     });
+
+    // 검색어 search state (검색 버튼 클릭 시)
+    const [startSearch, setStartSearch] = useState({
+        city: "전체",
+        startDate: getDateFormat(new Date()),
+        endDate: getDateFormat(new Date()),
+        adult: 0,
+        child: 0,
+        baby: 0,
+    });
+
+    // 검색 태그 category state
+    const [category, setCategory] = useState("전체");
 
     useEffect(() => {
         // server 에 getUser 요청 후 결과에 따라 값 부여 !
@@ -39,24 +52,15 @@ const MainPage = () => {
         });
     }, [])
 
-
     return (
         <>
             <Header user={loginUser} isModal={isModal}/>
-            <Search search={search} setSearch={setSearch} isModal={isModal} setIsModal={setIsModal}/>
-            <Category search={search} />
-            <Items search={search} />
+            <Search search={search} setSearch={setSearch} setStartSearch={setStartSearch} isModal={isModal} setIsModal={setIsModal}/>
+            <Category setCategory={setCategory} />
+            <Items startSearch={startSearch} category={category}/>
             <Footer user={loginUser} />
-            
         </>
-    )
-
-  return (
-    <>
-      <Header user={loginUser} />
-      <Search />
-    </>
-  );
+    );
 };
 
 export default MainPage;
