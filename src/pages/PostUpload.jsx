@@ -81,7 +81,7 @@ const ShortInputText = styled.input`
     height: 50px;
     border: 1px solid #EBEBEB;
     border-radius: 20px;
-    padding-left: 20px;
+    padding: 0 20px 0 20px;
     font-size: 14px;
     // 텍스트가 input 길이 초과 시 숨기기 / 줄바꿈을 사용 안 함 / ... 표시
     overflow: hidden;
@@ -89,7 +89,7 @@ const ShortInputText = styled.input`
     text-overflow: ellipsis;
 
     &:focus{
-        outline: none;
+        outline-color: #f87878;
     }
 `
 const OutlineDiv = styled.div`
@@ -129,18 +129,19 @@ const selectCustom = {
       backgroundColor,
       color,
       padding: 20,
-      border: "none" 
+      borderRadius: "5px"
     }},
     control: (provided) => ({
       ...provided,
-      border: "none",
+      border: "1px solid #EBEBEB",
+      borderRadius: "10px",
       boxShadow: 'none',
       width: "95%",
       fontSize: "14px"
     }),
     menu: (provided) => ({
       ...provided,
-      border: "none",
+      borderRadius: "10px",
       width: "90%"
     }),
     singleValue: (provided) => ({
@@ -180,7 +181,16 @@ const CategoryCheckboxOption = styled(Checkbox)`
 const InputTextArea = styled.textarea`
     width: 95%;
     height: 350px;
-
+    border: 1px solid #EBEBEB;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 16px;
+    // 드래그로 크기 수정 못하게
+    resize: none;
+    
+    &:focus{
+        outline-color: #f87878;
+    }
 `
 
 const SubmitButton = styled.button`
@@ -205,17 +215,17 @@ const PostUpload = () => {
         main_image: "",
         sub_images: [], // [string]
         title: "",
-        room_num: 0, // number
-        max_adult: 0, // number
+        room_num: 1, // number
+        max_adult: 1, // number
         max_child: 0, // number
         max_baby: 0, // number
-        price: 0, // number
+        price: 1000, // number
         main_location: "",
         sub_location: "",
         contents: "",
         category: [], // [string]
         host_intro: ""
-    });
+    }); 
     
     // 첨부된 images 이름 state
     const [imageName, setImageName] = useState({
@@ -245,7 +255,7 @@ const PostUpload = () => {
     // 어른/어린이/아기 state
     // 인원 수 옵션 상태 정의
     const personArr = ["1명", "2명", "4명", "6명", "9명", "12명", "15명", "20명 이상"];
-    const childArr = ["1명", "2명", "3명", "4명", "5명(최대)"];
+    const childArr = ["0명", "1명", "2명", "3명", "4명", "5명(최대)"];
     const optionsPerson = personArr.map((v) => {
         return {value: v, label: v};
     });
@@ -259,6 +269,13 @@ const PostUpload = () => {
     const [optionChild, setOptionChild] = useState(optionsChild[0]);
     const [optionBaby, setOptionBaby] = useState(optionsBaby[0]);
 
+    // 주요 행정구역 옵션 상태 정의
+    const mainLocationArr = ["서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
+        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도"];
+    const optionsMainLocation = mainLocationArr.map((v) => {
+        return {value: v, label: v};
+    });
+    const [optionMainLocation, setoptionMainLocation] = useState(optionsMainLocation[0]);
 
     // 메인이미지 file input 변경 시 적용
     const onChangeFiles = (e) => {
@@ -335,10 +352,7 @@ const PostUpload = () => {
 
     // 방 갯수 상태 및 data 상태 변경
     const onChangeSelectRoom = (e) => {
-        setOptionRoom(() => {
-            return optionsRoom.filter(v => v.value === e.value);
-        });
-        console.log("Asdf")
+        setOptionRoom(e);
         setData((current) => {
             const newData = {...current};
             newData.room_num = Number(e.value[0]);
@@ -348,9 +362,7 @@ const PostUpload = () => {
 
     // 어른 옵션 상태 및 data 상태 변경
     const onChangeSelectPerson = (e) => {
-        setOptionPerson(() => {
-            return optionsPerson.filter(v => v.value === e.value);
-        });
+        setOptionPerson(e);
 
         setData((current) => {
             const newData = {...current};
@@ -360,9 +372,7 @@ const PostUpload = () => {
     };
     // 어린이 옵션 상태 및 data 상태 변경
     const onChangeSelectChild = (e) => {
-        setOptionChild(() => {
-            return optionsChild.filter(v => v.value === e.value);
-        });
+        setOptionChild(e);
 
         setData((current) => {
             const newData = {...current};
@@ -372,9 +382,7 @@ const PostUpload = () => {
     };
     // 유아 옵션 상태 및 data 상태 변경
     const onChangeSelectBaby = (e) => {
-        setOptionBaby(() => {
-            return optionsBaby.filter(v => v.value === e.value);
-        });
+        setOptionBaby(e);
 
         setData((current) => {
             const newData = {...current};
@@ -382,10 +390,14 @@ const PostUpload = () => {
             return newData;
         });
     }
-
+    console.log(optionBaby)
     
     // 카테고리 상태 값 및 data 상태 변경
     const onChangeCategory = (e) => {
+        if(e.length > 3){
+            alert("카테고리는 최대 3개까지 지정 가능합니다!");
+            return;
+        }
         setData((current) => {
             const newData = {...current};
             newData.category = e;
@@ -412,8 +424,58 @@ const PostUpload = () => {
     const optionIcons = notAllSortedImages;
     const optionWithIcon = optionValues.map((v, i) => ({label: v, value: v, icon: optionIcons[i].src}));
 
-    
+    // 숙소 소개 data 상태 반영
+    const onChangeContents = (e) => {
+        setData((current) => {
+            const newData = {...current};
+            newData.contents = e.target.value;
+            return newData;
+        });
+    };
 
+    // 숙소 주요 위치 option 및 data 상태 반영
+    const onChangeMainLocation = (e) => {
+        setoptionMainLocation(e);
+        
+        setData((current) => {
+            const newData = {...current};
+            newData.main_location = e.value;
+            return newData;
+        });
+    }
+    
+    // 숙소 상세 주소 data 상태 반영
+    // 다음 주소 api load 와 컴포넌트 언마운트 시 정리 작업
+    const onClickSubLocation = () => {
+        // 스크립트 동적 로드
+        const script = document.createElement('script');
+        script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+        script.async = true;
+        document.body.appendChild(script);
+    
+        // 스크립트 로드 후 실행 함수
+        script.onload = () => {
+          if (window.daum) {
+            window.daum.postcode.load(() => {
+              new window.daum.Postcode({
+                oncomplete: function(data) {
+                  // 주소를 선택했을 때 호출 함수
+                  setData((current) => {
+                    const newData = {...current};
+                    newData.sub_location = data.address;
+                    return newData;
+                  });
+                }
+              }).open();
+            });
+          }
+        }
+    
+        return () => {
+          document.body.removeChild(script);
+        };      
+    }
+    
 
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
     const onSubmitPost = async (e) => {
@@ -458,29 +520,28 @@ const PostUpload = () => {
                         <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
                     </ImageUploadLabel>
                     <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
-                    <ShortInputText placeholder="숙소 대표 이미지를 첨부해주세요." value={imageName.main_image} disabled></ShortInputText>
+                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled></ShortInputText>
                     <OutlineDiv />
                     <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 숙소 이미지 파일들을 첨부해주세요." value={imageName.sub_images} disabled></ShortInputText>
-                    
+                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 9장" value={imageName.sub_images} disabled></ShortInputText>
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText placeholder="숙소 이름을 작성해주세요."></ShortInputText>
+                        <ShortInputText maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내"></ShortInputText>
                     </InputDiv>    
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>옵션</InputTitle>
                         <InputSubTitle>객실 갯수</InputSubTitle>
                         <Select styles={selectCustom} options={optionsRoom} onChange={onChangeSelectRoom} value={optionRoom} />
-                        <InputSubTitle>최대 인원(어른 - 17세 이상)</InputSubTitle>
+                        <InputSubTitle>최대 인원(어른: 17세 이상)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsPerson} onChange={onChangeSelectPerson} value={optionPerson} />
-                        <InputSubTitle>최대 인원(어린이 - 7~16세)</InputSubTitle>
+                        <InputSubTitle>최대 인원(어린이: 7~16세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsChild} onChange={onChangeSelectChild} value={optionChild} />
-                        <InputSubTitle>최대 인원(유아 - ~ 6세)</InputSubTitle>
+                        <InputSubTitle>최대 인원(유아: ~ 6세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
-                        <InputSubTitle>숙소 카테고리 선택</InputSubTitle>
+                        <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
                         <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
                             {optionWithIcon.map((v, i) => (
                                 <CategoryCheckboxOption key={i} value={v.value}>
@@ -493,9 +554,17 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <InputDiv>
                             <InputTitle>숙소 소개</InputTitle>
-                            <InputTextArea></InputTextArea>
+                            <InputTextArea onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)"></InputTextArea>
                     </InputDiv>
-
+                    <OutlineDiv />
+                    <InputDiv>
+                            <InputTitle>숙소 위치</InputTitle>
+                            <InputSubTitle>주요 위치</InputSubTitle>
+                            <Select styles={selectCustom} options={optionsMainLocation} onChange={onChangeMainLocation} value={optionMainLocation} />
+                            <InputSubTitle>상세 위치</InputSubTitle>
+                            {/* 커서 투명화 css 따로 추가 */}
+                            <ShortInputText id="inputSubLocation" placeholder="상세 주소를 입력해주세요." onClick={onClickSubLocation} value={data.sub_location} style={{caretColor: "transparent"}} readOnly></ShortInputText>
+                    </InputDiv>
                    
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
