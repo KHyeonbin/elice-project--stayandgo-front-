@@ -91,7 +91,11 @@ const MyAccommodations = () => {
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (checked, id) => {
-    setCheckedButtons((prev) => (checked ? [...prev, id] : prev.filter((buttonId) => buttonId !== id)));
+    if (checked) {
+      setCheckedButtons((prev) => [...prev, id]);
+    } else {
+      setCheckedButtons((prev) => prev.filter((buttonId) => buttonId !== id));
+    }
   };
 
   /** 등록삭제 버튼 클릭 시 */
@@ -128,7 +132,7 @@ const MyAccommodations = () => {
                 type="checkbox"
                 checked={checkedButtons.includes(accommodation.id)}
                 onChange={(event) => onChangeHandleCheckBox(event.target.checked, accommodation.id)}
-                onClick={(event) => event.stopPropagation()} // 체크박스 클릭 시 부모(상위)태그의 클릭 이벤트 반응(버블링) 막기 위해 사용
+                onClick={(event) => event.stopPropagation()}
               />
             </Image>
             <DetailContainer onClick={() => onClickHandleDetail(accommodation.id)}>
