@@ -1,13 +1,7 @@
+//예약페이지에서 사용하는 스타일컴포넌트 분리
 import styled from "styled-components";
 
-export const ImagePlaceholder = styled.div`
-  width: 111px;
-  height: 111px;
-  background-color: #d9d9d9;
-  border-radius: 15px;
-  margin-right: 5px;
-`;
-
+//예약인포, 예약가격 스타일
 export const Flexbox = styled.div`
   display: flex;
   justify-content: space-between;
@@ -20,9 +14,46 @@ export const ColumnBox = styled.div`
   margin-bottom: 8px;
 `;
 
+export const SectionDetail = styled.span`
+  font-size: 14px;
+  line-height: 16.94px;
+  margin-bottom: 4px;
+`;
+
+export const SectionDetailBold = styled.span`
+  font-size: 14px;
+  line-height: 16.94px;
+  font-weight: bold;
+  margin-bottom: 4px;
+`;
+
+export const ModifyButton = styled.button`
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 12px;
+`;
+
+export const TotalBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
+//예약페이지 스타일
+export const ImagePlaceholder = styled.div`
+  width: 111px;
+  height: 111px;
+  background-color: #d9d9d9;
+  border-radius: 15px;
+  margin-right: 5px;
+`;
+
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 `;
 
 export const Title = styled.span`
@@ -40,7 +71,7 @@ export const Name = styled.span`
 `;
 
 export const Description = styled.span`
-  margin-top: 3px;
+  margin-top: 6px;
   color: #555555;
   font-size: 12px;
   line-height: 14.52px;
@@ -62,20 +93,6 @@ export const SectionTitle = styled.h2`
   margin-bottom: 25px;
 `;
 
-export const SectionDetail = styled.span`
-  font-size: 14px;
-  line-height: 16.94px;
-  margin-bottom: 4px;
-`;
-
-export const ModifyButton = styled.button`
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  font-size: 12px;
-`;
-
 export const Button = styled.button`
   width: 100%;
   padding: 10px 0;
@@ -93,4 +110,12 @@ export const RefundPolicy = styled.div`
   font-size: 12px;
   text-align: center;
   margin-top: 10px;
+`;
+
+export const Container = styled.div`
+  padding-bottom: 60px;
+`;
+
+export const RequestContainer = styled.div`
+  display: flex;
 `;

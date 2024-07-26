@@ -2,10 +2,6 @@ import axios from "axios";
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  sendEmailCertification,
-  certificationCode,
-} from "../../api/EmailRequest";
 
 const FlexDiv = styled.div`
   display: flex;
@@ -62,8 +58,9 @@ const Join = () => {
     password: "",
     passwordCheck: "",
     name: "",
-    phoneNumber: "",
+    phone: "",
     code: "",
+    nickName: "",
   });
   const [passwordCheckError, setPasswordCheckError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -77,7 +74,7 @@ const Join = () => {
       const inputName = e.target.name;
       let inputValue = e.target.value;
 
-      if (inputName === "phoneNumber") {
+      if (inputName === "phone") {
         inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
         inputValue = inputValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 000-0000-0000 형태로 리턴
       }
@@ -135,20 +132,30 @@ const Join = () => {
       return false;
     }
     console.log(!!passwordCheckError, !!passwordError2, !!passwordError);
-    const response = await axios.post("/login", {
+    const response = await axios.post("http://localhost:3001/users", {
       email: userInfo.email,
       password: userInfo.password,
       name: userInfo.name,
-      phoneNumber: userInfo.phoneNumber,
+      nickname: userInfo.nickName,
+      phone: userInfo.phone,
     });
-    navigate("/joinEnd");
+
+    console.log(response);
+
+    // 회원가입 완료 시
+    if (response.data.code == 200) {
+      navigate("/joinEnd");
+    }
   };
 
   // 이메일 인증 버튼 클릭 시
   const onEmailRequestHandler = async (e) => {
     e.preventDefault();
-    const result = await sendEmailCertification(userInfo.email);
-    if (result) {
+    const result = await axios.post("http://localhost:3001/users/verify", {
+      email: userInfo.email,
+    });
+    if (result.data.code === 200) {
+      alert("이메일이 발송되었습니다.");
       // 이메일 인증 요청 시 버튼 비활성화
       e.target.disabled = true;
     }
@@ -156,12 +163,22 @@ const Join = () => {
 
   // 이메일 인증 확인 버튼 클릭 시
   const onEmailCheckHandler = async (e) => {
-    e.preventDefault();
-    const result = await certificationCode(userInfo.email, userInfo.code);
-    if (result) {
+    //e.preventDefault();
+    const result = await axios.post(
+      "http://localhost:3001/users/verify/confirm",
+      {
+        email: userInfo.email,
+        secret: userInfo.code,
+      }
+    );
+    // 인증 성공
+    if (result.data.code === 200) {
+      alert("이메일 인증 코드가 확인되었습니다.");
       // 이메일 인증 요청 시 버튼 비활성화
       e.target.disabled = true;
-    } else {
+    }
+    if (result.data.code === 400) {
+      alert("이메일 인증 코드를 다시 확인해주세요.");
       emailRequestBtn.current.disabled = false;
       e.target.disabled = false;
     }
@@ -243,14 +260,23 @@ const Join = () => {
       <JoinInput
         type="text"
         placeholder="휴대폰번호"
-        name="phoneNumber"
+        name="phone"
         maxLength={13}
         // 정규표현식 사용으로 value값에 undefined가 들어가는 경우가 있어 undefined일 경우 빈 문자열을 값으로 가진다.
-        value={userInfo.phoneNumber || ""}
+        value={userInfo.phone || ""}
         onChange={(e) => {
           onChangeHandler(e);
         }}
         required
+      />
+      <JoinInput
+        type="text"
+        placeholder="닉네임"
+        name="nickName"
+        value={userInfo.nickName}
+        onChange={(e) => {
+          onChangeHandler(e);
+        }}
       />
       <JoinBtn type="submit">가입하기</JoinBtn>
     </form>
