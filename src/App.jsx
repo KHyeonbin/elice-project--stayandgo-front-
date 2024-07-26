@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import MainPage from "./pages/MainPage";
 import WishPage from "./pages/WishPage";
-import HistoryPage from "./pages/HistoryPage";
+import TravelPage from "./pages/TravelPage";
 import ReservationPage from "./pages/ReservationPage";
+import AboutPage from "./pages/AboutPage";
 
 const App = () => {
   return (
@@ -13,8 +14,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/Wish" element={<WishPage />}></Route>
-          <Route path="/History" element={<HistoryPage />}></Route>
+          <Route path="/Travel" element={<TravelPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
+          <Route path="/About" element={<AboutPage />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

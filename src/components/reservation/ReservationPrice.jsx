@@ -1,6 +1,11 @@
-// PriceDetails.js
+// 예약페이지 내 요금세부정보 부분
 import React from "react";
-import { Flexbox, SectionDetail } from "../main/ReservationStyle";
+import {
+  Flexbox,
+  SectionDetail,
+  SectionDetailBold,
+  TotalBox,
+} from "./ReservationStyle";
 
 const ReservationPrice = ({ price, nights }) => (
   <>
@@ -14,12 +19,12 @@ const ReservationPrice = ({ price, nights }) => (
       <SectionDetail>서비스 수수료(10%)</SectionDetail>
       <SectionDetail>₩{((price * nights) / 10).toLocaleString()}</SectionDetail>
     </Flexbox>
-    <Flexbox>
-      <SectionDetail>총 합계</SectionDetail>
+    <TotalBox>
+      <SectionDetailBold>총 합계</SectionDetailBold>
       <SectionDetail>
         ₩{(price * nights + (price * nights) / 10).toLocaleString()}
       </SectionDetail>
-    </Flexbox>
+    </TotalBox>
   </>
 );
 
