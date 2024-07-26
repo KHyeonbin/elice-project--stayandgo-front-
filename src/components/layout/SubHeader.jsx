@@ -22,6 +22,7 @@ const LeftArea = styled.div`
 const PrevPageBtn = styled.button`
   background: none;
   border: none;
+  cursor: pointer;
 `;
 
 const RightArea = styled(LeftArea)``;
