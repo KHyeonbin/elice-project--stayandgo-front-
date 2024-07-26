@@ -9,6 +9,11 @@ const Container = styled.div`
   align-items: center;
   border-bottom: 2px solid #eeeeee;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: #fff;
 `;
 const LeftArea = styled.div`
   margin-left: 10px;
@@ -17,6 +22,7 @@ const LeftArea = styled.div`
 const PrevPageBtn = styled.button`
   background: none;
   border: none;
+  cursor: pointer;
 `;
 
 const RightArea = styled(LeftArea)``;
