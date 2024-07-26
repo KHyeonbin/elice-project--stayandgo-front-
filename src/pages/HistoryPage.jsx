@@ -1,13 +1,11 @@
 import React from "react";
-import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Header from "../components/layout/SubHeader";
 import loginState from "../atoms/loginState";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import Header from "../components/layout/SubHeader";
-import Footer from "../components/layout/MainFooter";
-import loginState from "../atoms/loginState";
-import WishCard from "../components/wishlist/WishCard";
+import HistoryCard from "../components/main/HistoryCard";
+import styled from "styled-components";
+import No from "../components/layout/No";
 
 const Title = styled.h1`
   font-size: 20px;
@@ -15,14 +13,7 @@ const Title = styled.h1`
   margin: 25px 15px;
 `;
 
-const WishlistContainer = styled.div`
-  display: grid;
-  grid-template-columns: 163px 163px;
-  grid-column-gap: 17px;
-  padding-bottom: 60px;
-`;
-
-const WishPage = () => {
+const HistoryPage = () => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
   const [cardData, setCardData] = useState([]);
@@ -50,17 +41,17 @@ const WishPage = () => {
   return (
     <>
       <Header user={loginUser} />
-      <Title>위시 리스트</Title>
-      <WishlistContainer>
-        <WishCard />
-        <WishCard title="부산의 집" />
-        <WishCard title="강릉의 집" />
-        <WishCard title="제주의 집" />
-        <WishCard title="대전의 집" />
-      </WishlistContainer>
-      <Footer user={loginUser} />
+      <Title>여행</Title>
+      <No></No>
+      <Title>이전 여행지</Title>
+      <HistoryCard />
+      <HistoryCard title="부산의 집" />
+      <HistoryCard title="강릉의 집" />
+      <HistoryCard title="제주의 집" />
+      <HistoryCard title="서울의 집" />
+      <HistoryCard title="대전의 집" />
     </>
   );
 };
 
-export default WishPage;
+export default HistoryPage;
