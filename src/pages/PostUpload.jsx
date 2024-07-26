@@ -502,14 +502,26 @@ const PostUpload = () => {
             const remain1000Price = inputPrice.slice(0, inputPrice.length - 3);
             const returnDataPrice = `${remain1000Price}${convert1000EndPrice}`;
             
+            // 5 억 이상일 경우 차단
+            if(Number(returnDataPrice) >= 500000000){
+                alert("5억 원 이상으로 설정은 불가합니다.");
+                return;
+            }
+
             // 3. 수정된 string은 숫자로 변경 후 data 반영
             setData((current) => {
                 const newData = {...current};
                 newData.price = Number(returnDataPrice);
                 return newData;
             });
+
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').toString();
         }
     };
+    // input 필드 벗어날 때 input value 교체
+    const onBlurPrice = (e) => {
+        e.target.value = data.price;
+    }
 
     // 호스트 소개 data 반영
     const onChangeHostIntro = (e) => {
@@ -637,7 +649,7 @@ const PostUpload = () => {
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
                         <InputSubTitle>성인: 1인 1박 가격<br />어린이: 성인의 50% 가격<br/>유아:   성인의 20% 가격으로 반영</InputSubTitle>
-                        <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} />
+                        <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
