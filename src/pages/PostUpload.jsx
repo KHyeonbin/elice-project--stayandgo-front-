@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SubHeader from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import styled from "styled-components";
 import addImg from '../assets/icons/addImg.png';
 import Select from 'react-select';
 import {Checkbox} from 'antd';
+import { myPostUpload } from "../api/myPostUpload";
+import ReservationModal from "../components/layout/ReservationModal";
+
 
 const Container = styled.div`
     width: 100%;
@@ -12,8 +15,7 @@ const Container = styled.div`
 
 const ImageUploadForm = styled.form`
     width: 100%;
-    //
-    height: 10000px;
+    height: 2900px;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -112,6 +114,7 @@ const InputSubTitle = styled.span`
     font-size: 16px;
     font-weight: 400;
 `
+
 // react-select css
 const selectCustom = {
     option: (provided, state) => {
@@ -220,7 +223,7 @@ const PostUpload = () => {
         max_child: 0, // number
         max_baby: 0, // number
         price: 1000, // number
-        main_location: "",
+        main_location: "서울",
         sub_location: "",
         contents: "",
         category: [], // [string]
@@ -276,6 +279,18 @@ const PostUpload = () => {
         return {value: v, label: v};
     });
     const [optionMainLocation, setoptionMainLocation] = useState(optionsMainLocation[0]);
+
+    // model 팝업 띄우기 위한 상태
+    const [showFinishModal, setshowFinishModal] = useState(false);
+
+    // 숙소 이름 data 반영
+    const onChangeTitle = (e) => {
+        setData((current) => {
+            const newData = {...current};
+            newData.title = e.target.value;
+            return newData;
+        });
+    };
 
     // 메인이미지 file input 변경 시 적용
     const onChangeFiles = (e) => {
@@ -390,7 +405,6 @@ const PostUpload = () => {
             return newData;
         });
     }
-    console.log(optionBaby)
     
     // 카테고리 상태 값 및 data 상태 변경
     const onChangeCategory = (e) => {
@@ -470,46 +484,100 @@ const PostUpload = () => {
             });
           }
         }
-    
         return () => {
           document.body.removeChild(script);
         };      
     }
     
+    // 숙소 가격 입력 data 반영 전 유효성 검사(1000 단위 검사)
+    // 1. 입력한 문자에서 숫자만 추출
+    // 2. 끝 자리 자동으로 1000 단위로 강제 변경
+    // 3. 수정된 string은 숫자로 변경 후 data 반영
+    const onChangePrice = (e) => {
+        // 1. 입력한 문자에서 숫자만 추출
+        const inputPrice = e.target.value.replace(/[^0-9]/g, '').toString();
+        if(inputPrice.length >= 4){
+            // 2. 끝 자리 자동으로 1000 단위로 강제 변경
+            const convert1000EndPrice = "000";
+            const remain1000Price = inputPrice.slice(0, inputPrice.length - 3);
+            const returnDataPrice = `${remain1000Price}${convert1000EndPrice}`;
+            
+            // 3. 수정된 string은 숫자로 변경 후 data 반영
+            setData((current) => {
+                const newData = {...current};
+                newData.price = Number(returnDataPrice);
+                return newData;
+            });
+        }
+    };
 
+    // 호스트 소개 data 반영
+    const onChangeHostIntro = (e) => {
+        setData((current) => {
+            const newData = {...current};
+            newData.host_intro = e.target.value;
+            return newData;
+        });
+    };
+
+    // 등록 하기 !
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
     const onSubmitPost = async (e) => {
         e.preventDefault();
-        
+
+        if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
+            || !data.sub_location || !data.contents || !data.host_intro){
+                alert("입력이 누락되거나 잘못된 항목을 확인해주세요.");
+                return;
+        }
+        // 카테고리가 없을 때는 서버에서 판단하여 "전체" 로 넣어줌
+
+
+        // formdata 생성 및 데이터 추가
         const formData = new FormData();
-        
-
-        // 파일들을 'images'라는 필드 이름으로 추가
-        for (let i = 0; i < files.length; i++) {
-            formData.append('images', files[i]);
-            // formData test 필드에 value 추가
-            
+        // 파일들을 'images'라는 필드 이름으로 추가 (서버에는 images 에 main 첫번째 나머지 subimage로 들어가야 함)
+        formData.append('images', data.main_image[0]);
+        for (let i = 0; i < data.sub_images.length; i++) {
+            formData.append('images', data.sub_images[i]);
         }
-        formData.append('test', 'value');
-        try {
-            const response = await fetch('/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            
-        } catch (e) {
-            console.log(e);
+        if(data.category.length > 0){
+            for (let k = 0; k < data.category.length; k++) {
+                formData.append('category', data.category[k]);
+            }
+        } else {
+            // category 가 없을 시 서버에서 length 확인 후 "전체" 로 삽입
+            formData.append('category', data.category);
         }
+        formData.append('title', data.title);
+        formData.append('max_adult', data.max_adult);
+        formData.append('max_child', data.max_child);
+        formData.append('max_baby', data.max_baby);
+        formData.append('price', data.price);
+        formData.append('main_location', data.main_location);
+        formData.append('sub_location', data.sub_location);
+        formData.append('contents', data.contents);
+        formData.append('room_num', data.room_num);
+        formData.append('host_intro', data.host_intro);
         
-    }
+        myPostUpload(formData)
+        .then(res => {
+            console.log(res)
+            if(res.data.code === 200){
+                // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
+                setshowFinishModal(true);
+            } else {
+                alert(res.data.message);
+            }
+        }); 
+    };
+
     // enter 클릭 시에는 폼이 제출되지 않음.
     const onHandleEnter = (e) => {
         if(e.key === "Enter"){
             e.preventDefault();
         }
     }
-    console.log()
+
     console.log(data, imageName)
 
     return (
@@ -520,15 +588,15 @@ const PostUpload = () => {
                         <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
                     </ImageUploadLabel>
                     <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
-                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled></ShortInputText>
+                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled />
                     <OutlineDiv />
                     <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 9장" value={imageName.sub_images} disabled></ShortInputText>
+                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 9장" value={imageName.sub_images} disabled />
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내"></ShortInputText>
+                        <ShortInputText onChange={onChangeTitle} maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내" />
                     </InputDiv>    
                     <OutlineDiv />
                     <InputDiv>
@@ -553,23 +621,35 @@ const PostUpload = () => {
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
-                            <InputTitle>숙소 소개</InputTitle>
-                            <InputTextArea onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)"></InputTextArea>
+                        <InputTitle>숙소 소개</InputTitle>
+                        <InputTextArea onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
-                            <InputTitle>숙소 위치</InputTitle>
-                            <InputSubTitle>주요 위치</InputSubTitle>
-                            <Select styles={selectCustom} options={optionsMainLocation} onChange={onChangeMainLocation} value={optionMainLocation} />
-                            <InputSubTitle>상세 위치</InputSubTitle>
-                            {/* 커서 투명화 css 따로 추가 */}
-                            <ShortInputText id="inputSubLocation" placeholder="상세 주소를 입력해주세요." onClick={onClickSubLocation} value={data.sub_location} style={{caretColor: "transparent"}} readOnly></ShortInputText>
+                        <InputTitle>숙소 위치</InputTitle>
+                        <InputSubTitle>주요 위치</InputSubTitle>
+                        <Select styles={selectCustom} options={optionsMainLocation} onChange={onChangeMainLocation} value={optionMainLocation} />
+                        <InputSubTitle>상세 위치</InputSubTitle>
+                        {/* 커서 투명화 css 추가 */}
+                        <ShortInputText id="inputSubLocation" placeholder="상세 주소를 입력해주세요." onClick={onClickSubLocation} value={data.sub_location} style={{caretColor: "transparent"}} readOnly />
                     </InputDiv>
-                   
+                    <OutlineDiv />
+                    <InputDiv>
+                        <InputTitle>숙소 가격 (성인 기준)</InputTitle>
+                        <InputSubTitle>성인: 1인 1박 가격<br />어린이: 성인의 50% 가격<br/>유아:   성인의 20% 가격으로 반영</InputSubTitle>
+                        <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} />
+                    </InputDiv>
+                    <OutlineDiv />
+                    <InputDiv>
+                        <InputTitle>호스트 소개</InputTitle>
+                        <InputTextArea maxLength="500" placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={onChangeHostIntro} />
+                    </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
                 </ImageUploadForm>
             <Footer/>
+            {showFinishModal && <ReservationModal message="숙소 등록이 완료되었습니다 !"
+                onClose={() => setshowFinishModal(false)} />}
         </Container>
     );
 };

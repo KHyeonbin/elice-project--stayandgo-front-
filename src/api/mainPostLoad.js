@@ -4,7 +4,7 @@ class MainPostLoad {
     // 페이지 정보 불러오기
     async getPostsPage({search, category}){
         try {
-            const res = await axios.post(`http://172.30.1.15:3001/post/getposts/page`,{
+            const res = await axios.post(`http://localhost:3001/post/getposts/page`,{
                 search,
                 category
             });
@@ -12,6 +12,7 @@ class MainPostLoad {
         }
         catch(e) {
             console.log(e);
+            // alert
             return;
         }
     }
@@ -19,7 +20,7 @@ class MainPostLoad {
     // 숙소 정보 불러오기
     async getPostsRead({nowpage, search, category}){
         try{
-            const res = await axios.post(`http://172.30.1.15:3001/post/getposts/page/read`,{
+            const res = await axios.post(`http://localhost:3001/post/getposts/page/read`,{
                 nowpage,
                 search,
                 category
@@ -40,6 +41,7 @@ class MainPostLoad {
             return /*posts*/ res.data.result;
         } catch (e) {
             console.log(e);
+            // alert
             return;
         }
     }

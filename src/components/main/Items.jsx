@@ -209,6 +209,9 @@ const Items = ({startSearch, category}) => {
                     </ItemTextDiv>
                 </ItemDiv>
             ))}
+            {posts && posts.length === 0 &&
+                <div>데이터가 존재하지 않습니다 !</div>
+            }
             <Pagenation_div>
                 <Pagenation_ul>
                     <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
