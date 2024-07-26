@@ -59,12 +59,17 @@ const SubImageUploadLabel = styled.label`
     border: none;
     border-radius: 10px;
     font-size: 15px;
-    background-color: #F0586F;
+    background-color: #f87878;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: background-color 1s;
+
+    &:hover{
+        background-color: #F0586F;
+    }
 
     &:focus {
         outline: none;
@@ -72,7 +77,7 @@ const SubImageUploadLabel = styled.label`
 `
 
 const ShortInputText = styled.input`
-    width: 90%;
+    width: 92%;
     height: 50px;
     border: 1px solid #EBEBEB;
     border-radius: 20px;
@@ -130,7 +135,7 @@ const selectCustom = {
       ...provided,
       border: "none",
       boxShadow: 'none',
-      width: "90%",
+      width: "95%",
       fontSize: "14px"
     }),
     menu: (provided) => ({
@@ -172,6 +177,11 @@ const CategoryCheckboxOption = styled(Checkbox)`
         border: 1px solid #F0586F;
     }
 `
+const InputTextArea = styled.textarea`
+    width: 95%;
+    height: 350px;
+
+`
 
 const SubmitButton = styled.button`
     width: 90%;
@@ -180,7 +190,7 @@ const SubmitButton = styled.button`
     border-radius: 15px;
     cursor: pointer;
 
-    background-color: #E61E51;
+    background-color: #f87878;
     color: white;
     transition: background-color 1s;
 
@@ -483,7 +493,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <InputDiv>
                             <InputTitle>숙소 소개</InputTitle>
-
+                            <InputTextArea></InputTextArea>
                     </InputDiv>
 
                    
