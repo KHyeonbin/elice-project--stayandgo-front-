@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const Header = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin: 0 25px 20px 0;
   width: 100%;
 `;
 
@@ -22,6 +22,7 @@ export const Button = styled.div`
   border: 1px solid #f87878;
   border-radius: 10px;
   padding: 10px 10px;
+  margin-right: 5px;
   text-align: center;
   font-size: 12px;
   color: #f87878;
@@ -34,9 +35,9 @@ export const ListContainer = styled.div`
   justify-content: center;
   gap: 17px;
   width: 100%;
-  padding: 0 10px;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  margin: 0 auto;
 `;
 
 export const ListItem = styled.div`
@@ -47,7 +48,7 @@ export const ListItem = styled.div`
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  margin: 0 auto;
+  margin: 0;
 `;
 
 export const Image = styled.div`
