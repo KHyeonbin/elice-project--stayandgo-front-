@@ -5,6 +5,7 @@ import MainPage from "./pages/MainPage";
 import WishPage from "./pages/WishPage";
 import HistoryPage from "./pages/HistoryPage";
 import ReservationPage from "./pages/ReservationPage";
+import PostUpload from './pages/PostUpload';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/History" element={<HistoryPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
+          <Route path="/upload" element={<PostUpload />}/>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

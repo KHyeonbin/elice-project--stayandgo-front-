@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Header from "../components/layout/Header";
+import Header from "../components/layout/SubHeader";
 import loginState from "../atoms/loginState";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import HistoryCard from "../components/main/HistoryCard";

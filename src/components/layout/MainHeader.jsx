@@ -83,7 +83,7 @@ const Header = ({user, isModal}) => {
                     <RightArea>
                         {user.is_logined &&
                             <>
-                                <LinkDiv><LinkText to={'/'}>숙소등록</LinkText></LinkDiv>
+                                <LinkDiv><LinkText to={'/upload'}>숙소등록</LinkText></LinkDiv>
                                 <LinkDiv><LinkText to={'/'}>로그아웃</LinkText></LinkDiv>
                             </>
                         ||
