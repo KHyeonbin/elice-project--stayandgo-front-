@@ -19,14 +19,14 @@ export const Header = styled.div`
 export const Button = styled.div`
   width: 85px;
   height: 38px;
-  border: 1px solid #f87878;
-  border-radius: 10px;
   padding: 10px 10px;
   margin-right: 5px;
   text-align: center;
   font-size: 12px;
-  color: #f87878;
-  cursor: pointer;
+  color: ${(props) => (props.disabled ? "#ccc" : "#f87878")};
+  border: ${(props) => (props.disabled ? "1px solid #ccc" : "1px solid #f87878")};
+  border-radius: 10px;
+  cursor: ${(props) => (props.disabled ? "" : "pointer")};
 `;
 
 export const ListContainer = styled.div`
