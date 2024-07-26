@@ -31,8 +31,8 @@ const WishPage = () => {
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
     // true
     setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
+      email: 'gudrjsdn8825@naver.com',
+      nickName: '건우',
       is_admin: false,
       is_logined: false,
     });

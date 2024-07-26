@@ -22,14 +22,7 @@ import {
   RequestContainer,
 } from "../components/reservation/ReservationStyle";
 
-const ReservationPage = ({
-  title,
-  description,
-  name,
-  initialStartDate,
-  initialEndDate,
-  price,
-}) => {
+const ReservationPage = ({ title, description, name, initialStartDate, initialEndDate, price }) => {
   const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
   const [dateRange, setDateRange] = useState([
@@ -53,8 +46,8 @@ const ReservationPage = ({
     // server 에 getUser 요청 후 결과에 따라 값 부여 !
     // true
     setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
+      email: 'gudrjsdn8825@naver.com',
+      nickName: '건우',
       is_admin: false,
       is_logined: false,
     });
