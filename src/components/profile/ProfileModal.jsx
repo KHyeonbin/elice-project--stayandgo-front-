@@ -48,8 +48,8 @@ const ModalButton = styled.button`
   padding: 10px 10px;
   text-align: center;
   font-size: 12px;
-  color: ${(props) => (props.cancel ? "white" : "black")};
-  background-color: ${(props) => (props.cancel ? "#f87878" : "white")};
+  color: ${(props) => (props.type === "cancel" ? "white" : "black")};
+  background-color: ${(props) => (props.type === "cancel" ? "#f87878" : "white")};
   cursor: pointer;
 `;
 
@@ -62,12 +62,12 @@ const ProfileModal = ({ message, onClose, onConfirm, onCancel }) => {
         {onConfirm && onCancel ? (
           <ButtonContainer>
             <ModalButton onClick={onConfirm}>예</ModalButton>
-            <ModalButton cancel onClick={onCancel}>
+            <ModalButton type="cancel" onClick={onCancel}>
               아니오
             </ModalButton>
           </ButtonContainer>
         ) : (
-          <ModalButton cancel onClick={onClose}>
+          <ModalButton type="cancel" onClick={onClose}>
             닫기
           </ModalButton>
         )}
