@@ -5,6 +5,7 @@ import MainPage from "./pages/MainPage";
 import WishPage from "./pages/WishPage";
 import TravelPage from "./pages/TravelPage";
 import ReservationPage from "./pages/ReservationPage";
+import AboutPage from "./pages/AboutPage";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/Travel" element={<TravelPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
+          <Route path="/About" element={<AboutPage />}></Route>
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
