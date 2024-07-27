@@ -34,7 +34,7 @@ const App = () => {
                 newUser.nickname = res.data.nickname;
                 newUser.phone = res.data.phone;
             });
-        } else if(res && res.code === 411){
+        } else if(res && res.code === 401){
           console.log(res.message);
         }
       });

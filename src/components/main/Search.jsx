@@ -508,7 +508,7 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     // 전체 삭제 클릭 시 이벤트 핸들러
     const onClickSearchReset = () => {
         setSearch(defaultValue);
-        setSelectValue(option[0])
+        setSelectValue(option[0]);
     };
 
     // 검색 시작

@@ -98,7 +98,7 @@ const Items = ({startSearch, category}) => {
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
     // 1. 일단 페이지 정보를 먼저 세팅
     useEffect(() => {
-        mainPostLoad.getPostsPage({search: startSearch, category})
+        mainPostLoad.getPostsPage({search: startSearch, category, mymode: false})
         .then(res => {
             setPage(res);
         });
@@ -106,7 +106,7 @@ const Items = ({startSearch, category}) => {
 
     // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
-        mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category})
+        mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
         .then(res => {
             setPosts(res);
         });
