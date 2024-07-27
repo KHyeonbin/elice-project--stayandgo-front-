@@ -12,7 +12,6 @@ class MainPostLoad {
             return res.data.result;
         }
         catch(e) {
-
             console.log(e.message);
             // alert
             return;
