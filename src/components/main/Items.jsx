@@ -201,7 +201,7 @@ const Items = ({startSearch, category}) => {
     return (
         <Container>
             {posts && posts.map((v, i) => (
-                <ItemDiv key={i}>
+                <ItemDiv key={i} nanoid={v.nanoid}>
                     <ItemBackgroundDiv $background={v.main_image/*v.main_image_link*/} />
                     <ItemTextDiv>
                         <ItemTitle>{v.title}<br /></ItemTitle>
