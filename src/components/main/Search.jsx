@@ -378,19 +378,10 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
     });
     // react-select box value 설정하기 위함
     const [selectValue, setSelectValue] = useState(option[0]);
-    console.log(search)
     
     // 시작 날짜, 끝 날짜 state
-    const [startDate, setStartDate] = useState(() => {
-        const date = new Date();
-        date.setDate(date.getDate() + 1);
-        return date;
-    });
-    const [endDate, setEndDate] = useState(() => {
-        const date = new Date();
-        date.setDate(date.getDate() + 1);
-        return date;
-    });
+    const [startDate, setStartDate] = useState(getNextDate());
+    const [endDate, setEndDate] = useState(getNextDate());
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
         setSearch((current) => {
@@ -504,7 +495,6 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
         });
     };
 
-
     // 전체 삭제 클릭 시 이벤트 핸들러
     const onClickSearchReset = () => {
         setSearch(defaultValue);
@@ -525,10 +515,6 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
             setStartSearch(search);
         }
     }
-
-
-    
-
 
     return (
         <>

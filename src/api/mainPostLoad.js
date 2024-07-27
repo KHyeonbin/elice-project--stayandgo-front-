@@ -39,7 +39,6 @@ class MainPostLoad {
                 } 
             });
             */
-            console.log(res.data);
             return /*posts*/ res.data.result;
         } catch (e) {
             console.log(e);

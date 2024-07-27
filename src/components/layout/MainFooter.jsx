@@ -34,7 +34,7 @@ const ItemImg = styled.img`
     height: 22px;
 `
 
-const Footer = ({user}) => {
+const Footer = () => {
     // footer menu 전역 상태 확인 및 변경
     const setMenu = useSetRecoilState(footerState);
     const menu = useRecoilValue(footerState);
@@ -45,7 +45,6 @@ const Footer = ({user}) => {
     // 메뉴 페이지로 진입할 시 setMenu 를 적용하기 위함
     const location = useLocation();
     useEffect(() => {
-        console.log(location.pathname)
         setMenu((current) => {
             const newMenu = {...current};
             const path = location.pathname;
