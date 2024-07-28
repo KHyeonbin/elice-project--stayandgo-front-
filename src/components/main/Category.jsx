@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import { tagArr } from "../../util/data/arrayStaticData";
 
 const Container = styled.div`
     width: 100%;
@@ -61,8 +62,6 @@ const ItemImg = styled.img`
 
 const Category = ({setCategory}) => {
     // 태그 배열 및 상태 정의
-    const tagArr = ["전체", "멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
-        , "산 근처", "방", "호수 근처", "통나무집", "캠핑카", "특이한 숙소", "농장", "디자인", "섬", "예술 공간"];
     const [tag, setTag] = useState(tagArr[0]);
 
     // 태그(카테고리) 변경될 때 setCategory 작업으로 category 상태 변경

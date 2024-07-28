@@ -7,7 +7,7 @@ import Select from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostUpload } from "../api/myPostUpload";
 import ReservationModal from "../components/reservation/ReservationModal";
-
+import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 
 const Container = styled.div`
     width: 100%;
@@ -249,7 +249,6 @@ const PostUpload = () => {
     
     // 방 갯수 state
     // 방 갯수 옵션 상태 정의
-    const optionsRoomArr = ["1개", "2개", "3개", "4개", "5개", "6개", "7개", "8개", "9개 이상"];
     const optionsRoom = optionsRoomArr.map((v) => {
         return {value: v, label: v};
     });
@@ -257,8 +256,6 @@ const PostUpload = () => {
 
     // 어른/어린이/아기 state
     // 인원 수 옵션 상태 정의
-    const personArr = ["1명", "2명", "4명", "6명", "9명", "12명", "15명", "20명 이상"];
-    const childArr = ["0명", "1명", "2명", "3명", "4명", "5명(최대)"];
     const optionsPerson = personArr.map((v) => {
         return {value: v, label: v};
     });
@@ -273,8 +270,6 @@ const PostUpload = () => {
     const [optionBaby, setOptionBaby] = useState(optionsBaby[0]);
 
     // 주요 행정구역 옵션 상태 정의
-    const mainLocationArr = ["서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
-        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도"];
     const optionsMainLocation = mainLocationArr.map((v) => {
         return {value: v, label: v};
     });

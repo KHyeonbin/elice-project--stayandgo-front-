@@ -150,11 +150,9 @@ const Items = ({startSearch, category}) => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
-          });
-      
+          });   
     };
     
-
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
     const pagePrevHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
@@ -194,9 +192,7 @@ const Items = ({startSearch, category}) => {
             top: 0,
             behavior: 'smooth'
           });
-      
     };
-
 
     return (
         <Container>

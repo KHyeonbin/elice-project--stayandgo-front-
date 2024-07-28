@@ -9,6 +9,7 @@ import {getDateFormat} from '../../util/getDateFormat';
 import { getNextDate } from "../../util/getNextDate";
 import {ko} from 'date-fns/locale';
 import Select from 'react-select';
+import { korCity } from "../../util/data/arrayStaticData";
 
 const Container = styled.div`
     width: 100%;
@@ -369,9 +370,7 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
         child: 0,
         baby: 0
     };
-    // 지역 정의 배열
-    const korCity = ["전체", "서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
-        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도"];
+    // 지역 정의 배열 사용
     // react-select 에는 key 값이 없어서 미리 option 정의
     const option = korCity.map((v) => {
         return {value: v, label: v}
