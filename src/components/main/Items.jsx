@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import mainPostLoad from "../../api/mainPostLoad";
 import main_no_data from '../../assets/images/main_no_data.png';
+import OneItem from "./OneItem";
 
 const Container = styled.div`
     width: 100%;
@@ -12,42 +13,6 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 `
-const ItemDiv = styled.div`
-    width: 90%;
-    height: 500px;
-    border: none;
-    cursor: pointer;
-`
-const ItemBackgroundDiv = styled.div.attrs(props => ({
-    style: {
-        backgroundImage: `url(${props.$background})`,
-    }
-}))`
-    width: 100%;
-    height: 400px;
-    border-radius: 20px;
-
-    background-size: cover;
-    background-repeat: no-repeat;
-
-`
-const ItemTextDiv = styled.div`
-    width: 90%;
-    padding-top: 10px;
-`
-const ItemTitle = styled.span`
-    font-size: 15px;
-    font-weight: 500;
-`
-const ItemNormalText = styled.span`
-    font-size: 13px;
-    font-weight: 400;
-`
-const ItemPriceText = styled.span`
-    font-size: 13px;
-    font-weight: 600;
-`
-
 const Pagenation_div = styled.div`
     width: 100%;
     font-size: 17px;
@@ -197,14 +162,7 @@ const Items = ({startSearch, category}) => {
     return (
         <Container>
             {posts && posts.map((v, i) => (
-                <ItemDiv key={i} id={v.nanoid}>
-                    <ItemBackgroundDiv $background={v.main_image/*v.main_image_link*/} />
-                    <ItemTextDiv>
-                        <ItemTitle>{v.title}<br /></ItemTitle>
-                        <ItemNormalText>호스트: jubilee님<br /></ItemNormalText>
-                        <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
-                    </ItemTextDiv>
-                </ItemDiv>
+                <OneItem key={i} v={v} />
             ))}
             {posts && posts.length === 0 &&
                 <div style={{paddingTop:"40%", display: "flex", flexDirection: "column", alignItems: "center"}}>

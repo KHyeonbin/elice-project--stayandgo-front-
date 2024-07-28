@@ -16,7 +16,8 @@ const Container = styled.div`
 `
 const Direction = styled.div`
     width: 5%;
-
+    right: 2%;
+    top: 20%;
     font-size: 20px;
     font-weight: bold;
     position: absolute;
