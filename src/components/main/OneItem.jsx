@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 
 const ItemDiv = styled.div`
@@ -11,9 +11,8 @@ const ItemDiv = styled.div`
 const ItemImagePrev = styled.div`
     cursor: pointer;
     position: absolute;
-    top: 40%;
-    left: 7%;
-    transform: translate(-50%, -50%);
+    bottom: 52%;
+    z-index: 100;
     width: 60px;
     height: 60px;
     border-radius: 20px;
@@ -23,7 +22,7 @@ const ItemImagePrev = styled.div`
     color: #FF385C;
 `
 const ItemImageNext = styled(ItemImagePrev)`
-    left: 93%;
+    left: 85%;
 `
 const ItemBackgroundDiv = styled.div.attrs(props => ({
     style: {
@@ -37,7 +36,18 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
     background-size: cover;
     background-repeat: no-repeat;
 
-    transition: background-image 1s;
+    opacity: 1;
+
+    @keyframes changeCaraselAni {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0%);
+            opacity: 1;
+        }
+    }
 `
 const ItemTextDiv = styled.div`
     width: 90%;
@@ -61,6 +71,8 @@ const OneItem = ({v}) => {
     const [index, setIndex] = useState(0);
     // 캐러셀 이미지 배열
     const images = [v.main_image, ...v.sub_images];
+    // 배경 div targetref 지정(translate left or right)
+    const backgroundRef = useRef(null);
 
     // 아이템 좌 우 클릭 시 이전 다음 사진으로 변화
     const onClickItemImagePrev = () => {
@@ -69,6 +81,10 @@ const OneItem = ({v}) => {
         } else {
             setIndex(index - 1);
         }
+        backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        setTimeout(() => {
+            backgroundRef.current.style.animation = "none";
+        }, 350);
     }
     const onClickItemImageNext = () => {
         if(index === images.length - 1){
@@ -76,6 +92,10 @@ const OneItem = ({v}) => {
         } else {
             setIndex(index + 1);
         }
+        backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        setTimeout(() => {
+            backgroundRef.current.style.animation = "none";
+        }, 350);
     }
 
     // 아이템 클릭 시 아이템 상세보기로 이동
@@ -87,7 +107,7 @@ const OneItem = ({v}) => {
         <ItemDiv id={v.nanoid}>
                     <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                     <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
-                    <ItemBackgroundDiv onClick={() => onClickItemDetail(v.nanoid)} $background={images[index]} />
+                    <ItemBackgroundDiv ref={backgroundRef} onClick={() => onClickItemDetail(v.nanoid)} $background={images[index]} />
                     <ItemTextDiv>
                         <ItemTitle>{v.title}<br /></ItemTitle>
                         <ItemNormalText>호스트: {v.author.name}<br /></ItemNormalText>
