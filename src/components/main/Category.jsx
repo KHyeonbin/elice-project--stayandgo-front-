@@ -80,7 +80,7 @@ const ItemImg = styled.img`
 `
 
 
-const Category = ({setCategory}) => {
+const Category = ({setCategory, setPage}) => {
     // 태그 배열 및 상태 정의
     const [tag, setTag] = useState(tagArr[0]);
 
@@ -107,6 +107,11 @@ const Category = ({setCategory}) => {
     // 아이템 클릭 시 태그 상태 변화
     const onClickImage = (index) => {
         setTag(tagArr[index]);
+        setPage((current) => {
+            const newPage = {...current};
+            newPage.page = 1;
+            return newPage;
+        });
     };
 
     return (

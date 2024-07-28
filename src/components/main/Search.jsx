@@ -243,7 +243,7 @@ const selectCustom = {
 };
 
 
-const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
+const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
     const defaultValue = {
         city: "전체",
@@ -329,6 +329,11 @@ const Search = ({search, setSearch, isModal, setIsModal, setStartSearch}) => {
             setIsModal(false);
             document.body.style.overflowY = "auto";
             setStartSearch(search);
+            setPage((current) => {
+                const newPage = {...current};
+                newPage.page = 1;
+                return newPage;
+            });
         }
     }
 

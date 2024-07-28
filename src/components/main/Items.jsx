@@ -70,18 +70,12 @@ const Pagenation_li = styled.li`
     }
 `
 
-const Items = ({startSearch, category}) => {
+const Items = ({page, setPage, startSearch, category}) => {
     // 숙소 아이템 목록 상태
     const [posts, setPosts] = useState(null);
-    // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
-    const [page, setPage] = useState({
-        page: 1,
-        perPage: 0,
-        total: 0,
-        totalPage: 0,
-    });
+    
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
-    // 1. 일단 페이지 정보를 먼저 세팅 (페이지 정보는 case1. 검색 버튼으로 검색 시작, case2. category 변동 에만 추가로 필요함)
+    // 1. 일단 페이지 정보를 먼저 세팅 (페이지 정보는 case1. 검색 버튼으로 검색 시작 & case2. category 변동 에 추가로 필요함)
     // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
         if(page && page.page === 1){
