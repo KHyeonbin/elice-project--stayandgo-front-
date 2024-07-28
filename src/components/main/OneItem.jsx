@@ -22,7 +22,7 @@ const ItemImagePrev = styled.div`
     color: #FF385C;
 `
 const ItemImageNext = styled(ItemImagePrev)`
-    left: 85%;
+    right: 0%;
 `
 const ItemBackgroundDiv = styled.div.attrs(props => ({
     style: {
