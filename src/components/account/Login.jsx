@@ -28,7 +28,7 @@ const LinkUl = styled.ul`
 const LinkLi = styled.li`
   display: inline-block;
   font-size: 12px;
-  color: 666;
+  color: #666;
   margin: 0 5px;
 `;
 
@@ -60,13 +60,16 @@ const Login = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const response = await axios.post("/login", { email, password });
-    // 엑세스 토큰 Recoil 전역 상태에 저장
-    console.log(response.data);
-    setAccessToken(response.data.accessToken);
-    
-    
-    navigate("/");
+
+    try {
+      const response = await axios.post("http://localhost:3001/login", { email, password });
+      // 엑세스 토큰 Recoil 전역 상태에 저장
+      //console.log(response.data);
+      setAccessToken(response.data.accessToken);
+      navigate("/");
+    } catch(error) {
+      alert(error.response.data.message);
+    }
   };
   return (
     <form onSubmit={onSubmitHandler}>
