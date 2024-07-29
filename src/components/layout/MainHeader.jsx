@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link  } from "react-router-dom";
+import { logoutUser } from "../../api/logoutUser";
 
 const Container = styled.div`
     position: sticky;
@@ -68,6 +69,18 @@ const LinkText = styled(Link)`
 `
 
 const Header = ({user, isModal}) => {
+    const onClickLogout = () => {
+        logoutUser()
+        .then(res => {
+            console.log(res);
+            if(res.data.code === 200){
+                window.location.href = '/';
+            } else {
+                alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
+            }
+        })
+    };
+
     return (
         <>
             {isModal && 
@@ -84,11 +97,11 @@ const Header = ({user, isModal}) => {
                         {user.is_logined &&
                             <>
                                 <LinkDiv><LinkText to={'/upload'}>숙소등록</LinkText></LinkDiv>
-                                <LinkDiv><LinkText to={'/'}>로그아웃</LinkText></LinkDiv>
+                                <LinkDiv><LinkText onClick={onClickLogout}>로그아웃</LinkText></LinkDiv>
                             </>
                         ||
                             <>
-                                <LinkDiv><LinkText to={'/'}>로그인</LinkText></LinkDiv>
+                                <LinkDiv><LinkText to={'/login'}>로그인</LinkText></LinkDiv>
                             </>
                         }
                     </RightArea>

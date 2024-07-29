@@ -20,11 +20,12 @@
     "react-select": "^5.8.0",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.12",
+    "swiper": "^11.1.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp -r build/* ../stay_and_go_back/public/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

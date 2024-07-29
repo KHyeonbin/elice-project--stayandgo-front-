@@ -11,6 +11,8 @@ import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 �
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
 import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가져오기
 import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
+import loginState from "../../atoms/loginState";
+import { useRecoilValue } from "recoil";
 
 /** 컴포넌트 외부로 이동하여 재사용성을 높이고 리렌더링을 방지 */
 const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
@@ -37,6 +39,10 @@ const ProfileEdit = () => {
   const [profileImage, setProfileImage] = useState(
     "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTEyNjE4NTg5MzIzNjI0NjI2MA%3D%3D/original/e6b26733-2c15-47d9-b097-6968b39bb697.jpeg?im_w=1440&im_q=highq",
   );
+  
+  const loginUser = useRecoilValue(loginState);
+  console.log(loginUser);
+
   const [email, setEmail] = useState("elice@test.com");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -131,7 +137,7 @@ const ProfileEdit = () => {
         <ProfileEditSection>
           <ProfileImageUpload profileImage={profileImage} setProfileImage={setProfileImage} />
           <ProfileEditForm>
-            <ProfileInput type="email"  name="email" value={email} disabled />
+            <ProfileInput type="email"  name="email" value={loginUser.email} disabled />
             <ProfileInput
               type="password"
               name="password"
@@ -150,13 +156,13 @@ const ProfileEdit = () => {
               onChange={onChangeHandler}
               error={passwordCheckError}
             />
-            <ProfileInput type="text" name="name" value={name} disabled />
+            <ProfileInput type="text" name="name" value={loginUser.name} disabled />
             <ProfileInput
               type="tel"
               name="phone"
               placeholder="휴대폰 번호"
               maxLength={13}
-              value={phone}
+              value={loginUser.phone}
               required
               onChange={onChangeHandler} // 휴대폰 번호 형식 변경 핸들러 사용
             />
