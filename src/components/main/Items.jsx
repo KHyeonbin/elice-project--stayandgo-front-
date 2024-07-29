@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import mainPostLoad from "../../api/mainPostLoad";
 import main_no_data from '../../assets/images/main_no_data.png';
+import OneItem from "./OneItem";
 
 const Container = styled.div`
     width: 100%;
@@ -12,40 +13,24 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 `
-const ItemDiv = styled.div`
-    width: 90%;
-    height: 500px;
-    border: none;
-    cursor: pointer;
+// 피드백 반영 (NoItem 스타일드컴포넌트 작성)
+const NoItemContainer = styled.div`
+    padding-top: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
-const ItemBackgroundDiv = styled.div.attrs(props => ({
+const NoItem = styled.div.attrs(props => ({
     style: {
-        backgroundImage: `url(${props.$background})`,
+        backgroundImage: `url(${props.$main_no_data})`
     }
 }))`
-    width: 100%;
-    height: 400px;
-    border-radius: 20px;
-
-    background-size: cover;
-    background-repeat: no-repeat;
-
+    width: 100px;
+    height: 100px;
 `
-const ItemTextDiv = styled.div`
-    width: 90%;
-    padding-top: 10px;
-`
-const ItemTitle = styled.span`
-    font-size: 15px;
-    font-weight: 500;
-`
-const ItemNormalText = styled.span`
-    font-size: 13px;
-    font-weight: 400;
-`
-const ItemPriceText = styled.span`
-    font-size: 13px;
-    font-weight: 600;
+const NoItemSpan = styled.span`
+    font-size: 20px;
+    color: #E61E51;
 `
 
 const Pagenation_div = styled.div`
@@ -85,32 +70,31 @@ const Pagenation_li = styled.li`
     }
 `
 
-const Items = ({startSearch, category}) => {
+const Items = ({page, setPage, startSearch, category}) => {
     // 숙소 아이템 목록 상태
     const [posts, setPosts] = useState(null);
-    // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
-    const [page, setPage] = useState({
-        page: 1,
-        perPage: 0,
-        total: 0,
-        totalPage: 0,
-    });
+    
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
-    // 1. 일단 페이지 정보를 먼저 세팅
-    useEffect(() => {
-        mainPostLoad.getPostsPage({search: startSearch, category})
-        .then(res => {
-            setPage(res);
-        });
-    },[startSearch, category]);
-
+    // 1. 일단 페이지 정보를 먼저 세팅 (페이지 정보는 case1. 검색 버튼으로 검색 시작 & case2. category 변동 에 추가로 필요함)
     // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
-        mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category})
-        .then(res => {
-            setPosts(res);
-        });
-    },[page]);
+        if(page && page.page === 1){
+            mainPostLoad.getPostsPage({search: startSearch, category, mymode: false})
+            .then(res => {
+                setPage(res);
+            });
+
+            mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
+            .then(res => {
+                setPosts(res);
+            });
+        } else if(page && page.page > 1) {
+            mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
+            .then(res => {
+                setPosts(res);
+            });
+        }        
+    },[startSearch, category, page.page]);
 
     // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
@@ -150,11 +134,9 @@ const Items = ({startSearch, category}) => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
-          });
-      
+          });   
     };
-    console.log(page)
-    console.log(posts)
+    
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
     const pagePrevHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
@@ -194,27 +176,18 @@ const Items = ({startSearch, category}) => {
             top: 0,
             behavior: 'smooth'
           });
-      
     };
-
 
     return (
         <Container>
             {posts && posts.map((v, i) => (
-                <ItemDiv key={i}>
-                    <ItemBackgroundDiv $background={v.main_image/*v.main_image_link*/} />
-                    <ItemTextDiv>
-                        <ItemTitle>{v.title}<br /></ItemTitle>
-                        <ItemNormalText>호스트: jubilee님<br /></ItemNormalText>
-                        <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
-                    </ItemTextDiv>
-                </ItemDiv>
+                <OneItem key={i} v={v} />
             ))}
             {posts && posts.length === 0 &&
-                <div style={{paddingTop:"40%", display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <div style={{width:"100px", height:"100px", backgroundImage:`url(${main_no_data})`}}></div>
-                    <span style={{fontSize:"20px", color: "#E61E51"}}>데이터가 존재하지 않습니다</span>
-                </div>  
+                <NoItemContainer>
+                    <NoItem $main_no_data={main_no_data}></NoItem>
+                    <NoItemSpan>데이터가 존재하지 않습니다</NoItemSpan>
+                </NoItemContainer>  
             ||
                 <Pagenation_div>
                     <Pagenation_ul>
