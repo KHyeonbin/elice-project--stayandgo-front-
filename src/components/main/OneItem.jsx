@@ -12,7 +12,7 @@ const ItemImagePrev = styled.div`
     cursor: pointer;
     position: absolute;
     bottom: 52%;
-    z-index: 100;
+    z-index: 90;
     width: 60px;
     height: 60px;
     border-radius: 20px;

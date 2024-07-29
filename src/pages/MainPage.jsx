@@ -27,8 +27,6 @@ const MainPage = ({search, setSearch, startSearch, setStartSearch}) => {
         totalPage: 0,
     });
 
-    console.log(loginUser);
-
     return (
         <>
             <Header user={loginUser} isModal={isModal}/>

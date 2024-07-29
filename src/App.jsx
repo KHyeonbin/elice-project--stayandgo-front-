@@ -18,7 +18,7 @@ import ProfileEditPage from "./pages/ProfileEditPage";
 import MyAccommodationsPage from "./pages/MyAccommodationsPage";
 import { loginUserCheck } from "./api/loginUserCheck";
 import {useEffect, useState} from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import loginState from "./atoms/loginState";
 import {getDateFormat} from './util/getDateFormat';
 
@@ -26,6 +26,7 @@ import {getDateFormat} from './util/getDateFormat';
 
 const App = () => {
   // user 로그인 상태 확인 및 변경 -> 새로고침을 하더라도 바로 유저의 정보를 프론트에서 쉽게 관리 가능
+  const loginUser = useRecoilValue(loginState);
   const setLoginUser = useSetRecoilState(loginState);
 
   // 검색어 search state (실시간)
@@ -80,6 +81,8 @@ const App = () => {
         }
       });
   }, []);
+
+  console.log(loginUser);
 
   return (
       <BrowserRouter>
