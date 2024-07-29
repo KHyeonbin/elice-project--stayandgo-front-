@@ -39,6 +39,8 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
 
     opacity: 1;
 
+    position: relative;
+
     @keyframes changeCaraselAni {
         0% {
             transform: translateX(-100%);
@@ -66,6 +68,25 @@ const ItemPriceText = styled.span`
     font-size: 13px;
     font-weight: 600;
 `
+const DotDiv = styled.div`
+    position: absolute;
+    left: 43%;
+    bottom: 25%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+`
+const Dot = styled.div.attrs(props => ({
+    style: {
+        backgroundColor: props.$index === props.$imgIndex ? '#E61E51' : 'white'
+    }
+}))`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.7;
+`;
+
 
 const OneItem = ({v}) => {
     // 캐러셀 이미지 인덱스
@@ -74,6 +95,8 @@ const OneItem = ({v}) => {
     const images = [v.main_image, ...v.sub_images];
     // 배경 div targetref 지정(translate left or right)
     const backgroundRef = useRef(null);
+    // dot index
+    const [dots, setDots] = useState(0);
 
     // 아이템 좌 우 클릭 시 이전 다음 사진으로 변화
     const onClickItemImagePrev = () => {
@@ -103,12 +126,19 @@ const OneItem = ({v}) => {
     const onClickItemDetail = (nanoid) => {
         console.log(nanoid);
     }
-
+    console.log(images.length)
     return (
         <ItemDiv id={v.nanoid}>
                     <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                     <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
                     <ItemBackgroundDiv ref={backgroundRef} onClick={() => onClickItemDetail(v.nanoid)} $background={images[index]} />
+                        <DotDiv>
+                            {images.map((v, i) => {
+                                return (
+                                    <Dot key={i} $index={i} $imgIndex={index} />
+                                )
+                            })}
+                        </DotDiv>    
                     <ItemTextDiv>
                         <ItemTitle>{v.title}<br /></ItemTitle>
                         <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
