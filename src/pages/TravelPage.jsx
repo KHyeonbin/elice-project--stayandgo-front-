@@ -20,7 +20,6 @@ const Title = styled.h1`
 
 const TravelPage = () => {
   //로그인 상태 확인
-  const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
   //여행카드 세팅
   const [cardData, setCardData] = useState([]);
@@ -39,14 +38,7 @@ const TravelPage = () => {
     };
 
     fetchTravelData();
-
-    setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
-      is_admin: false,
-      is_logined: false,
-    });
-  }, [setLoginUser]);
+  }, []);
 
   //오늘 날짜를 기준으로 과거, 미래 분류해서 state에 담기
   useEffect(() => {

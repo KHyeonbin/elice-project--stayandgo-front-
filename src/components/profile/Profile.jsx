@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import loginState from "../../atoms/loginState";
+import { useRecoilValue } from "recoil";
 import {
   ProfileContainer,
   ProfileHeader,
@@ -14,15 +16,12 @@ import {
 } from "./ProfilePageStyle";
 import ProfileModal from "./ProfileModal"; // 수정된 모달 컴포넌트
 import { fetchEditUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
+import { logoutUser } from "../../api/logoutUser";
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    id: 1,
-    name: "엘리스",
-    email: "elice@test.com",
-    profileImage:
-      "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTEyNjE4NTg5MzIzNjI0NjI2MA%3D%3D/original/e6b26733-2c15-47d9-b097-6968b39bb697.jpeg?im_w=1440&im_q=highq",
-  });
+  // user 전역 상태(app.jsx 에서 체크됨) 확인
+  const user = useRecoilValue(loginState);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 모달 상태 추가
 
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
@@ -69,9 +68,14 @@ const Profile = () => {
 
   /** 로그아웃 버튼 클릭 시 홈으로 이동 */
   const onClickHandleProfileLogout = () => {
-    // 토큰삭제?
-    console.log("로그아웃");
-    navigate("/");
+    logoutUser()
+    .then(res => {
+        if(res?.data && res.data.code === 200){
+            window.location.href = '/';
+        } else {
+            alert("로그아웃 오류가 발생하였습니다.");
+        }
+    });
   };
 
   return (
