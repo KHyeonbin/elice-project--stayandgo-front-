@@ -50,10 +50,12 @@ const Footer = () => {
             const path = location.pathname;
             if(path === "/"){
                 newMenu.menu = menu.menuArr[0];
-            } else if(path === "/reservation"){
+            } else if(path === "/travel"){
                 newMenu.menu = menu.menuArr[1];
-            } else if(path === "/history"){
+            } else if(path === "/myaccommodation"){
                 newMenu.menu = menu.menuArr[2];
+            } else if(path === "/profile"){
+                newMenu.menu = menu.menuArr[3];
             }
             return newMenu;
         });
@@ -80,16 +82,17 @@ const Footer = () => {
     const normalSortImages = sortedImages(normalImages);
     const clickedSortImages = sortedImages(clickedImages);
 
-
     // 아이템 클릭 시 해당 메뉴 페이지로 이동
     const onClickImage = (index) => {
         // navigate 추가
         if(index === 0){
             navigate('/');
         } else if(index === 1){
-            navigate('/reservation');
+            navigate('/travel');
         } else if(index === 2){
-            navigate('/history');
+            navigate('/myaccommodation');
+        } else if(index === 3){
+            navigate('/profile');
         }
     };
 

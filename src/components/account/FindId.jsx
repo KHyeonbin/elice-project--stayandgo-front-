@@ -2,6 +2,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { findIDUser } from "../../api/findIDUser";
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -56,18 +57,21 @@ const JoinBox = styled.div`
 `;
 
 const Findpassword = () => {
-  const [name, setName] = useState();
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [userId, setUserId] = useState(null);
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [userId, setUserId] = useState("");
   const onSubmitHandle = async (e) => {
     e.preventDefault();
-
-    const response = await axios.get(
-      `/user?name=${name}&phoneNumber=${phoneNumber}`
-    );
-    setUserId(response.data.email);
+    findIDUser(name, phoneNumber)
+    .then(res => {
+      if(res.data.code === 200){
+        setUserId(res.data.data);
+      } else {
+        alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
+      } 
+    })
   };
-
+  
   const phoneNumberChangeHandler = (e) => {
     let inputValue = e.target.value;
     inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
@@ -104,7 +108,7 @@ const Findpassword = () => {
           <Link to="/login">로그인 하기</Link>
         </LinkLi>
       </LinkUl>
-      <ShowBtn type="button">확인</ShowBtn>
+      <ShowBtn type="submit">확인</ShowBtn>
       <JoinBox>
         아직 회원이 아니세요?
         <Link to="/join">회원가입</Link>
@@ -112,7 +116,7 @@ const Findpassword = () => {
 
       {userId && (
         <UserInfoDiv>
-          아이디는 <b>${userId}</b>입니다.
+          아이디는 <b>{userId}</b>입니다.
         </UserInfoDiv>
       )}
     </form>

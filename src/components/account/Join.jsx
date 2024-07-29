@@ -185,7 +185,7 @@ const Join = () => {
     } catch(error) {
       //emailRequestBtn.current.disabled = false;
       e.target.disabled = false;
-      alert(error.response.data.message);
+      alert(error.response); // 확인 !!
     }
 
   };

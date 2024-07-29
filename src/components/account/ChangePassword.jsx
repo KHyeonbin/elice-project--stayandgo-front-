@@ -1,8 +1,9 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { PasswordRegex } from "../account/Regex";
+import { changePWUser } from "../../api/changePWUser";
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -51,6 +52,7 @@ const ChangePassword = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const validatePassword = (password) => {
     if (password.length > 0 && password.length < 10) {
@@ -80,12 +82,15 @@ const ChangePassword = () => {
     }
 
     try {
-      await axios.put("/", {
-        email: userInfo.email,
-        password: userInfo.password,
-      });
-        alert("비밀번호가 변경되었습니다.");
-        navigate("/login");
+        changePWUser(location.state.email, userInfo.password)
+        .then(res => {
+          if(res.data.code === 200){
+            alert("비밀번호가 변경되었습니다.");
+            navigate("/login");
+          } else {
+            alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생")
+          }
+        })
     } catch (error) {
       alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
@@ -125,10 +130,8 @@ const ChangePassword = () => {
         type="email"
         placeholder="이메일"
         name="email"
-        value={userInfo.email}
-        onChange={(e) => {
-          onChangeHandler(e);
-        }}
+        value={location.state.email ? location.state.email : ""}
+        readOnly
         required
       />
       <LoginInput

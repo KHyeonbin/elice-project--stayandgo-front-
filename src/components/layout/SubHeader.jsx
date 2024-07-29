@@ -70,16 +70,16 @@ const SubHeader = ({ isLogin }) => {
         {(isLogin && (
           <>
             <LinkDiv>
-              <LinkText to={"/"}>숙소등록</LinkText>
+              <LinkText to={"/upload"}>숙소등록</LinkText>
             </LinkDiv>
             <LinkDiv>
-              <LinkText to={"/"}>로그아웃</LinkText>
+              <LinkText to={"/logout"}>로그아웃</LinkText>
             </LinkDiv>
           </>
         )) || (
           <>
             <LinkDiv>
-              <LinkText to={"/"}>로그인</LinkText>
+              <LinkText to={"/login"}>로그인</LinkText>
             </LinkDiv>
           </>
         )}
