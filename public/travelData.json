@@ -10,8 +10,8 @@
     "baby": 0,
     "price": 120000,
     "totalPrice": 240000,
-    "image": [
-      "https://picsum.photos/111/111?random=1",
+    "main_image": "https://picsum.photos/111/111?random=1",
+    "sub_images": [
       "https://picsum.photos/111/111?random=2",
       "https://picsum.photos/111/111?random=3"
     ]
@@ -27,7 +27,8 @@
     "baby": 1,
     "price": 200000,
     "totalPrice": 1200000,
-    "image": ["https://picsum.photos/111/111?random=4"]
+    "main_image": "https://picsum.photos/111/111?random=4",
+    "sub_images": []
   },
   {
     "id": "3",
@@ -40,8 +41,8 @@
     "baby": 0,
     "price": 150000,
     "totalPrice": 900000,
-    "image": [
-      "https://picsum.photos/111/111?random=6",
+    "main_image": "https://picsum.photos/111/111?random=6",
+    "sub_images": [
       "https://picsum.photos/111/111?random=5"
     ]
   },
@@ -56,19 +57,21 @@
     "baby": 3,
     "price": 180000,
     "totalPrice": 900000,
-    "image": ["https://picsum.photos/111/111?random=7"]
+    "main_image": "https://picsum.photos/111/111?random=7",
+    "sub_images": []
   },
   {
     "id": "5",
     "title": "인천 집",
     "name": "규진",
     "startDate": "2024-07-22",
-    "endDate": "2024-07-24",
+    "endDate": "2024-07-29",
     "adult": 2,
     "child": 0,
     "baby": 0,
     "price": 230000,
     "totalPrice": 460000,
-    "image": ["https://picsum.photos/111/111?random=8"]
+    "main_image": "https://picsum.photos/111/111?random=8",
+    "sub_images": []
   }
 ]
