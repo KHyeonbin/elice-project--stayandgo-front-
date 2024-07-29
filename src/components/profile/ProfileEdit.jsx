@@ -9,8 +9,8 @@ import {
 } from "./ProfileEditPageStyle";
 import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
-import ProfileInput from "./ProfileInput"; // input 컴포넌튼 분리
-import axios from "axios";
+import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가져오기
+import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
 
 const ProfileEdit = () => {
   const [profileImage, setProfileImage] = useState(
@@ -31,10 +31,9 @@ const ProfileEdit = () => {
 
   /** 사용자 정보 불러오기 */
   useEffect(() => {
-    const fetchUserData = async () => {
+    const getUserData = async () => {
       try {
-        const response = await axios.get(`/users/edit/${id}`); // 임시 엔드포인트
-        const userData = response.data;
+        const userData = await fetchUserData(id);
         setProfileImage(userData.profileImage);
         setEmail(userData.email);
         setName(userData.name);
@@ -44,7 +43,7 @@ const ProfileEdit = () => {
       }
     };
 
-    fetchUserData();
+    getUserData();
   }, [id]);
 
   /** 비밀번호 유효성 검사 함수 */
@@ -103,12 +102,7 @@ const ProfileEdit = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      await axios.put(`/users/${id}`, {
-        // 임시 엔드포인트
-        password,
-        phone,
-        profileImage,
-      });
+      await editUserData(id, { password, phone, profileImage });
       setIsModal(true);
       navigate("/");
     } catch (error) {
