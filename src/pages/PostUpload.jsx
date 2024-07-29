@@ -536,7 +536,24 @@ const PostUpload = () => {
     const onSubmitPost = async (e) => {
         e.preventDefault();
 
-
+        const subImagesArray = Array.from(data.sub_images);
+        const mainImageArray = Array.from(data.main_image);
+        // 파일 이름에 공백이 포함되어 있는지 확인
+        if (
+            subImagesArray.some(file => file.name.includes(" ")) ||
+            mainImageArray.some(file => file.name.includes(" "))
+        ) {
+            alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
+            return;
+        }
+        // 파일 이름 길이가 20자를 초과하는지 확인
+        if (
+            subImagesArray.some(file => file.name.length > 20) ||
+            mainImageArray.some(file => file.name.length > 20)
+        ) {
+            alert("이미지 파일 이름은 20자 이내여야 합니다.");
+            return;
+        }
 
         if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){

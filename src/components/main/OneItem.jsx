@@ -35,6 +35,7 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
 
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
 
     opacity: 1;
 
