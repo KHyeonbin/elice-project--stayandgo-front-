@@ -39,7 +39,7 @@ const Date = styled.span`
 const TravelCard = ({
   title,
   main_image,
-  sub_images,
+  sub_images = [],
   name,
   startDate,
   endDate,
@@ -55,11 +55,7 @@ const TravelCard = ({
 
   //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
-    if (main_image && Array.isArray(sub_images)) {
-      setImageUrls([main_image, ...sub_images]);
-    } else if (main_image) {
-      setImageUrls([main_image]);
-    }
+    setImageUrls([main_image, ...sub_images]);
   }, [main_image, sub_images]);
 
   const handleClick = () => {
