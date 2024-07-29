@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
   ProfileEditSection,
   ProfileEditForm,
-  ProfileEditInput,
   ProfileEditButtonContainer,
   ProfileEditSaveButton,
-  ErrorMessage,
 } from "./ProfileEditPageStyle";
 import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
+import ProfileInput from "./ProfileInput"; // input 컴포넌튼 분리
 import axios from "axios";
 
 const ProfileEdit = () => {
@@ -49,10 +48,9 @@ const ProfileEdit = () => {
   }, [id]);
 
   /** 비밀번호 유효성 검사 함수 */
-  const validatePassword = (password) => {
+  const validatePassword = useCallback((password) => {
     if (password.length > 0 && password.length < 10) {
-      setPasswordError("10자 이상 입력해주세요.");
-      return false;
+      return "10자 이상 입력해주세요.";
     } else {
       const hasLetter = /[a-zA-Z]/.test(password);
       const hasNumber = /[0-9]/.test(password);
@@ -60,38 +58,28 @@ const ProfileEdit = () => {
       const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
 
       if (!isValidCombination) {
-        setPasswordError("영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합");
-        return false;
+        return "영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합";
       } else {
-        setPasswordError("");
-        return true;
+        return "";
       }
     }
-  };
+  },[]);
 
   /** 인풋 변경 핸들러 */
-  const onChangeHandler = (e) => {
+  const onChangeHandler = useCallback((e) => {
     const { name, value } = e.target;
 
     if (name === "phone") {
-      const formattedValue = value.replace(/\D/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경
+      const formattedValue = value.replace(/\D/g, "").slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경 및 길이 제한
       setPhone(formattedValue);
     } else if (name === "password") {
       setPassword(value);
+      setPasswordError(validatePassword(value)); // 패스워드 에러 검증
     } else if (name === "passwordCheck") {
       setPasswordCheck(value);
+      setPasswordCheckError(value !== password ? "비밀번호가 일치하지 않습니다." : ""); // 패스워드 확인 에러 검증
     }
-  };
-
-  useEffect(() => {
-    validatePassword(password);
-  }, [password]);
-
-  useEffect(() => {
-    setPasswordCheckError(
-      passwordCheck.length > 0 && password !== passwordCheck ? "비밀번호가 일치하지 않습니다." : "",
-    );
-  }, [passwordCheck, password]);
+  },[password, validatePassword]);
 
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e) => {
@@ -146,31 +134,28 @@ const ProfileEdit = () => {
         <ProfileEditSection>
           <ProfileImageUpload profileImage={profileImage} setProfileImage={setProfileImage} />
           <ProfileEditForm>
-            <ProfileEditInput type="email" id="email" name="email" value={email} disabled />
-            <ProfileEditInput
+            <ProfileInput type="email"  name="email" value={email} disabled />
+            <ProfileInput
               type="password"
-              id="password"
               name="password"
               placeholder="새 비밀번호 입력"
               value={password}
               required
               onChange={onChangeHandler}
+              error={passwordError}
             />
-            {password.length > 0 && password && <ErrorMessage>{passwordError}</ErrorMessage>}
-            <ProfileEditInput
+            <ProfileInput
               type="password"
-              id="passwordCheck"
               name="passwordCheck"
               placeholder="새 비밀번호 확인"
               value={passwordCheck}
               required
               onChange={onChangeHandler}
+              error={passwordCheckError}
             />
-            {passwordCheck.length > 0 && passwordCheckError && <ErrorMessage>{passwordCheckError}</ErrorMessage>}
-            <ProfileEditInput type="text" id="name" name="name" value={name} disabled />
-            <ProfileEditInput
+            <ProfileInput type="text" name="name" value={name} disabled />
+            <ProfileInput
               type="tel"
-              id="phone"
               name="phone"
               placeholder="휴대폰 번호"
               maxLength={13}
