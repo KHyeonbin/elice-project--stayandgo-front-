@@ -13,6 +13,7 @@ import {
   ProfileLogout,
 } from "./ProfilePageStyle";
 import ProfileModal from "./ProfileModal"; // 수정된 모달 컴포넌트
+import { fetchEditUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
 
 const Profile = () => {
   const [user, setUser] = useState({
@@ -28,16 +29,16 @@ const Profile = () => {
 
   useEffect(() => {
     /** 유저 데이터 가져오는 함수 */
-    const fetchUserData = async () => {
+    const getUserData = async () => {
       try {
-        const response = await axios.get("/users"); // 임시 엔드포인트
-        setUser(response.data);
+        const userData = await fetchEditUserData();
+        setUser(userData);
       } catch (error) {
         console.error("유저의 데이터를 찾을 수 없습니다.", error);
       }
     };
 
-    fetchUserData();
+    getUserData();
   }, []);
 
   /** 개인정보 수정 페이지로 이동 */
@@ -58,7 +59,7 @@ const Profile = () => {
   /** 회원 탈퇴 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
-      await axios.delete(`users/${user.id}`); // 임시 엔드포인트, 주석처리 후 탈퇴성공 테스트 확인 가능
+      await deleteUser(user.id); // 주석처리 후 탈퇴성공 테스트 확인 가능
       setIsDeleteModalOpen(false);
       navigate("/"); // 홈으로 이동
     } catch (error) {

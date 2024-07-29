@@ -53,20 +53,6 @@ export const ProfileEditForm = styled.form`
   flex: 1;
 `;
 
-export const ProfileEditInput = styled.input`
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  height: 50px;
-  border-radius: 10px;
-  border: 1px solid #dddddd;
-  outline: none;
-
-  &:focus {
-    border: 1px solid #f87878;
-  }
-`;
-
 export const ProfileEditButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -87,8 +73,4 @@ export const ProfileEditSaveButton = styled.button`
   cursor: pointer;
 `;
 
-export const ErrorMessage = styled.div`
-  font-size: 12px;
-  color: red;
-  padding: 5px 0;
-`;
+
