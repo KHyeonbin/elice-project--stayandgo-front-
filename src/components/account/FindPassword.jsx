@@ -2,10 +2,6 @@ import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
-import {
-  sendEmailCertification,
-  certificationCode,
-} from "../../api/EmailRequest";
 
 const FlexDiv = styled.div`
   display: flex;
@@ -86,20 +82,26 @@ const Findpassword = () => {
   const navigate = useNavigate();
   const onEmailRequestHandler = async (e) => {
     e.preventDefault();
-    const result = await sendEmailCertification(email);
-    if (result) {
-      // 이메일 인증 요청 시 버튼 비활성화
+
+    try {
+      const response = await axios.post('http://localhost:3001/users/verify/findpw', {email});
       e.target.disabled = true;
+      alert(response.data.message);
+    } catch(error) {
+      alert(error.response.data.message);
     }
-  };
+  }; 
 
   // 이메일 인증 확인 버튼 클릭 시
   const onEmailCheckHandler = async (e) => {
     e.preventDefault();
-    const result = await certificationCode(email, code);
-    if (result) {
+    try {
+      await axios.post('http://localhost:3001/users/verify/confirm', {email, secret: code});
       navigate("/changePassword");
+    } catch(error) {
+      alert(error.response.data.message);
     }
+
   };
 
   return (
