@@ -7,7 +7,7 @@ import Select from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostUpload } from "../api/myPostUpload";
 import ReservationModal from "../components/reservation/ReservationModal";
-
+import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 
 const Container = styled.div`
     width: 100%;
@@ -249,7 +249,6 @@ const PostUpload = () => {
     
     // 방 갯수 state
     // 방 갯수 옵션 상태 정의
-    const optionsRoomArr = ["1개", "2개", "3개", "4개", "5개", "6개", "7개", "8개", "9개 이상"];
     const optionsRoom = optionsRoomArr.map((v) => {
         return {value: v, label: v};
     });
@@ -257,8 +256,6 @@ const PostUpload = () => {
 
     // 어른/어린이/아기 state
     // 인원 수 옵션 상태 정의
-    const personArr = ["1명", "2명", "4명", "6명", "9명", "12명", "15명", "20명 이상"];
-    const childArr = ["0명", "1명", "2명", "3명", "4명", "5명(최대)"];
     const optionsPerson = personArr.map((v) => {
         return {value: v, label: v};
     });
@@ -273,8 +270,6 @@ const PostUpload = () => {
     const [optionBaby, setOptionBaby] = useState(optionsBaby[0]);
 
     // 주요 행정구역 옵션 상태 정의
-    const mainLocationArr = ["서울", "제주도", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기도", "강원도"
-        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도"];
     const optionsMainLocation = mainLocationArr.map((v) => {
         return {value: v, label: v};
     });
@@ -343,8 +338,8 @@ const PostUpload = () => {
                 alert("이미지 파일만(jpg, png, jpeg) 첨부할 수 있습니다.");
                 return;
             }
-            if(filesNameArray.length >= 10){
-                alert("서브 이미지는 10장 이내로 첨부할 수 있습니다!");
+            if(filesNameArray.length >= 5){
+                alert("서브 이미지는 5장 이내로 첨부할 수 있습니다!");
                 return;
             }
     
@@ -548,6 +543,7 @@ const PostUpload = () => {
         // formdata 생성 및 데이터 추가
         const formData = new FormData();
         // 파일들을 'images'라는 필드 이름으로 추가 (서버에는 images 에 main 첫번째 나머지 subimage로 들어가야 함)
+        // 백엔드에서 main_image <-> sub_images 분리시킴
         formData.append('images', data.main_image[0]);
         for (let i = 0; i < data.sub_images.length; i++) {
             formData.append('images', data.sub_images[i]);
@@ -604,7 +600,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 9장" value={imageName.sub_images} disabled />
+                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>

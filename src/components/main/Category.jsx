@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import { tagArr } from "../../util/data/arrayStaticData";
 
 const Container = styled.div`
     width: 100%;
@@ -8,6 +9,26 @@ const Container = styled.div`
     
     border-bottom: 2px solid #EEEEEE;
     padding-top: 10px;
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+`
+const Direction = styled.div`
+    width: 5%;
+    right: 2%;
+    top: 20%;
+    font-size: 20px;
+    font-weight: bold;
+    position: absolute;
+
+    @keyframes colorChange {
+        0% { color: #333; }
+        50% { color: #E61E51; }
+        100% { color: #333; }
+    }
+    // 무한 반복
+    animation: colorChange 2s infinite;
 `
 const ItemDiv = styled.div`
     width: 90%;
@@ -59,10 +80,8 @@ const ItemImg = styled.img`
 `
 
 
-const Category = ({setCategory}) => {
+const Category = ({setCategory, setPage}) => {
     // 태그 배열 및 상태 정의
-    const tagArr = ["전체", "멋진 수영장", "한적한 시골", "해변 근처", "캠핑장", "한옥", "최고의 전망"
-        , "산 근처", "방", "호수 근처", "통나무집", "캠핑카", "특이한 숙소", "농장", "디자인", "섬", "예술 공간"];
     const [tag, setTag] = useState(tagArr[0]);
 
     // 태그(카테고리) 변경될 때 setCategory 작업으로 category 상태 변경
@@ -88,10 +107,18 @@ const Category = ({setCategory}) => {
     // 아이템 클릭 시 태그 상태 변화
     const onClickImage = (index) => {
         setTag(tagArr[index]);
+        setPage((current) => {
+            const newPage = {...current};
+            newPage.page = 1;
+            return newPage;
+        });
     };
 
     return (
         <Container>
+            <Direction>
+            {">>"}
+            </Direction>
             <ItemDiv>
                 {sortedImages.map((v, i) => (
                     <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
@@ -100,7 +127,6 @@ const Category = ({setCategory}) => {
                     </Item>
                 ))}
             </ItemDiv>
-
         </Container>
     );
 }

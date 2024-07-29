@@ -2,28 +2,30 @@ import axios from 'axios';
 
 class MainPostLoad {
     // 페이지 정보 불러오기
-    async getPostsPage({search, category}){
+    async getPostsPage({search, category, mymode}){
         try {
             const res = await axios.post(`http://localhost:3001/post/getposts/page`,{
                 search,
-                category
+                category,
+                mymode
             });
             return res.data.result;
         }
         catch(e) {
-            console.log(e);
+            console.log(e.message);
             // alert
             return;
         }
     }
 
     // 숙소 정보 불러오기
-    async getPostsRead({nowpage, search, category}){
+    async getPostsRead({nowpage, search, category, mymode}){
         try{
             const res = await axios.post(`http://localhost:3001/post/getposts/page/read`,{
                 nowpage,
                 search,
-                category
+                category,
+                mymode
             });
             // 기존 db 방식일 때 
             /*
@@ -37,7 +39,6 @@ class MainPostLoad {
                 } 
             });
             */
-            console.log(res.data);
             return /*posts*/ res.data.result;
         } catch (e) {
             console.log(e);

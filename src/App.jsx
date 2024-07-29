@@ -11,15 +11,36 @@ import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import MyAccommodationsPage from "./pages/MyAccommodationsPage";
 import { loginUserCheck } from "./api/loginUserCheck";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import { useSetRecoilState } from "recoil";
 import loginState from "./atoms/loginState";
+import {getDateFormat} from './util/getDateFormat';
 
 
 
 const App = () => {
   // user 로그인 상태 확인 및 변경 -> 새로고침을 하더라도 바로 유저의 정보를 프론트에서 쉽게 관리 가능
   const setLoginUser = useSetRecoilState(loginState);
+
+  // 검색어 search state (실시간)
+  const [search, setSearch] = useState({
+    city: "전체",
+    startDate: getDateFormat(new Date()),
+    endDate: getDateFormat(new Date()),
+    adult: 0,
+    child: 0,
+    baby: 0,
+  });
+
+  // 검색어 search state (검색 버튼 클릭 시)
+  const [startSearch, setStartSearch] = useState({
+      city: "전체",
+      startDate: getDateFormat(new Date()),
+      endDate: getDateFormat(new Date()),
+      adult: 0,
+      child: 0,
+      baby: 0,
+  });
 
   useEffect(() => {
     loginUserCheck()
@@ -33,6 +54,8 @@ const App = () => {
                 newUser.name = res.data.name;
                 newUser.nickname = res.data.nickname;
                 newUser.phone = res.data.phone;
+                newUser.photo = rew.data.photo;
+                return newUser;
             });
         } else if(res && res.code === 411){
           console.log(res.message);
@@ -44,7 +67,7 @@ const App = () => {
     <RecoilRoot>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MainPage />}></Route>
+          <Route path="/" element={<MainPage search={search} setSearch={setSearch} startSearch={startSearch} setStartSearch={setStartSearch} />}></Route>
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/Travel" element={<TravelPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>

@@ -5,7 +5,11 @@ export const loginUserCheck = async () => {
         const res = await axios.get('http://localhost:3001/users/getuser');
         return res.data;
     } catch (e) {
-        console.log(e);
+        if(e.response.data){
+            console.log(e.response.data.message);
+        } else {
+            console.log(e);
+        }
         return;
     }
 };
