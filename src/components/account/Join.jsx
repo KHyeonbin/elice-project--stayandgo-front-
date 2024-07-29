@@ -2,7 +2,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 const FlexDiv = styled.div`
   display: flex;
   gap: 10px;
@@ -66,6 +66,7 @@ const Join = () => {
   const [passwordError, setPasswordError] = useState("");
   const [passwordError2, setPasswordError2] = useState("");
   const navigate = useNavigate();
+  const emailCodeInput = useRef();
   const emailRequestBtn = useRef();
 
   // 인풋 입력 시 상태 변경
@@ -75,8 +76,9 @@ const Join = () => {
       let inputValue = e.target.value;
 
       if (inputName === "phone") {
-        inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
-        inputValue = inputValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 000-0000-0000 형태로 리턴
+        // 문자 입력 제거
+        // 000-0000-0000 형태로 리턴
+        inputValue = PhoneNumberRegex(inputValue);
       }
 
       if (inputName === "password") {
@@ -86,9 +88,7 @@ const Join = () => {
           setPasswordError("");
 
           /** 영문, 숫자, 특수문자(공백 제외) 포함 여부 확인 / 정규표현식 사용 */
-          const hasLetter = /[a-zA-Z]/.test(inputValue); // 영문자 포함 여부
-          const hasNumber = /[0-9]/.test(inputValue); // 숫자 포함 여부
-          const hasSpecialChar = /[^a-zA-Z0-9]/.test(inputValue); // 특수 문자 포함 여부
+          const [hasLetter, hasNumber, hasSpecialChar] = PasswordRegex(inputValue);
           const isValidCombination =
             [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
           // filter() 이용해서 각각 2개 이상 조합 참, 거짓인지 확인
@@ -127,61 +127,67 @@ const Join = () => {
   //회원가입 완료 버튼 클릭 시
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    if (!!passwordCheckError || !!passwordError2 || !!passwordError) {
-      alert("비밀번호를 확인해주세요.");
-      return false;
-    }
-    console.log(!!passwordCheckError, !!passwordError2, !!passwordError);
-    const response = await axios.post("http://localhost:3001/users", {
-      email: userInfo.email,
-      password: userInfo.password,
-      name: userInfo.name,
-      nickname: userInfo.nickName,
-      phone: userInfo.phone,
-    });
 
-    console.log(response);
+    try {
+      if (!!passwordCheckError || !!passwordError2 || !!passwordError) {
+        alert("비밀번호를 확인해주세요.");
+        return false;
+      }
+      await axios.post("http://localhost:3001/users", {
+        email: userInfo.email,
+        password: userInfo.password,
+        name: userInfo.name,
+        nickname: userInfo.nickName,
+        phone: userInfo.phone,
+      });
 
-    // 회원가입 완료 시
-    if (response.data.code == 200) {
       navigate("/joinEnd");
+    } catch(error) {
+      alert(error.response.data.message);
     }
+
   };
 
-  // 이메일 인증 버튼 클릭 시
+  // 이메일 요청 버튼 클릭 시
   const onEmailRequestHandler = async (e) => {
     e.preventDefault();
-    const result = await axios.post("http://localhost:3001/users/verify", {
-      email: userInfo.email,
-    });
-    if (result.data.code === 200) {
+    try {
+      await axios.post("http://localhost:3001/users/verify", {
+        email: userInfo.email,
+      });
+      e.target.disabled = true;
+      emailCodeInput.current.readOnly = false;
+      emailRequestBtn.current.disabled = false;
       alert("이메일이 발송되었습니다.");
       // 이메일 인증 요청 시 버튼 비활성화
-      e.target.disabled = true;
-    }
+    } catch(error) {
+      e.target.disabled = false;
+      alert(error.response.data.message);
+    };
   };
+
 
   // 이메일 인증 확인 버튼 클릭 시
   const onEmailCheckHandler = async (e) => {
     //e.preventDefault();
-    const result = await axios.post(
-      "http://localhost:3001/users/verify/confirm",
-      {
-        email: userInfo.email,
-        secret: userInfo.code,
-      }
-    );
-    // 인증 성공
-    if (result.data.code === 200) {
-      alert("이메일 인증 코드가 확인되었습니다.");
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/users/verify/confirm",
+        {
+          email: userInfo.email,
+          secret: userInfo.code,
+        }
+      );
       // 이메일 인증 요청 시 버튼 비활성화
       e.target.disabled = true;
-    }
-    if (result.data.code === 400) {
-      alert("이메일 인증 코드를 다시 확인해주세요.");
-      emailRequestBtn.current.disabled = false;
+      emailCodeInput.current.readOnly = true;
+      alert(response.data.message);
+    } catch(error) {
+      //emailRequestBtn.current.disabled = false;
       e.target.disabled = false;
+      alert(error.response.data.message);
     }
+
   };
 
   return (
@@ -214,6 +220,7 @@ const Join = () => {
           onChange={(e) => {
             onChangeHandler(e);
           }}
+          ref={emailCodeInput}
           required
         />
         <RequestBtn type="button" onClick={onEmailCheckHandler}>
