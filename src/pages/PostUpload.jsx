@@ -8,6 +8,8 @@ import {Checkbox} from 'antd';
 import { myPostUpload } from "../api/myPostUpload";
 import ReservationModal from "../components/reservation/ReservationModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
+import { useRecoilValue } from "recoil";
+import loginState from "../atoms/loginState";
 
 const Container = styled.div`
     width: 100%;
@@ -213,6 +215,8 @@ const SubmitButton = styled.button`
 `
 
 const PostUpload = () => {
+    const loginUser = useRecoilValue(loginState);
+
     // 등록 데이터 state
     const [data, setData] = useState({
         main_image: "",
@@ -531,6 +535,8 @@ const PostUpload = () => {
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
     const onSubmitPost = async (e) => {
         e.preventDefault();
+
+
 
         if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){
