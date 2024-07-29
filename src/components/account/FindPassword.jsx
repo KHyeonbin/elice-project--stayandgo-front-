@@ -88,7 +88,8 @@ const Findpassword = () => {
       e.target.disabled = true;
       alert(response.data.message);
     } catch(error) {
-      alert(error.response.data.message);
+      console.log(error);
+      alert(error.response.data ? error.response.data.message : error.response);
     }
   }; 
 
@@ -96,10 +97,16 @@ const Findpassword = () => {
   const onEmailCheckHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/users/verify/confirm', {email, secret: code});
-      navigate("/changePassword");
+      const res = await axios.post('http://localhost:3001/users/verify/confirm', {email, secret: code});
+      console.log(res);
+      if(res.data.code === 200){
+        navigate("/changePassword", {state: {email} });
+      } else {
+        alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
+      }
     } catch(error) {
-      alert(error.response.data.message);
+      console.log(error);
+      alert(error.response.data ? error.response.data.message : error.response);
     }
 
   };

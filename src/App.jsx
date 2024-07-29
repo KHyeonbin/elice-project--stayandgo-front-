@@ -1,11 +1,17 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import MainPage from "./pages/MainPage";
 import WishPage from "./pages/WishPage";
 import TravelPage from "./pages/TravelPage";
 import ReservationPage from "./pages/ReservationPage";
 import AboutPage from "./pages/AboutPage";
+import LoginPage from "./pages/LoginPage";
+import JoinPage from "./pages/JoinPage";
+import FindIdPage from "./pages/FindIdPage";
+import FindPasswordPage from "./pages/FindPasswordPage";
+import JoinEndPage from "./pages/JoinEndPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
+import RoomDetailsPage from "./pages/RoomDetailsPage";
 import PostUpload from "./pages/PostUpload";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
@@ -54,31 +60,48 @@ const App = () => {
                 newUser.name = res.data.name;
                 newUser.nickname = res.data.nickname;
                 newUser.phone = res.data.phone;
-                newUser.photo = rew.data.photo;
+                newUser.photo = res.data.photo;
                 return newUser;
             });
+            console.log(res.message);
         } else if(res && res.code === 411){
+            setLoginUser((current) => {
+              const newUser = {...current};
+              newUser.name= '';
+              newUser.nickname= '';
+              newUser.email= '';
+              newUser.phone= '';
+              newUser.is_admin= false;
+              newUser.is_logined= false;
+              newUser.photo= '';
+              return newUser;
+          });
           console.log(res.message);
         }
       });
   }, []);
 
   return (
-    <RecoilRoot>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage search={search} setSearch={setSearch} startSearch={startSearch} setStartSearch={setStartSearch} />}></Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/join" element={<JoinPage />} />
+          <Route path="/findId" element={<FindIdPage />} />
+          <Route path="/findpassword" element={<FindPasswordPage />} />
+          <Route path="/joinEnd" element={<JoinEndPage />} />
+          <Route path="/changePassword" element={<ChangePasswordPage />} />
+          <Route path="/room/details/:id" element={<RoomDetailsPage />} />
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/Travel" element={<TravelPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
           <Route path="/Profile" element={<ProfilePage />}></Route>
           <Route path="/Profile/Edit/:id" element={<ProfileEditPage />}></Route>
-          <Route path="/MyAccommodation" element={<MyAccommodationsPage />}></Route>
+          <Route path="/myaccommodation" element={<MyAccommodationsPage />}></Route>
           <Route path="/About" element={<AboutPage />}></Route>
           <Route path="/upload" element={<PostUpload />} />
         </Routes>
       </BrowserRouter>
-    </RecoilRoot>
   );
 };
 
