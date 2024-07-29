@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SlideModal } from "../../atoms/modalAtom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -11,7 +11,7 @@ const ModalOverlay = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  overflow-y: none;
+  overflow-y: initial;
   z-index: 101;
   transition: background-color 0.3s ease-in-out;
   &.open {
@@ -50,15 +50,14 @@ const RoomModal = ({ children }) => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const [isSlideUp, setIsSlideUp] = useState(false);
-  console.log("hi");
+  const timer = useRef();
 
   // 모달 슬라이드 업 애니메이션 0.1초 후 실행
   useEffect(() => {
-    let timer;
     if (slideModal) {
-      timer = setTimeout(() => setIsSlideUp(true), 100);
+      timer.current = setTimeout(() => setIsSlideUp(true), 100);
     } else {
-      clearTimeout(timer);
+      clearTimeout(timer.current);
     }
   }, [slideModal]);
 
