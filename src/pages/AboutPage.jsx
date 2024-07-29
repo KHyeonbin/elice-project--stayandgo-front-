@@ -7,17 +7,7 @@ import About from "../components/account/About";
 
 const AboutPage = () => {
   // user 전역 상태 확인 및 변경
-  const setLoginUser = useSetRecoilState(loginState);
   const loginUser = useRecoilValue(loginState);
-
-  useEffect(() => {
-    setLoginUser({
-      email: "gudrjsdn8825@naver.com",
-      nickName: "건우",
-      is_admin: false,
-      is_logined: false,
-    });
-  }, [setLoginUser]);
 
   return (
     <>

@@ -14,6 +14,7 @@ const Container = styled.div`
   top: 0;
   width: 100%;
   background: #fff;
+  z-index: 101;
 `;
 const LeftArea = styled.div`
   margin-left: 10px;
@@ -66,24 +67,6 @@ const SubHeader = ({ isLogin }) => {
           </svg>
         </PrevPageBtn>
       </LeftArea>
-      <RightArea>
-        {(isLogin && (
-          <>
-            <LinkDiv>
-              <LinkText to={"/upload"}>숙소등록</LinkText>
-            </LinkDiv>
-            <LinkDiv>
-              <LinkText to={"/logout"}>로그아웃</LinkText>
-            </LinkDiv>
-          </>
-        )) || (
-          <>
-            <LinkDiv>
-              <LinkText to={"/login"}>로그인</LinkText>
-            </LinkDiv>
-          </>
-        )}
-      </RightArea>
     </Container>
   );
 };

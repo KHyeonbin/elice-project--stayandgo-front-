@@ -72,13 +72,12 @@ const Header = ({user, isModal}) => {
     const onClickLogout = () => {
         logoutUser()
         .then(res => {
-            console.log(res);
-            if(res.data.code === 200){
+            if(res?.data && res.data.code === 200){
                 window.location.href = '/';
             } else {
-                alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
+                alert("로그아웃 오류가 발생하였습니다.");
             }
-        })
+        });
     };
 
     return (
