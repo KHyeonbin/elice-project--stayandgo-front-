@@ -338,8 +338,8 @@ const PostUpload = () => {
                 alert("이미지 파일만(jpg, png, jpeg) 첨부할 수 있습니다.");
                 return;
             }
-            if(filesNameArray.length >= 10){
-                alert("서브 이미지는 10장 이내로 첨부할 수 있습니다!");
+            if(filesNameArray.length >= 5){
+                alert("서브 이미지는 5장 이내로 첨부할 수 있습니다!");
                 return;
             }
     
@@ -600,7 +600,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 9장" value={imageName.sub_images} disabled />
+                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
