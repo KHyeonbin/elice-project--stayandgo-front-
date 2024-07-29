@@ -1,17 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
   ProfileEditSection,
   ProfileEditForm,
-  ProfileEditInput,
   ProfileEditButtonContainer,
   ProfileEditSaveButton,
-  ErrorMessage,
 } from "./ProfileEditPageStyle";
 import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
-import axios from "axios";
+import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가져오기
+import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
+
+/** 컴포넌트 외부로 이동하여 재사용성을 높이고 리렌더링을 방지 */
+const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+
+/** 비밀번호 유효성 검사 함수 */
+const validatePassword = (password) => {
+  if (password.length > 0 && password.length < 10) {
+    return "10자 이상 입력해주세요.";
+  } else {
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
+
+    if (!isValidCombination) {
+      return "영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합";
+    } else {
+      return "";
+    }
+  }
+};
 
 const ProfileEdit = () => {
   const [profileImage, setProfileImage] = useState(
@@ -27,15 +47,15 @@ const ProfileEdit = () => {
   const [isModal, setIsModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
-
   const navigate = useNavigate();
+
+  
 
   /** 사용자 정보 불러오기 */
   useEffect(() => {
-    const fetchUserData = async () => {
+    const getUserData = async () => {
       try {
-        const response = await axios.get(`/users/edit/${id}`); // 임시 엔드포인트
-        const userData = response.data;
+        const userData = await fetchUserData(id);
         setProfileImage(userData.profileImage);
         setEmail(userData.email);
         setName(userData.name);
@@ -45,53 +65,24 @@ const ProfileEdit = () => {
       }
     };
 
-    fetchUserData();
+    getUserData();
   }, [id]);
 
-  /** 비밀번호 유효성 검사 함수 */
-  const validatePassword = (password) => {
-    if (password.length > 0 && password.length < 10) {
-      setPasswordError("10자 이상 입력해주세요.");
-      return false;
-    } else {
-      const hasLetter = /[a-zA-Z]/.test(password);
-      const hasNumber = /[0-9]/.test(password);
-      const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
-      const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
-
-      if (!isValidCombination) {
-        setPasswordError("영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합");
-        return false;
-      } else {
-        setPasswordError("");
-        return true;
-      }
-    }
-  };
-
   /** 인풋 변경 핸들러 */
-  const onChangeHandler = (e) => {
+  const onChangeHandler = useCallback((e) => {
     const { name, value } = e.target;
 
     if (name === "phone") {
-      const formattedValue = value.replace(/\D/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경
+      const formattedValue = value.replace(/\D/g, "").slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경 및 길이 제한
       setPhone(formattedValue);
     } else if (name === "password") {
       setPassword(value);
+      setPasswordError(validatePassword(value)); // 패스워드 에러 검증
     } else if (name === "passwordCheck") {
       setPasswordCheck(value);
+      setPasswordCheckError(value !== password ? "비밀번호가 일치하지 않습니다." : ""); // 패스워드 확인 에러 검증
     }
-  };
-
-  useEffect(() => {
-    validatePassword(password);
-  }, [password]);
-
-  useEffect(() => {
-    setPasswordCheckError(
-      passwordCheck.length > 0 && password !== passwordCheck ? "비밀번호가 일치하지 않습니다." : "",
-    );
-  }, [passwordCheck, password]);
+  },[password]);
 
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e) => {
@@ -107,7 +98,6 @@ const ProfileEdit = () => {
       return;
     }
 
-    const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
     if (!phoneRegex.test(phone)) {
       alert("휴대폰 번호는 000-0000-0000 형태로 입력해야 합니다.");
       return;
@@ -115,12 +105,7 @@ const ProfileEdit = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      await axios.put(`/users/${id}`, {
-        // 임시 엔드포인트
-        password,
-        phone,
-        profileImage,
-      });
+      await editUserData(id, { password, phone, profileImage });
       setIsModal(true);
       navigate("/");
     } catch (error) {
@@ -146,31 +131,28 @@ const ProfileEdit = () => {
         <ProfileEditSection>
           <ProfileImageUpload profileImage={profileImage} setProfileImage={setProfileImage} />
           <ProfileEditForm>
-            <ProfileEditInput type="email" id="email" name="email" value={email} disabled />
-            <ProfileEditInput
+            <ProfileInput type="email"  name="email" value={email} disabled />
+            <ProfileInput
               type="password"
-              id="password"
               name="password"
               placeholder="새 비밀번호 입력"
               value={password}
               required
               onChange={onChangeHandler}
+              error={passwordError}
             />
-            {password.length > 0 && password && <ErrorMessage>{passwordError}</ErrorMessage>}
-            <ProfileEditInput
+            <ProfileInput
               type="password"
-              id="passwordCheck"
               name="passwordCheck"
               placeholder="새 비밀번호 확인"
               value={passwordCheck}
               required
               onChange={onChangeHandler}
+              error={passwordCheckError}
             />
-            {passwordCheck.length > 0 && passwordCheckError && <ErrorMessage>{passwordCheckError}</ErrorMessage>}
-            <ProfileEditInput type="text" id="name" name="name" value={name} disabled />
-            <ProfileEditInput
+            <ProfileInput type="text" name="name" value={name} disabled />
+            <ProfileInput
               type="tel"
-              id="phone"
               name="phone"
               placeholder="휴대폰 번호"
               maxLength={13}
