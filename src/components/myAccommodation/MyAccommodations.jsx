@@ -19,11 +19,10 @@ const MyAccommodations = () => {
     const fetchAccommodations = async () => {
       try {
         const response = await axios.get("/accommodations/"); // 임시 엔드포인트
-        setAccommodations(response.data);
-      } catch (error) {
-        console.error("숙소 데이터를 불러오는데 실패했습니다.", error);
-
-        // 가져올 숙소데이터가 없을때 더미 데이터 사용
+        if (Array.isArray(response.data)) {
+          setAccommodations(response.data);
+        } else {
+          // 가져올 숙소데이터가 없을때 더미 데이터 사용
         setAccommodations([
           {
             id: 1,
@@ -72,6 +71,9 @@ const MyAccommodations = () => {
               "https://a0.muscache.com/im/pictures/miso/Hosting-859232603817409995/original/419280ee-b2f6-49a9-b0f6-74f71e8c9c03.jpeg?im_w=320",
           },
         ]);
+        }
+      } catch (error) {
+        console.error("숙소 데이터를 불러오는데 실패했습니다.", error);
       }
     };
 
@@ -115,15 +117,19 @@ const MyAccommodations = () => {
         </Button>
       </Header>
       <ListContainer>
-        {accommodations.map((accommodation) => (
-          <AccommodationItem
-          key={accommodation.id}
-          accommodation={accommodation}
-          checkedButtons={checkedButtons}
-          onClickHandleDetail={onClickHandleDetail}
-          onChangeHandleCheckBox={onChangeHandleCheckBox}
-          />
-        ))}
+        {Array.isArray(accommodations) && accommodations.length > 0 ? (
+          accommodations.map((accommodation) => (
+            <AccommodationItem
+              key={accommodation.id}
+              accommodation={accommodation}
+              checkedButtons={checkedButtons}
+              onClickHandleDetail={onClickHandleDetail}
+              onChangeHandleCheckBox={onChangeHandleCheckBox}
+            />
+          ))
+        ) : (
+          <p>나의 숙소 데이터가 없습니다.</p>
+        )}
       </ListContainer>
     </Container>
   );
