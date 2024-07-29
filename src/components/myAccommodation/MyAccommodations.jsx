@@ -4,16 +4,10 @@ import {
   Header,
   Button,
   ListContainer,
-  ListItem,
-  Image,
-  CheckBox,
-  DetailContainer,
-  Title,
-  Description,
-  Price,
 } from "./MyAccommodationsStyle";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 
 const MyAccommodations = () => {
   const navigate = useNavigate();
@@ -122,21 +116,13 @@ const MyAccommodations = () => {
       </Header>
       <ListContainer>
         {accommodations.map((accommodation) => (
-          <ListItem key={accommodation.id}>
-            <Image $imageUrl={accommodation.imageUrl} onClick={() => onClickHandleDetail(accommodation.id)}>
-              <CheckBox
-                type="checkbox"
-                checked={checkedButtons.includes(accommodation.id)}
-                onChange={(event) => onChangeHandleCheckBox(event.target.checked, accommodation.id)}
-                onClick={(event) => event.stopPropagation()} // 체크박스 클릭 시 부모(상위)태그의 클릭 이벤트 반응(버블링) 막기 위해 사용
-              />
-            </Image>
-            <DetailContainer onClick={() => onClickHandleDetail(accommodation.id)}>
-              <Title>{accommodation.title}</Title>
-              <Description>{accommodation.description}</Description>
-              <Price>{Number(accommodation.price).toLocaleString()}원 / 1박</Price>
-            </DetailContainer>
-          </ListItem>
+          <AccommodationItem
+          key={accommodation.id}
+          accommodation={accommodation}
+          checkedButtons={checkedButtons}
+          onClickHandleDetail={onClickHandleDetail}
+          onChangeHandleCheckBox={onChangeHandleCheckBox}
+          />
         ))}
       </ListContainer>
     </Container>

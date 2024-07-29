@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
@@ -11,6 +11,27 @@ import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 �
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
 import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가져오기
 import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
+
+/** 컴포넌트 외부로 이동하여 재사용성을 높이고 리렌더링을 방지 */
+const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+
+/** 비밀번호 유효성 검사 함수 */
+const validatePassword = (password) => {
+  if (password.length > 0 && password.length < 10) {
+    return "10자 이상 입력해주세요.";
+  } else {
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
+
+    if (!isValidCombination) {
+      return "영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합";
+    } else {
+      return "";
+    }
+  }
+};
 
 const ProfileEdit = () => {
   const [profileImage, setProfileImage] = useState(
@@ -26,8 +47,9 @@ const ProfileEdit = () => {
   const [isModal, setIsModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
-
   const navigate = useNavigate();
+
+  
 
   /** 사용자 정보 불러오기 */
   useEffect(() => {
@@ -46,24 +68,6 @@ const ProfileEdit = () => {
     getUserData();
   }, [id]);
 
-  /** 비밀번호 유효성 검사 함수 */
-  const validatePassword = useCallback((password) => {
-    if (password.length > 0 && password.length < 10) {
-      return "10자 이상 입력해주세요.";
-    } else {
-      const hasLetter = /[a-zA-Z]/.test(password);
-      const hasNumber = /[0-9]/.test(password);
-      const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
-      const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
-
-      if (!isValidCombination) {
-        return "영문/숫자/특수문자(공백 제외)만 허용하며, 2개 이상 조합";
-      } else {
-        return "";
-      }
-    }
-  },[]);
-
   /** 인풋 변경 핸들러 */
   const onChangeHandler = useCallback((e) => {
     const { name, value } = e.target;
@@ -78,7 +82,7 @@ const ProfileEdit = () => {
       setPasswordCheck(value);
       setPasswordCheckError(value !== password ? "비밀번호가 일치하지 않습니다." : ""); // 패스워드 확인 에러 검증
     }
-  },[password, validatePassword]);
+  },[password]);
 
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e) => {
@@ -94,7 +98,6 @@ const ProfileEdit = () => {
       return;
     }
 
-    const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
     if (!phoneRegex.test(phone)) {
       alert("휴대폰 번호는 000-0000-0000 형태로 입력해야 합니다.");
       return;
