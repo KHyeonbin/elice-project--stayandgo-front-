@@ -62,7 +62,9 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/login", { email, password });
+      const response = await axios.post("http://localhost:3001/login", { email, password }, {
+        withCredentials: true // 쿠키를 포함시키기 위해 필요
+    });
       // 엑세스 토큰 Recoil 전역 상태에 저장
       //console.log(response.data);
       setAccessToken(response.data.accessToken);
