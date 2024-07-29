@@ -32,7 +32,8 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
                 startDate={item.startDate}
                 endDate={item.endDate}
                 totalPrice={item.totalPrice}
-                image={item.image}
+                main_image={item.main_image}
+                sub_images={item.sub_images}
                 adult={item.adult}
                 child={item.child}
                 baby={item.baby}
