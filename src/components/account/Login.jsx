@@ -64,6 +64,8 @@ const Login = () => {
     // 엑세스 토큰 Recoil 전역 상태에 저장
     console.log(response.data);
     setAccessToken(response.data.accessToken);
+    
+    
     navigate("/");
   };
   return (
