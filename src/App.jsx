@@ -54,6 +54,8 @@ const App = () => {
                 newUser.name = res.data.name;
                 newUser.nickname = res.data.nickname;
                 newUser.phone = res.data.phone;
+                newUser.photo = rew.data.photo;
+                return newUser;
             });
         } else if(res && res.code === 411){
           console.log(res.message);

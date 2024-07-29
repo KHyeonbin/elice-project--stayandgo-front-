@@ -8,7 +8,8 @@ const loginState = atom({
         email: '',
         phone: '',
         is_admin: false,
-        is_logined: false
+        is_logined: false,
+        photo: ''
     }
 });
 
