@@ -554,6 +554,29 @@ const PostUpload = () => {
             alert("이미지 파일 이름은 20자 이내여야 합니다.");
             return;
         }
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사하는 정규 표현식
+        const unsafePattern = /[<>:"/\\|?*\u007F-\uFFFF]/;
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사
+        let hasUnsafeCharacters = false;
+        for (const v of subImagesArray) {
+            if (unsafePattern.test(v.name)) {
+                hasUnsafeCharacters = true;
+                break; 
+            }
+        }
+        if (!hasUnsafeCharacters) {
+            for (const v of mainImageArray) {
+                if (unsafePattern.test(v.name)) {
+                    hasUnsafeCharacters = true;
+                    break;
+                }
+            }
+        }
+        if (hasUnsafeCharacters) {
+            alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
+            return;
+        }
+        
 
         if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){
