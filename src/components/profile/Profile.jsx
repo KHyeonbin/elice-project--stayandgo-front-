@@ -14,16 +14,14 @@ import {
   ProfileLogout,
 } from "./ProfilePageStyle";
 import ProfileModal from "./ProfileModal";
-import { fetchEditUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
+import { fetchUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
 import { logoutUser } from "../../api/logoutUser";
 
 const Profile = () => {
-  // user 전역 상태(app.jsx 에서 체크됨) 확인
   const user = useRecoilValue(loginState);
   const resetLoginState = useResetRecoilState(loginState); // 로그아웃 시 상태 초기화하기 위해 사용
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 회원 탈퇴 모달 상태 추가
-
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
 
   useEffect(() => {
@@ -31,16 +29,14 @@ const Profile = () => {
     if (user.is_logined) {
       const getUserData = async () => {
         try {
-          await fetchEditUserData(user.id);
+          await fetchUserData(user.email);
         } catch (error) {
           console.error("유저의 데이터를 찾을 수 없습니다.", error);
         }
       };
-  
       getUserData();
     }
   }, [user]);
-
 
   /** 개인정보 수정 페이지로 이동 */
   const onClickHandleProfileEdit = () => {
@@ -68,31 +64,32 @@ const Profile = () => {
   /** 회원 탈퇴 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
-      await deleteUser(user.id);
-      setIsDeleteModalOpen(false);
+      await deleteUser(user.email); 
+      resetLoginState(); // 로그인 상태 초기화
       navigate("/"); // 홈으로 이동
     } catch (error) {
       console.error("회원 탈퇴에 실패했습니다.", error);
+      alert("회원 탈퇴에 실패했습니다. 다시 시도해 주세요.");
     }
   };
 
   /** 로그아웃 버튼 클릭 시 홈으로 이동 */
   const onClickHandleProfileLogout = () => {
     logoutUser()
-    .then(res => {
-        if(res?.data && res.data.code === 200){
-            resetLoginState(); // 로그아웃 후 상태 초기화
-            window.location.href = '/';
+      .then(res => {
+        if (res?.data && res.data.code === 200) {
+          resetLoginState(); // 로그아웃 후 상태 초기화
+          window.location.href = '/';
         } else {
-            alert("로그아웃 오류가 발생하였습니다.");
+          alert("로그아웃 오류가 발생하였습니다.");
         }
-    });
+      });
   };
 
   return (
     <ProfileContainer>
       <ProfileHeader>
-      <ProfileEmoji>{user.profileEmoji || "👤"}</ProfileEmoji>
+        <ProfileEmoji>{user.profileEmoji || "👤"}</ProfileEmoji>
         {user.is_logined ? (
           <ProfileName>{user.nickname} ({user.name})</ProfileName>
         ) : (
