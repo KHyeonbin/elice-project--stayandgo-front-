@@ -1,4 +1,3 @@
-//여행카드 중 지난여행과 다가오는여행 구분하는 컴포넌트
 import React, {useCallback} from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";

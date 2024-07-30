@@ -204,7 +204,7 @@ const TravelPage = () => {
           <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
           </Loading_div>
         ||
-          <TravelUpcomingCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
+          <TravelUpcomingCategory setSelectValue={setSelectValue} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
         }
       </Container>
       <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>

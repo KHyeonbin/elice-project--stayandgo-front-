@@ -1,6 +1,9 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useState} from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";
+import {Checkbox} from 'antd';
+import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
+import loading from "../../assets/icons/loading.png";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -45,9 +48,62 @@ const Pagenation_li = styled.li`
         color: #E61E51;
     }
 `
+// antd 체크박스 그룹 css style 정의
+const CheckboxGroup = styled(Checkbox.Group)`
+`
+const CheckboxOption = styled(Checkbox)`
+    // 체크'박스' css 
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #E61E51;
+        border: 1px solid #F0586F;
+    }
+`
+// 삭제 버튼 div
+const DelDiv = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+`
+// 삭제 버튼
+const CheckDelBtn = styled.button`
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    background-color: #E61E51;
+    transition: background-color 1s;
+    cursor: pointer;
+    color: white;
+
+    &:hover{
+        background-color: #F0586F;
+    }
+`
+const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
+const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+`
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelUpcomingCategory = ({ upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
+const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
+  // 1개 체크 박스 상태(nanoid : value)
+  const [checkValue, setCheckValue] = useState([]);
+
+  // 삭제 후 페이지 리로딩 효과
+  const [isLoading, setIsLoading] = useState(false);
+
   // upcomingPage
   // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
   // 5 페이지만 출력하여야 함
@@ -119,26 +175,66 @@ const TravelUpcomingCategory = ({ upcomingTravelData, noReservation, setUpcoming
         });
   };
 
+  // checkbox 1개 씩 선택 가능하다.
+  const onChangeCheckbox = (e) => {
+    if(e.length > 1){
+        alert("다가오는 여행은 -2 일 전까지 1개 씩 삭제 가능합니다.");
+        return;
+    }
+    setCheckValue(e);
+  };
+
+  // 체크 1개 지정 후 삭제 버튼
+  const onClickDelete = () => {
+    if(checkValue.length === 0){
+        alert("취소할 여행을 체크해주세요.");
+        return;
+    }
+    travelDeleteFromCheck({nanoid: checkValue[0]})
+    .then(res => {
+        if(res.data && res.data.code === 200){
+            alert('정상적으로 취소되었습니다.');
+            // 유사 새로고침 효과 부여
+            setSelectValue({value: "다가오는 여행", label: "다가오는 여행"});
+            return;
+        }
+    })
+  }
+
   return (
     <>
       {upcomingTravelData.length > 0 && (
         <>
           <CategoryBox>
-            {upcomingTravelData.map((item, i) => (
-              <TravelCard
-                key={i}
-                title={item.title}
-                name={item.host_nickname}
-                startDate={item.start_date}
-                endDate={item.end_date}
-                totalPrice={item.amount}
-                main_image={item.main_image}
-                sub_images={item.sub_images}
-                adult={item.adult}
-                child={item.child}
-                baby={item.baby}
-              />
-            ))}
+            <DelDiv>
+                <CheckDelBtn onClick={onClickDelete}>삭제</CheckDelBtn>
+            </DelDiv>
+            {!isLoading &&
+                <CheckboxGroup value={checkValue} onChange={onChangeCheckbox}>
+                {upcomingTravelData.map((item, i) => (
+                    <>
+                        <TravelCard
+                        key={i}
+                        title={item.title}
+                        name={item.host_nickname}
+                        startDate={item.start_date}
+                        endDate={item.end_date}
+                        totalPrice={item.amount}
+                        main_image={item.main_image}
+                        sub_images={item.sub_images}
+                        adult={item.adult}
+                        child={item.child}
+                        baby={item.baby}
+                        />
+                        <CheckboxOption key={i+1} value={item.nanoid} />
+                    </>
+                ))}
+                </CheckboxGroup>
+            ||
+                <Loading_div>
+                <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+                </Loading_div>
+            }
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>

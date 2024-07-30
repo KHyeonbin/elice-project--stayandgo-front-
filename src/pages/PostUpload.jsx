@@ -615,12 +615,11 @@ const PostUpload = () => {
         
         myPostUpload(formData)
         .then(res => {
-            console.log(res)
-            if(res.data.code === 200){
+            if(res.data && res.data.code === 200){
                 // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
-                alert(res.data.message);
+                alert(res?.data?.message);
             }
         }); 
     };
