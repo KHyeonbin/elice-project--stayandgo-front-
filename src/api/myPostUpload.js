@@ -11,8 +11,8 @@ export const myPostUpload = async (formData) => {
         console.log(res);
         return res;
     } catch (e) {
+        alert(e.response?.data?.message);
         console.log(e);
-        // alert 처리
         return;
     }
 };

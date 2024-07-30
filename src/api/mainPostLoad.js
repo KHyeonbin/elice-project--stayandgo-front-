@@ -41,8 +41,8 @@ class MainPostLoad {
             */
             return /*posts*/ res.data.result;
         } catch (e) {
+            alert(e.response?.data?.message);
             console.log(e);
-            // alert
             return;
         }
     }

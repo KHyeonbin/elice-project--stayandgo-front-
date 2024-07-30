@@ -12,8 +12,7 @@ class GetTravelLoad {
             return res.data.result;
         }
         catch(e) {
-            console.log(e.message);
-            // alert
+            console.log(e);
             return;
         }
     }
@@ -29,7 +28,6 @@ class GetTravelLoad {
             return /*posts*/ res.data.result;
         } catch (e) {
             console.log(e);
-            // alert
             return;
         }
     }
