@@ -136,7 +136,7 @@ const TravelModal = ({
       <Description>
         게스트 수: 성인 {adult}명, 어린이 {child}명, 유아 {baby}명
       </Description>
-      <Price>총 금액: {totalPrice.toLocaleString()}원</Price>
+      <Price>총 금액: {totalPrice.toLocaleString('ko-KR')}원</Price>
     </ModalContent>
   </ModalOverlay>
 );

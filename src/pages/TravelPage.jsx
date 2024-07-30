@@ -193,7 +193,7 @@ const TravelPage = () => {
           <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
           </Loading_div>
         ||
-          <TravelCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} $mode={selectValue.value} title="다가오는 여행" travelData={upcomingTravelData} noReservation={<NoReservation />}/>
+          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} $mode={selectValue.value} title="다가오는 여행" travelData={upcomingTravelData} noReservation={<NoReservation />}/>
         }
       </Container>
       <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
@@ -203,7 +203,7 @@ const TravelPage = () => {
             <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
           </Loading_div>
         ||
-          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} $mode={selectValue.value} title="지난 여행" travelData={pastTravelData} noReservation={<NoReservation />}/>
+          <TravelCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} pastPage={pastPage} setPastPage={setPastPage} $mode={selectValue.value} title="지난 여행" travelData={pastTravelData} noReservation={<NoReservation />}/>
         }
       </Container>
       </MainContainer>

@@ -15,7 +15,50 @@ const CategoryBox = styled.div`
   justify-content: flex-start;
   align-items: center;
 `;
+const Pagenation_div = styled.div`
+    width: 100%;
+    font-size: 17px;
+    margin: 0 auto;
+    margin-bottom: 100px;
+`
+const Pagenation_ul = styled.ul`
+    width: 100%;
+    height: 100%;
+    // ul list 그룹의 기본 들여쓰기 제거 (padding-left 0)
+    padding-left: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+`
+const Pagenation_span = styled.span`
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.5s;
+    color: #797979;
+ 
+    &:hover {
+        color: #E61E51;
+    }
+`
+const Pagenation_li = styled.li`
+    width: 10px;
+    list-style: none;
+    cursor: pointer;
+    transition: color 0.5s;
+    color: #797979;
 
+    &:hover {
+        color: #E61E51;
+    }
+`
+const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
 const TravelCategory = ({ title, travelData, noReservation, pastPage, setPastPage, setUpcomingPage, upcomingPage, $mode }) => {
@@ -165,16 +208,15 @@ const TravelCategory = ({ title, travelData, noReservation, pastPage, setPastPag
     <>
       {travelData.length > 0 && (
         <>
-          <CategoryTitle>{title}</CategoryTitle>
           <CategoryBox>
-            {travelData.map((item) => (
+            {travelData.map((item, i) => (
               <TravelCard
-                key={item.id}
+                key={i}
                 title={item.title}
-                name={item.name}
-                startDate={item.startDate}
-                endDate={item.endDate}
-                totalPrice={item.totalPrice}
+                name={item.host_nickname}
+                startDate={item.start_date}
+                endDate={item.end_date}
+                totalPrice={item.amount}
                 main_image={item.main_image}
                 sub_images={item.sub_images}
                 adult={item.adult}
@@ -185,7 +227,10 @@ const TravelCategory = ({ title, travelData, noReservation, pastPage, setPastPag
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>
+              {$mode === "지난 여행" &&
                   <Pagenation_span onClick={pastPagePrevHandle}>{"<<"}</Pagenation_span>
+              ||
+                  <Pagenation_span onClick={upcomingPagePrevHandle}>{"<<"}</Pagenation_span>}
                       {$mode === "지난 여행" &&
                         pastPagenationing().map((v,i) => {
                           return (
@@ -199,7 +244,11 @@ const TravelCategory = ({ title, travelData, noReservation, pastPage, setPastPag
                           );
                         })
                       }
-                  <Pagenation_span onClick={pastPageNextHandle}>{">>"}</Pagenation_span>
+              {$mode === "지난 여행" &&
+                <Pagenation_span onClick={pastPageNextHandle}>{">>"}</Pagenation_span>
+              ||
+                <Pagenation_span onClick={upcomingPageNextHandle}>{">>"}</Pagenation_span>
+              }
               </Pagenation_ul>
           </Pagenation_div>
         </>
