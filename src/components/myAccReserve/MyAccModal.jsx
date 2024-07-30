@@ -96,7 +96,7 @@ const Price = styled.span`
   line-height: 16.94px;
 `;
 
-const TravelModal = ({
+const MyAccModal = ({
   modalImageIndex,
   setModalImageIndex,
   closeModal,
@@ -141,4 +141,4 @@ const TravelModal = ({
   </ModalOverlay>
 );
 
-export default TravelModal;
+export default MyAccModal;

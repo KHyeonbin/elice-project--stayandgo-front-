@@ -1,7 +1,7 @@
 //여행 탭에 나오는 개별여행컴포넌트
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TravelModal from "./TravelModal";
+import MyAccModal from "./MyAccModal";
 import ImageSlider from "../layout/ImageSlider";
 
 const Container = styled.div`
@@ -36,7 +36,7 @@ const Date = styled.span`
   line-height: 16.94px;
 `;
 
-const TravelCard = ({
+const ReserveCard = ({
   title,
   main_image,
   sub_images = [],
@@ -86,7 +86,7 @@ const TravelCard = ({
         </DetailContainer>
       </Container>
       {isModalOpen && (
-        <TravelModal
+        <MyAccModal
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           closeModal={closeModal}
@@ -105,4 +105,4 @@ const TravelCard = ({
   );
 };
 
-export default TravelCard;
+export default ReserveCard;

@@ -5,8 +5,8 @@ import axios from "axios";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
-import NoReservation from "../components/travel/NoReservation";
-import TravelCategory from "../components/travel/TravelCategory";
+import NoAccReserve from "../components/myAccReserve/NoAccReserve";
+import MyAccCategory from "../components/myAccReserve/MyAccCategory";
 
 const Container = styled.div`
   padding-bottom: 60px;
@@ -58,12 +58,12 @@ const MyAccReservePage = () => {
       <Header user={loginUser} />
       <Container>
         <Title>예약관리</Title>
-        <TravelCategory
+        <MyAccCategory
           title="다가오는 여행"
-          travelData={upcomingTravelData}
-          noReservation={<NoReservation />}
+          reserveData={upcomingTravelData}
+          NoAccReserve={<NoAccReserve />}
         />
-        <TravelCategory title="지난 여행" travelData={pastTravelData} />
+        <MyAccCategory title="지난 여행" reserveData={pastTravelData} />
       </Container>
       <Footer user={loginUser} />
     </>

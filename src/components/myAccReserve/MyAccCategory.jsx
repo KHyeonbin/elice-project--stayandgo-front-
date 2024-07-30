@@ -1,7 +1,7 @@
 //여행카드 중 지난여행과 다가오는여행 구분하는 컴포넌트
 import React from "react";
 import styled from "styled-components";
-import TravelCard from "./TravelCard";
+import ReserveCard from "./ReserveCard";
 
 const CategoryTitle = styled.h2`
   font-size: 18px;
@@ -17,15 +17,15 @@ const CategoryBox = styled.div`
 `;
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelCategory = ({ title, travelData, noReservation }) => {
+const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
   return (
     <>
-      {travelData.length > 0 ? (
+      {reserveData.length > 0 ? (
         <>
           <CategoryTitle>{title}</CategoryTitle>
           <CategoryBox>
-            {travelData.map((item) => (
-              <TravelCard
+            {reserveData.map((item) => (
+              <ReserveCard
                 key={item.id}
                 title={item.title}
                 name={item.name}
@@ -42,10 +42,10 @@ const TravelCategory = ({ title, travelData, noReservation }) => {
           </CategoryBox>
         </>
       ) : (
-        noReservation
+        NoAccReserve
       )}
     </>
   );
 };
 
-export default TravelCategory;
+export default NoAccCategory;

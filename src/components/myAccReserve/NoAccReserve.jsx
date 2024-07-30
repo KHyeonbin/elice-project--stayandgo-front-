@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import handImg from "../../assets/icons/hand.png";
+import noreserveImg from "../../assets/icons/noreserve.png";
 import travelImg from "../../assets/images/travel.png";
 
 const Container = styled.div`
@@ -44,8 +44,9 @@ const ImageContainer = styled.div`
     opacity: 1;
   }
 `;
-const HandImg = styled.img`
-  width: 100px;
+const NoreserveImg = styled.img`
+  width: 50px;
+  margin-bottom: 15px;
 `;
 const Title = styled.span`
   margin-bottom: 12px;
@@ -65,15 +66,15 @@ const SearchButton = styled.button`
   height: 50px;
   border: none;
   border-radius: 10px;
-  background-color: #f87878;
-  color: white;
+  background-color: #d5d5d5;
+  color: #222222;
   font-size: 16px;
   line-height: 19.36px;
   font-weight: bold;
   cursor: pointer;
 
   &:hover {
-    background-color: #fb9d9d;
+    background-color: #e2e2e2;
   }
 `;
 
@@ -87,12 +88,12 @@ const NoReservation = () => {
   return (
     <Container>
       <Content>
-        <HandImg src={handImg} />
-        <Title>아직 예약된 여행이 없습니다!</Title>
+        <NoreserveImg src={noreserveImg} />
+        <Title>아직 예약된 나의 숙소가 없습니다!</Title>
         <Description>
-          여행 가방에 쌓인 먼지를 털어내고 다음 여행 계획을 세워보세요.
+          나의 숙소를 아릅답게 꾸며주세요!!
         </Description>
-        <SearchButton onClick={handleClick}>숙소 검색하기</SearchButton>
+        <SearchButton onClick={handleClick}>나의 등록숙소 확인</SearchButton>
       </Content>
       <ImageContainer />
     </Container>
