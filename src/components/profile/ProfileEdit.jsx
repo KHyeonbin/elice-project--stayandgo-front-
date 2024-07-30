@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
@@ -13,18 +13,14 @@ import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가�
 import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
 import loginState from "../../atoms/loginState";
 import { useRecoilValue } from "recoil";
-
-/** 컴포넌트 외부로 이동하여 재사용성을 높이고 리렌더링을 방지 */
-const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 
 /** 비밀번호 유효성 검사 함수 */
 const validatePassword = (password) => {
   if (password.length > 0 && password.length < 10) {
     return "10자 이상 입력해주세요.";
   } else {
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    const [hasLetter, hasNumber, hasSpecialChar] = PasswordRegex(password);
     const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
 
     if (!isValidCombination) {
@@ -35,37 +31,56 @@ const validatePassword = (password) => {
   }
 };
 
+/** 휴대폰 번호 형태 정의 */
+const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+
 const ProfileEdit = () => {
-  const [profileImage, setProfileImage] = useState(
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTEyNjE4NTg5MzIzNjI0NjI2MA%3D%3D/original/e6b26733-2c15-47d9-b097-6968b39bb697.jpeg?im_w=1440&im_q=highq",
-  );
-  
   const loginUser = useRecoilValue(loginState);
   console.log(loginUser);
 
-  const [email, setEmail] = useState("elice@test.com");
-  const [password, setPassword] = useState("");
-  const [passwordCheck, setPasswordCheck] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    passwordCheck: "",
+    name: "",
+    nickname: "",
+    phone: "",
+    profileImage: "",
+  });
+
   const [passwordError, setPasswordError] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState("");
-  const [name, setName] = useState("엘리스");
-  const [phone, setPhone] = useState("010-1234-5678");
   const [isModal, setIsModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
   const navigate = useNavigate();
 
-  
+  /** 초기 사용자 정보 설정 */
+  useEffect(() => {
+    setFormData({
+      email: loginUser.email || "",
+      password: "",
+      passwordCheck: "",
+      name: loginUser.name || "",
+      nickname: loginUser.nickname || "",
+      phone: loginUser.phone || "",
+      profileImage: loginUser.profileImage || "",
+    });
+  }, [loginUser]);
 
   /** 사용자 정보 불러오기 */
   useEffect(() => {
     const getUserData = async () => {
       try {
         const userData = await fetchUserData(id);
-        setProfileImage(userData.profileImage);
-        setEmail(userData.email);
-        setName(userData.name);
-        setPhone(userData.phone);
+        setFormData((prev) => ({
+          ...prev,
+          email: userData.email,
+          name: userData.name,
+          nickname: userData.nickname,
+          phone: userData.phone,
+          profileImage: userData.profileImage,
+        }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다.");
       }
@@ -79,20 +94,24 @@ const ProfileEdit = () => {
     const { name, value } = e.target;
 
     if (name === "phone") {
-      const formattedValue = value.replace(/\D/g, "").slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경 및 길이 제한
-      setPhone(formattedValue);
+      const formattedValue = PhoneNumberRegex(value);
+      setFormData((prev) => ({ ...prev, phone: formattedValue.slice(0, 13) }));
     } else if (name === "password") {
-      setPassword(value);
+      setFormData((prev) => ({ ...prev, password: value }));
       setPasswordError(validatePassword(value)); // 패스워드 에러 검증
     } else if (name === "passwordCheck") {
-      setPasswordCheck(value);
-      setPasswordCheckError(value !== password ? "비밀번호가 일치하지 않습니다." : ""); // 패스워드 확인 에러 검증
+      setFormData((prev) => ({ ...prev, passwordCheck: value }));
+      setPasswordCheckError(value !== formData.password ? "비밀번호가 일치하지 않습니다." : ""); // 패스워드 확인 에러 검증
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  },[password]);
+  }, [formData.password]);
 
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e) => {
     e.preventDefault();
+
+    const { password, passwordCheck, phone } = formData;
 
     // 아무 입력하지 않고 완료 버튼 클릭 했을 때
     if (!password || !passwordCheck || !phone) {
@@ -111,18 +130,12 @@ const ProfileEdit = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      await editUserData(id, { password, phone, profileImage });
+      await editUserData(id, formData);
       setIsModal(true);
       navigate("/");
     } catch (error) {
       console.error("사용자 정보를 수정하는데 실패했습니다.");
     }
-    // 수정완료 테스트 코드(await ~ console.error } 주석 처리 후 테스트)
-    //   console.log("수정완료", { password, phone, profileImage });
-    //   setIsModal(true);
-    // } catch (error) {
-    //   console.error("사용자 정보를 수정하는데 실패했습니다.", error);
-    // }
   };
 
   /** 모달 닫기 함수 */
@@ -135,14 +148,14 @@ const ProfileEdit = () => {
     <>
       <ProfileEditContainer>
         <ProfileEditSection>
-          <ProfileImageUpload profileImage={profileImage} setProfileImage={setProfileImage} />
+          <ProfileImageUpload profileImage={formData.profileImage} setProfileImage={(url) => setFormData((prev) => ({ ...prev, profileImage: url }))} />
           <ProfileEditForm>
-            <ProfileInput type="email"  name="email" value={loginUser.email} disabled />
+            <ProfileInput type="email" name="email" value={formData.email} disabled />
             <ProfileInput
               type="password"
               name="password"
               placeholder="새 비밀번호 입력"
-              value={password}
+              value={formData.password}
               required
               onChange={onChangeHandler}
               error={passwordError}
@@ -151,20 +164,28 @@ const ProfileEdit = () => {
               type="password"
               name="passwordCheck"
               placeholder="새 비밀번호 확인"
-              value={passwordCheck}
+              value={formData.passwordCheck}
               required
               onChange={onChangeHandler}
               error={passwordCheckError}
             />
-            <ProfileInput type="text" name="name" value={loginUser.name} disabled />
+            <ProfileInput type="text" name="name" value={formData.name} disabled />
+            <ProfileInput
+              type="text"
+              name="nickname"
+              placeholder="닉네임"
+              value={formData.nickname}
+              required
+              onChange={onChangeHandler}
+            />
             <ProfileInput
               type="tel"
               name="phone"
               placeholder="휴대폰 번호"
               maxLength={13}
-              value={loginUser.phone}
+              value={formData.phone}
               required
-              onChange={onChangeHandler} // 휴대폰 번호 형식 변경 핸들러 사용
+              onChange={onChangeHandler} 
             />
             <ProfileEditButtonContainer>
               <ProfileEditSaveButton onClick={onClickHandleSave}>완료</ProfileEditSaveButton>
