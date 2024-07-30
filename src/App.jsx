@@ -16,6 +16,7 @@ import PostUpload from "./pages/PostUpload";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import MyAccommodationsPage from "./pages/MyAccommodationsPage";
+import MyAccReservePage from "./pages/MyAccReservePage";
 import { loginUserCheck } from "./api/loginUserCheck";
 import {useEffect, useState} from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -101,6 +102,7 @@ const App = () => {
           <Route path="/Profile" element={<ProfilePage />}></Route>
           <Route path="/Profile/Edit/:id" element={<ProfileEditPage />}></Route>
           <Route path="/myaccommodation" element={<MyAccommodationsPage />}></Route>
+          <Route path="/myaccreserve" element={<MyAccReservePage />}></Route>
           <Route path="/About" element={<AboutPage />}></Route>
           <Route path="/upload" element={<PostUpload />} />
         </Routes>
