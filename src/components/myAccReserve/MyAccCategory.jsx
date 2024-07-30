@@ -21,28 +21,69 @@ const CategoryBox = styled.div`
   justify-content: flex-start;
   align-items: center;
 `;
+const FilterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const FilterSelect = styled.select`
+  padding: 5px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 15px;
+`;
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
 const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  
+  // 모든 제목을 필터 옵션으로 추가
+  const uniqueTitles = ["all", ...new Set(reserveData.map(item => item.title))];
 
-  const totalPages = Math.ceil(reserveData.length / itemsPerPage);
+  // 선택된 필터에 따라 데이터 필터링
+  const filteredData = selectedFilter === "all"
+    ? reserveData
+    : reserveData.filter(item => item.title === selectedFilter);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const currentItems = reserveData.slice(
+  const currentItems = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleFilterChange = (event) => {
+    setSelectedFilter(event.target.value);
+    setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+  };
   
   return (
     <>
       {reserveData.length > 0 ? (
         <Container>
+          
+          <FilterContainer>
           <CategoryTitle>{title}</CategoryTitle>
+            <FilterSelect
+              id="filter"
+              value={selectedFilter}
+              onChange={handleFilterChange}
+            >
+              {uniqueTitles.map((titleOption) => (
+                <option key={titleOption} value={titleOption}>
+                  {titleOption === "all" ? "모든 숙소" : titleOption}
+                </option>
+              ))}
+            </FilterSelect>
+          </FilterContainer>
           <CategoryBox>
             {currentItems.map((item) => (
               <ReserveCard
