@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
@@ -13,18 +13,15 @@ import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가�
 import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
 import loginState from "../../atoms/loginState";
 import { useRecoilValue } from "recoil";
+import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 
-/** 컴포넌트 외부로 이동하여 재사용성을 높이고 리렌더링을 방지 */
-const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
 
 /** 비밀번호 유효성 검사 함수 */
 const validatePassword = (password) => {
   if (password.length > 0 && password.length < 10) {
     return "10자 이상 입력해주세요.";
   } else {
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    const [hasLetter, hasNumber, hasSpecialChar] = PasswordRegex(password);
     const isValidCombination = [hasLetter, hasNumber, hasSpecialChar].filter(Boolean).length >= 2;
 
     if (!isValidCombination) {
@@ -35,21 +32,22 @@ const validatePassword = (password) => {
   }
 };
 
+/** 휴대폰 번호 형태 정의 */
+const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+
 const ProfileEdit = () => {
-  const [profileImage, setProfileImage] = useState(
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTEyNjE4NTg5MzIzNjI0NjI2MA%3D%3D/original/e6b26733-2c15-47d9-b097-6968b39bb697.jpeg?im_w=1440&im_q=highq",
-  );
+  const [profileImage, setProfileImage] = useState("");
   
   const loginUser = useRecoilValue(loginState);
   console.log(loginUser);
 
-  const [email, setEmail] = useState("elice@test.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState("");
-  const [name, setName] = useState("엘리스");
-  const [phone, setPhone] = useState("010-1234-5678");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [isModal, setIsModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
@@ -79,7 +77,7 @@ const ProfileEdit = () => {
     const { name, value } = e.target;
 
     if (name === "phone") {
-      const formattedValue = value.replace(/\D/g, "").slice(0, 11).replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 휴대폰 번호 형식 변경 및 길이 제한
+      const formattedValue = PhoneNumberRegex(value)
       setPhone(formattedValue);
     } else if (name === "password") {
       setPassword(value);
@@ -117,12 +115,6 @@ const ProfileEdit = () => {
     } catch (error) {
       console.error("사용자 정보를 수정하는데 실패했습니다.");
     }
-    // 수정완료 테스트 코드(await ~ console.error } 주석 처리 후 테스트)
-    //   console.log("수정완료", { password, phone, profileImage });
-    //   setIsModal(true);
-    // } catch (error) {
-    //   console.error("사용자 정보를 수정하는데 실패했습니다.", error);
-    // }
   };
 
   /** 모달 닫기 함수 */
