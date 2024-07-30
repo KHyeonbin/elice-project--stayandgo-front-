@@ -6,14 +6,16 @@ import {
   ProfileEditForm,
   ProfileEditButtonContainer,
   ProfileEditSaveButton,
+  ProfileEditEmojiPlaceholder,
+  ProfileEmoji,
 } from "./ProfileEditPageStyle";
-import ProfileImageUpload from "./ProfileImageUpload"; // 프로필 이미지 업로드 기능 컴포넌트
 import ProfileModal from "./ProfileModal"; // 수정 완료 모달
 import ProfileInput from "./ProfileInput"; // 분리한 input 컴포넌트 가져오기
 import { fetchUserData, editUserData } from "../../api/profile"; // 분리한 api 함수 가져오기
 import loginState from "../../atoms/loginState";
 import { useRecoilValue } from "recoil";
 import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
+import EmojiModal from "./EmojiModal"; // 프로필 이모지 모달
 
 /** 비밀번호 유효성 검사 함수 */
 const validatePassword = (password) => {
@@ -45,12 +47,13 @@ const ProfileEdit = () => {
     name: "",
     nickname: "",
     phone: "",
-    profileImage: "",
+    profileEmoji: "",
   });
 
   const [passwordError, setPasswordError] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState("");
   const [isModal, setIsModal] = useState(false);
+  const [isEmojiModal, setIsEmojiModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
   const navigate = useNavigate();
@@ -64,7 +67,7 @@ const ProfileEdit = () => {
       name: loginUser.name || "",
       nickname: loginUser.nickname || "",
       phone: loginUser.phone || "",
-      profileImage: loginUser.profileImage || "",
+      profileEmoji: loginUser.profileEmoji || "",
     });
   }, [loginUser]);
 
@@ -79,7 +82,7 @@ const ProfileEdit = () => {
           name: userData.name,
           nickname: userData.nickname,
           phone: userData.phone,
-          profileImage: userData.profileImage,
+          profileEmoji: userData.profileEmoji,
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다.");
@@ -144,11 +147,35 @@ const ProfileEdit = () => {
     navigate("/"); // 모달 닫기 클릭 시 홈으로 이동
   };
 
+  /** 이모지 모달 열기 함수 */
+  const onClickHandleOpenModal = () => {
+    setIsEmojiModal(true);
+  }
+
+  /** 이모지 선택 */
+  const onSelectHandleEmoji = (emoji) => {
+    setFormData((prev) => ({ ...prev, profileEmoji: emoji }));
+    setIsEmojiModal(false);
+  }
+
+  /** 이모지 모달 닫기 함수 */
+  const onClickHandleCloseEmojiModal = () => {
+    setIsEmojiModal(false);
+  }
+
   return (
     <>
       <ProfileEditContainer>
         <ProfileEditSection>
-          <ProfileImageUpload profileImage={formData.profileImage} setProfileImage={(url) => setFormData((prev) => ({ ...prev, profileImage: url }))} />
+          <ProfileEditEmojiPlaceholder onClick={onClickHandleOpenModal}>
+            {formData.profileEmoji ? (
+              <ProfileEmoji>{formData.profileEmoji}</ProfileEmoji>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="50" height="50">
+                <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+              </svg>
+            )}
+          </ProfileEditEmojiPlaceholder>
           <ProfileEditForm>
             <ProfileInput type="email" name="email" value={formData.email} disabled />
             <ProfileInput
@@ -194,6 +221,7 @@ const ProfileEdit = () => {
         </ProfileEditSection>
       </ProfileEditContainer>
       {isModal && <ProfileModal message="수정이 완료되었습니다!" onClose={onClickHandleCloseModal} />}
+      {isEmojiModal && <EmojiModal onSelect={onSelectHandleEmoji} onClose={onClickHandleCloseEmojiModal} /> }
     </>
   );
 };
