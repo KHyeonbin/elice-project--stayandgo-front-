@@ -1,14 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import axios from "axios";
+import { useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
 import NoReservation from "../components/travel/NoReservation";
 import TravelCategory from "../components/travel/TravelCategory";
+import getTravelLoad from "../api/getTravelLoad";
+import loading from "../assets/icons/loading.png";
+import Select from 'react-select';
 
+const SelectDiv = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
+// react-select css
+const selectCustom = {
+  option: (provided, state) => {
+    let backgroundColor = 'white';
+    let color = '#333';
+    if(state.isSelected){
+        backgroundColor = '#F0586F';
+        color = 'white';
+    } else if(state.isFocused){
+        backgroundColor = '#F07C8C';
+        color = 'white';
+    }
+  return {
+    ...provided,
+    backgroundColor,
+    color,
+    padding: 20,
+    border: "none" 
+  }},
+  control: (provided) => ({
+    ...provided,
+    border: "none",
+    boxShadow: 'none',
+    width: "220px",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    border: "none",
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#333',
+  }),
+};
+const MainContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
 const Container = styled.div`
+  width: 100%;
+  height: 100%;
   padding-bottom: 60px;
 `;
 const Title = styled.h1`
@@ -17,54 +66,131 @@ const Title = styled.h1`
   margin: 25px 0 0 25px;
   width: 320px;
 `;
+const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
+const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+`
 
 const TravelPage = () => {
   //로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
-  //여행카드 세팅
-  const [cardData, setCardData] = useState([]);
+  // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
+  const [upcomingPage, setUpcomingPage] = useState({
+    page: 1,
+    perPage: 0,
+    total: 0,
+    totalPage: 0,
+  });
+  const [pastPage, setPastPage] = useState({
+    page: 1,
+    perPage: 0,
+    total: 0,
+    totalPage: 0,
+  });
+  // 로딩 상태 정의
+  const [isingLoading, setIsIngLoading] = useState(false);
+  const [isPastLoading, setIsPastLoading] = useState(false);
   //오늘 날짜 기준으로 지난여행, 다가오는여행 상태 세팅
   const [pastTravelData, setPastTravelData] = useState([]);
   const [upcomingTravelData, setUpcomingTravelData] = useState([]);
 
-  useEffect(() => {
-    const fetchTravelData = async () => {
-      try {
-        const response = await axios.get("/travelData.json");
-        setCardData(response.data);
-      } catch (error) {
-        console.error("데이터 가져오기 실패:", error);
-      }
-    };
+  // react-select 에는 key 값이 없어서 미리 option 정의
+  const option = [{value: "다가오는 여행", label: "다가오는 여행"},
+                  {value: "지난 여행", label: "지난 여행"}];
+  // react-select box value 설정하기 위함
+  const [selectValue, setSelectValue] = useState(option[0]);
 
-    fetchTravelData();
-  }, []);
-
-  //오늘 날짜를 기준으로 과거, 미래 분류해서 state에 담기
+  // 첫 화면 진입
   useEffect(() => {
-    const today = new Date();
-    //여행의 끝날짜가 오늘보다 앞이면 past
-    const pastData = cardData.filter((item) => new Date(item.endDate) < today);
-    //여행의 시작날짜가 오늘보다 뒤이면 upcoming
-    const upcomingData = cardData.filter(
-      (item) => new Date(item.startDate) >= today
-    );
-    setPastTravelData(pastData);
-    setUpcomingTravelData(upcomingData);
-  }, [cardData]);
+    getTravelLoad.getReservePage({mymode: true})
+    .then(res => {
+      setUpcomingPage(res.ingResult);
+      setPastPage(res.pastResult);
+    });
+    getTravelLoad.getReserveRead({nowpage: 1, mymode: true})
+    .then(res => {
+      setUpcomingTravelData(res.ingData);
+      setPastTravelData(res.pastData);
+    });
+    setIsIngLoading(true);
+    setIsPastLoading(true);
+    setTimeout(() => {
+      setIsIngLoading(false);
+      setIsPastLoading(false);
+    }, 250);
+  },[selectValue]);
+
+  // 현재 여행 페이지 컨트롤
+  useEffect(() => {
+    getTravelLoad.getReserveRead({nowpage: upcomingPage.page, mymode: true})
+    .then(res => {
+      setUpcomingTravelData(res.ingData);
+    });
+    setIsIngLoading(true);
+    setTimeout(() => {
+      setIsIngLoading(false);
+    }, 250);
+  },[upcomingPage.page]);
+
+  // 지난 여행 페이지 컨트롤
+  useEffect(() => {
+    getTravelLoad.getReserveRead({nowpage: pastPage.page, mymode: true})
+    .then(res => {
+      setPastTravelData(res.pastData);
+    });
+    setIsPastLoading(true);
+    setTimeout(() => {
+      setIsPastLoading(false);
+    }, 250);
+  },[pastPage.page]);
+
+  // 지난 여행 또는 다가오는 여행 선택지
+  const onChangeSelect = (e) => {
+    setSelectValue(e);
+  };
+
+  console.log(upcomingPage, pastPage)
 
   return (
     <>
       <Header user={loginUser} />
-      <Container>
-        <Title>여행</Title>
-        <TravelCategory
-          title="다가오는 여행"
-          travelData={upcomingTravelData}
-          noReservation={<NoReservation />}
-        />
-        <TravelCategory title="지난 여행" travelData={pastTravelData} />
+      <SelectDiv>
+        <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
+      </SelectDiv>
+      
+      <MainContainer>
+      <Container style={selectValue.value === "다가오는 여행" ? {display:"block"} : {display:"none"}}>
+        <Title>다가오는 여행</Title>
+        {isingLoading &&
+          <Loading_div>
+          <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+          </Loading_div>
+        ||
+          <TravelCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} $mode={selectValue.value} title="다가오는 여행" travelData={upcomingTravelData} noReservation={<NoReservation />}/>
+        }
       </Container>
+      <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
+        <Title>지난 여행</Title>
+        {isPastLoading &&
+          <Loading_div>
+            <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+          </Loading_div>
+        ||
+          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} $mode={selectValue.value} title="지난 여행" travelData={pastTravelData} noReservation={<NoReservation />}/>
+        }
+      </Container>
+      </MainContainer>
       <Footer user={loginUser} />
     </>
   );
