@@ -1,30 +1,28 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import styled from "styled-components";
-import favoriteOffImg from "../../assets/icons/favorite_off.png";
 import SlideUpModal from "../layout/SlideUpModal";
 import KakaoMap from "../layout/KakaoMap";
 import { SlideModal } from "../../atoms/modalAtom";
 import loginState from "../../atoms/loginState";
+import { tagArr } from "../../util/data/arrayStaticData";
 
-const SwiperDiv = styled.div`
+const SwiperDiv = styled.div` 
   position: relative;
-`;
-const ImgBox = styled.div`
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  z-index: 10;
+  background: #eee;
+  & .swiper-wrapper {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const ImgDiv = styled.div`
-  background: ${(props) => (props.bg ? props.bg : "#ddd")};
   & img {
     width: 100%;
   }
@@ -58,6 +56,10 @@ const MainOption = styled.li`
   align-items: center;
   padding-bottom: 10px;
   font-size: 16px;
+  & img {
+    width: 24px;
+    margin-right: 5px;
+  }
 `;
 
 const RoomInfoDiv = styled.div`
@@ -224,14 +226,28 @@ const PriceDiv = styled.div`
 
 const RoomDetails = () => {
   const [slideIndex, setSlideIndex] = useState(0);
+  const navigate = useNavigate();
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const userState = useRecoilValue(loginState);
   const [roomInfo, setRoomInfo] = useState(null);
+  const [reservationInfo, setReservationInfo] = useState(null);
   const {id} = useParams();
+  const sortedImages = useRef();
 
-  // 방 정보 가져오기
+  
   useEffect(() => {
+
+    // 로그인 여부 확인
+    if(!userState.is_logined) {
+      //로그인 상태로 변경되기 전에 로그인 여부 체크 함수가 실행되어 로그인 페이지로 이동하는 문제
+      /*
+      alert('로그인 후 이용하실 수 있습니다.');
+      navigate('/login');
+      */
+    }
+
+    // 방 정보 가져오기
     (async() => {
       try {
         const response = await axios.get(`http://localhost:3001/post/read/${id}`); 
@@ -240,9 +256,27 @@ const RoomDetails = () => {
       } catch(error) {
         console.error(error);
       }
-
     })();
+
   }, [id]);
+
+  // 카테고리 이미지 가져오기
+  useEffect(()=>{
+    // mainCatetory 디렉토리 이미지 가져오기
+    const importImages = (v) => {
+      return v.keys().map((key) => ({
+          src: v(key),
+          name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
+        }));
+    };
+    const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+    // 파일 이름 순으로 정렬
+    sortedImages.current = images.sort((a, b) => {
+      const aNumber = parseInt(a.name.split('_')[0], 10);
+      const bNumber = parseInt(b.name.split('_')[0], 10);
+      return aNumber - bNumber;
+    });
+  },[roomInfo])
 
 
   const onReservate = async() => {
@@ -261,14 +295,13 @@ const RoomDetails = () => {
           sub_images: roomInfo.sub_images,
           main_location: roomInfo.main_location,
           sub_location: roomInfo.sub_location,
-          /*
-          amount: ,
-          start_date: start_date,
-          end_date: end_date,
-          adult: ,
-          child: ,
-          baby: ,
-          */
+          amount: 5, // 총 인원?
+          start_date: '2024-08-25',
+          end_date: '2024-08-30',
+          adult: 0,
+          child: 0,
+          baby: 0,
+          
         }
       );
     } catch(error) {
@@ -285,9 +318,6 @@ const RoomDetails = () => {
   return (
     <>
       <SwiperDiv>
-        <ImgBox>
-          <img src={favoriteOffImg} />
-        </ImgBox>
         <Swiper
           modules={[Pagination]}
           slidesPerView={1}
@@ -328,7 +358,11 @@ const RoomDetails = () => {
         </InfoText>
         <MainOptionBox>
           {roomInfo.category.map((cate, i)=>
-              <MainOption key={i}>{cate}</MainOption>
+            tagArr.map((tag, ii) => {
+              if(tag === cate) {
+                return <MainOption key={i}><img src={sortedImages.current[ii].src} />{cate}</MainOption>
+              }
+            })
           )}
         </MainOptionBox>
 
@@ -391,10 +425,13 @@ const RoomDetails = () => {
       </Container>
       <OrderBtnDiv>
         <PriceDiv>
-          <b>{roomInfo.price.toLocaleString()}원</b> / 박<p onClick={()=>setSlideModal(prev => ({
+          <b>{roomInfo.price.toLocaleString()}원</b> / 박
+          <p onClick={()=>setSlideModal(prev => ({
               ...prev, 
               isOpen: true,
-            }))}>8월11일~8월16일</p>
+            }))}>
+              날짜를 선택해주세요
+            </p>
         </PriceDiv>
         <ReservationBtn onClick={onReservate}>예약하기</ReservationBtn>
       </OrderBtnDiv>
