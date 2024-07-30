@@ -1,4 +1,4 @@
-//예약관리 탭에 나오는 예약컴포넌트
+//나의숙소 예약관리에 나오는 예약카드
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MyAccModal from "./MyAccModal";

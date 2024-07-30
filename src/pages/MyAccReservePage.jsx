@@ -1,3 +1,4 @@
+//나의숙소 예약관리 페이지
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
@@ -32,7 +33,7 @@ const MyAccReservePage = () => {
   useEffect(() => {
     const fetchReserveData = async () => {
       try {
-        const response = await axios.get("/reserveData.json");
+        const response = await axios.get("/reserveData.json"); //api 주소 넣기
         setCardData(response.data);
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
@@ -46,15 +47,13 @@ const MyAccReservePage = () => {
   useEffect(() => {
     const today = new Date();
     
-    // 예약의 끝날짜가 오늘보다 앞이면 past
     const pastData = cardData
-      .filter((item) => new Date(item.endDate) < today)
-      .sort((a, b) => new Date(b.endDate) - new Date(a.endDate)); // 최신 예약이 먼저 오게 정렬
+      .filter((item) => new Date(item.endDate) < today) // 예약의 체크아웃 날짜가 오늘보다 앞일 때
+      .sort((a, b) => new Date(b.endDate) - new Date(a.endDate)); //체크아웃 날짜가 최신이 먼저 오게 정렬
 
-    // 예약의 시작날짜가 오늘보다 뒤이면 upcoming
     const upcomingData = cardData
-      .filter((item) => new Date(item.startDate) >= today)
-      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate)); // 빠른 시작날짜가 먼저 오게 정렬
+      .filter((item) => new Date(item.startDate) >= today)// 체크인때 날짜가 오늘보다 뒤일때
+      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate)); // 체크인 빠른 순 먼저 오게 정렬
 
     setPastReserveData(pastData);
     setUpcomingReserveData(upcomingData);

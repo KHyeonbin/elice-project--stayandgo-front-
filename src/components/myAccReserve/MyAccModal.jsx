@@ -1,4 +1,4 @@
-//예약관리 탭에서 항목 클릭시 나오는 모달 창
+//나의숙소 예약관리에서 항목 클릭시 나오는 모달 창
 import React from "react";
 import styled from "styled-components";
 import ImageSlider from "../layout/ImageSlider";

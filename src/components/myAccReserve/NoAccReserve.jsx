@@ -1,4 +1,4 @@
-//여행 탭에서 예약된 여행이 없을 때 나오는 UI
+//나의숙소 예약관리에서 예약된 숙소가 없을 때 나오는 UI
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";

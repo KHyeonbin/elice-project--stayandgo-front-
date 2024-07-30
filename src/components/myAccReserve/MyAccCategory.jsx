@@ -1,4 +1,4 @@
-//예약카드 중 지난예약과 다가오는예약 구분하는 컴포넌트
+//나의숙소 예약관리 예약카드 중 지난예약과 다가오는예약 구분하는 컴포넌트
 import React, { useState } from "react";
 import styled from "styled-components";
 import ReserveCard from "./ReserveCard";
@@ -26,7 +26,6 @@ const FilterContainer = styled.div`
   align-items: center;
   margin-bottom: 15px;
 `;
-
 const FilterSelect = styled.select`
   padding: 5px;
   font-size: 15px;
@@ -35,11 +34,11 @@ const FilterSelect = styled.select`
   margin-right: 15px;
 `;
 
-//예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
+//예약 있으면 여행카드 가져와서 배열, 없으면 예약 없음 안내
 const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
-  const itemsPerPage = 6;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedFilter, setSelectedFilter] = useState("all");
+  const itemsPerPage = 6; //한페이지에 6개씩
+  const [currentPage, setCurrentPage] = useState(1); // 현재페이지 기본값 1
+  const [selectedFilter, setSelectedFilter] = useState("all"); //숙소필터 기본값 모든숙소
   
   // 모든 제목을 필터 옵션으로 추가
   const uniqueTitles = ["all", ...new Set(reserveData.map(item => item.title))];
@@ -49,12 +48,14 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
     ? reserveData
     : reserveData.filter(item => item.title === selectedFilter);
 
+  //페이지수 계산
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  //현재 페이지 아이템 시작,끝 계산
   const currentItems = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -62,7 +63,7 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
-    setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+    setCurrentPage(1); // 필터 변경 시 현재 페이지는 1
   };
   
   return (
@@ -73,7 +74,6 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
           <FilterContainer>
           <CategoryTitle>{title}</CategoryTitle>
             <FilterSelect
-              id="filter"
               value={selectedFilter}
               onChange={handleFilterChange}
             >
