@@ -9,6 +9,7 @@ import TravelCategory from "../components/travel/TravelCategory";
 import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -85,6 +86,7 @@ const Loading_img = styled.img`
 const TravelPage = () => {
   //로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
+  const navigate = useNavigate();
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
   const [upcomingPage, setUpcomingPage] = useState({
     page: 1,
@@ -113,46 +115,60 @@ const TravelPage = () => {
 
   // 첫 화면 진입
   useEffect(() => {
-    getTravelLoad.getReservePage({mymode: true})
-    .then(res => {
-      setUpcomingPage(res.ingResult);
-      setPastPage(res.pastResult);
-    });
-    getTravelLoad.getReserveRead({nowpage: 1, mymode: true})
-    .then(res => {
-      setUpcomingTravelData(res.ingData);
-      setPastTravelData(res.pastData);
-    });
-    setIsIngLoading(true);
-    setIsPastLoading(true);
-    setTimeout(() => {
-      setIsIngLoading(false);
-      setIsPastLoading(false);
-    }, 250);
+    if(!loginUser.is_logined){
+      alert('로그인이 필요한 페이지입니다.');
+      navigate('/');
+      return;
+    }
+  },[])
+
+  useEffect(() => {
+    if(loginUser.is_logined){
+      getTravelLoad.getReservePage({mymode: true})
+      .then(res => {
+        setUpcomingPage(res.ingResult);
+        setPastPage(res.pastResult);
+      });
+      getTravelLoad.getReserveRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setUpcomingTravelData(res.ingData);
+        setPastTravelData(res.pastData);
+      });
+      setIsIngLoading(true);
+      setIsPastLoading(true);
+      setTimeout(() => {
+        setIsIngLoading(false);
+        setIsPastLoading(false);
+      }, 250);
+    }
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
   useEffect(() => {
-    getTravelLoad.getReserveRead({nowpage: upcomingPage.page, mymode: true})
-    .then(res => {
-      setUpcomingTravelData(res.ingData);
-    });
-    setIsIngLoading(true);
-    setTimeout(() => {
-      setIsIngLoading(false);
-    }, 250);
+    if(loginUser.is_logined){
+      getTravelLoad.getReserveRead({nowpage: upcomingPage.page, mymode: true})
+      .then(res => {
+        setUpcomingTravelData(res.ingData);
+      });
+      setIsIngLoading(true);
+      setTimeout(() => {
+        setIsIngLoading(false);
+      }, 250);
+    }
   },[upcomingPage.page]);
 
   // 지난 여행 페이지 컨트롤
   useEffect(() => {
-    getTravelLoad.getReserveRead({nowpage: pastPage.page, mymode: true})
-    .then(res => {
-      setPastTravelData(res.pastData);
-    });
-    setIsPastLoading(true);
-    setTimeout(() => {
-      setIsPastLoading(false);
-    }, 250);
+    if(loginUser.is_logined){
+      getTravelLoad.getReserveRead({nowpage: pastPage.page, mymode: true})
+      .then(res => {
+        setPastTravelData(res.pastData);
+      });
+      setIsPastLoading(true);
+      setTimeout(() => {
+        setIsPastLoading(false);
+      }, 250);
+    }
   },[pastPage.page]);
 
   // 지난 여행 또는 다가오는 여행 선택지
