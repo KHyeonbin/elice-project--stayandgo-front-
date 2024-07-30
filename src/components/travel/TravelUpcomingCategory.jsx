@@ -1,4 +1,3 @@
-//여행카드 중 지난여행과 다가오는여행 구분하는 컴포넌트
 import React, {useCallback} from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";
@@ -48,34 +47,34 @@ const Pagenation_li = styled.li`
 `
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }) => {
-  // pastPage
+const TravelUpcomingCategory = ({ upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
+  // upcomingPage
   // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
   // 5 페이지만 출력하여야 함
   // 테스트로 2 개 씩 2 페이지 출력으로 체크 중
-  const pastPagenationing = useCallback(() => {
+  const upcomingPagenationing = useCallback(() => {
     const pageArray = [];
     // 페이지 시작점 계산
-    let remainpage = pastPage.page;
+    let remainpage = upcomingPage.page;
     let count = 0;
     while((remainpage - count) % 5 !== 1){
         count++;
     }
-    const startpage = pastPage.page - count;
+    const startpage = upcomingPage.page - count;
     // 페이지 끝점 계산
     remainpage = startpage + 4;
-    if(remainpage > pastPage.totalPage){
-        remainpage = pastPage.totalPage;
+    if(remainpage > upcomingPage.totalPage){
+        remainpage = upcomingPage.totalPage;
     }
     const lastpage = remainpage;
     for(let i = startpage;i <= lastpage; i++){
         pageArray.push(i);
     }
     return pageArray;
-  },[pastPage]);
+  },[upcomingPage]);
   // 선택한 페이지로 이동 기능
-  const pastPagenateHandle = (i) => {
-      setPastPage((current) => {
+  const upcomingPagenateHandle = (i) => {
+      setUpcomingPage((current) => {
           const newPage = {...current};
           newPage.page = i;
           return newPage;
@@ -86,13 +85,13 @@ const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }
         });   
   };
   // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
-  const pastPagePrevHandle = () => {
+  const upcomingPagePrevHandle = () => {
       // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
-      let i = pastPage.page - 5;
+      let i = upcomingPage.page - 5;
       if(i < 1){
           i = 1;
       }
-      setPastPage((current) => {
+      setUpcomingPage((current) => {
           const newPage = {...current};
           newPage.page = i;
           return newPage;
@@ -103,13 +102,13 @@ const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }
         });
   };
   // 다음 버튼 클릭 시 최대 5 페이지 이동 기능
-  const pastPageNextHandle = () => {
+  const upcomingPageNextHandle = () => {
       // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 마지막 페이지로)
-      let i = pastPage.page + 5;
-      if(i > pastPage.totalPage){
-          i = pastPage.totalPage;
+      let i = upcomingPage.page + 5;
+      if(i > upcomingPage.totalPage){
+          i = upcomingPage.totalPage;
       }
-      setPastPage((current) => {
+      setUpcomingPage((current) => {
           const newPage = {...current};
           newPage.page = i;
           return newPage;
@@ -122,10 +121,10 @@ const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }
 
   return (
     <>
-      {pastTravelData.length > 0 && (
+      {upcomingTravelData.length > 0 && (
         <>
           <CategoryBox>
-            {pastTravelData.map((item, i) => (
+            {upcomingTravelData.map((item, i) => (
               <TravelCard
                 key={i}
                 title={item.title}
@@ -143,13 +142,15 @@ const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>
-                  <Pagenation_span onClick={pastPagePrevHandle}>{"<<"}</Pagenation_span>
-                        {pastPagenationing().map((v,i) => {
+                  <Pagenation_span onClick={upcomingPagePrevHandle}>{"<<"}</Pagenation_span>
+                      {
+                        upcomingPagenationing().map((v,i) => {
                           return (
-                              <Pagenation_li key={i} onClick={() => pastPagenateHandle(v)} style={pastPage.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
+                              <Pagenation_li key={i} onClick={() => upcomingPagenateHandle(v)} style={upcomingPage.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
                           );
-                      })}
-                <Pagenation_span onClick={pastPageNextHandle}>{">>"}</Pagenation_span>
+                        })
+                      }
+                <Pagenation_span onClick={upcomingPageNextHandle}>{">>"}</Pagenation_span>
               </Pagenation_ul>
           </Pagenation_div>
         </>
@@ -162,4 +163,4 @@ const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }
   );
 };
 
-export default TravelCategory;
+export default TravelUpcomingCategory;

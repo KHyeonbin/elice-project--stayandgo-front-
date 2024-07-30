@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
@@ -6,6 +6,7 @@ import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
 import NoReservation from "../components/travel/NoReservation";
 import TravelCategory from "../components/travel/TravelCategory";
+import TravelUpcomingCategory from "../components/travel/TravelUpcomingCategory";
 import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
@@ -52,6 +53,7 @@ const selectCustom = {
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -124,31 +126,39 @@ const TravelPage = () => {
 
   useEffect(() => {
     if(loginUser.is_logined){
-      getTravelLoad.getReservePage({mymode: true})
+      // page
+      getTravelLoad.getReservePastPage({mymode: true})
       .then(res => {
-        setUpcomingPage(res.ingResult);
-        setPastPage(res.pastResult);
+        setPastPage(res);
       });
-      getTravelLoad.getReserveRead({nowpage: 1, mymode: true})
+      getTravelLoad.getReserveUpcomingPage({mymode: true})
       .then(res => {
-        setUpcomingTravelData(res.ingData);
-        setPastTravelData(res.pastData);
+        setUpcomingPage(res);
+      });
+      // list
+      getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setPastTravelData(res);
+      });
+      getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setUpcomingTravelData(res);
       });
       setIsIngLoading(true);
       setIsPastLoading(true);
       setTimeout(() => {
         setIsIngLoading(false);
         setIsPastLoading(false);
-      }, 250);
+      }, 350);
     }
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
   useEffect(() => {
     if(loginUser.is_logined){
-      getTravelLoad.getReserveRead({nowpage: upcomingPage.page, mymode: true})
+      getTravelLoad.getReserveUpcomingRead({nowpage: upcomingPage.page, mymode: true})
       .then(res => {
-        setUpcomingTravelData(res.ingData);
+        setUpcomingTravelData(res);
       });
       setIsIngLoading(true);
       setTimeout(() => {
@@ -160,9 +170,9 @@ const TravelPage = () => {
   // 지난 여행 페이지 컨트롤
   useEffect(() => {
     if(loginUser.is_logined){
-      getTravelLoad.getReserveRead({nowpage: pastPage.page, mymode: true})
+      getTravelLoad.getReservePastRead({nowpage: pastPage.page, mymode: true})
       .then(res => {
-        setPastTravelData(res.pastData);
+        setPastTravelData(res);
       });
       setIsPastLoading(true);
       setTimeout(() => {
@@ -177,6 +187,7 @@ const TravelPage = () => {
   };
 
   console.log(upcomingPage, pastPage)
+  console.log(upcomingTravelData, pastTravelData)
 
   return (
     <>
@@ -193,7 +204,7 @@ const TravelPage = () => {
           <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
           </Loading_div>
         ||
-          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} $mode={selectValue.value} title="다가오는 여행" travelData={upcomingTravelData} noReservation={<NoReservation />}/>
+          <TravelUpcomingCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
         }
       </Container>
       <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
@@ -203,7 +214,7 @@ const TravelPage = () => {
             <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
           </Loading_div>
         ||
-          <TravelCategory upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} pastPage={pastPage} setPastPage={setPastPage} $mode={selectValue.value} title="지난 여행" travelData={pastTravelData} noReservation={<NoReservation />}/>
+          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} title="지난 여행" pastTravelData={pastTravelData} noReservation={<NoReservation />}/>
         }
       </Container>
       </MainContainer>

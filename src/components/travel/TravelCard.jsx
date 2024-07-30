@@ -56,7 +56,7 @@ const TravelCard = ({
   //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
     setImageUrls([main_image, ...sub_images]);
-  }, [main_image, sub_images]);
+  }, []);
 
   const handleClick = () => {
     //모달창 열기 및 첫번째 이미지 보여주기
