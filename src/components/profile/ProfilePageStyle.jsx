@@ -32,7 +32,7 @@ export const ProfileName = styled.h3`
   color: #333333;
 `;
 
-export const ProfileSection = styled.section`
+export const ProfileSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
