@@ -42,13 +42,13 @@ const CloseIcon = styled.img`
   height: 16px;
 `;
 const Name = styled.span`
+  font-weight: bold;
   margin: 20px;
   font-size: 20px;
   line-height: 24.2px;
 `;
 const Title = styled.span`
   margin: 10px 0;
-  font-weight: bold;
   color: #333333;
   font-size: 16px;
   line-height: 19.36px;
@@ -100,7 +100,7 @@ const MyAccModal = ({
   modalImageIndex,
   setModalImageIndex,
   closeModal,
-  name,
+  author,
   imageUrls,
   title,
   startDate,
@@ -108,14 +108,15 @@ const MyAccModal = ({
   adult,
   child,
   baby,
-  totalPrice,
+  amount,
+  create_at,
 }) => (
   <ModalOverlay>
     <ModalContent>
       <CloseButton onClick={closeModal}>
         <CloseIcon src={closeImg} alt="닫기" />
       </CloseButton>
-      <Name>{name}님의 숙소</Name>
+      <Name>{author}님의 예약</Name>
       <ImageSlider
         imageUrls={imageUrls}
         currentIndex={modalImageIndex}
@@ -136,7 +137,7 @@ const MyAccModal = ({
       <Description>
         게스트 수: 성인 {adult}명, 어린이 {child}명, 유아 {baby}명
       </Description>
-      <Price>총 금액: {totalPrice.toLocaleString()}원</Price>
+      <Price>총 금액: {amount.toLocaleString()}원</Price>
     </ModalContent>
   </ModalOverlay>
 );

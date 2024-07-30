@@ -30,6 +30,11 @@ const Name = styled.span`
   font-size: 14px;
   line-height: 16.94px;
 `;
+const Create = styled.span`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 16.94px;
+`;
 const Date = styled.span`
   margin-top: 8px;
   font-size: 12px;
@@ -40,13 +45,14 @@ const ReserveCard = ({
   title,
   main_image,
   sub_images = [],
-  name,
+  author,
   startDate,
   endDate,
   adult,
   child,
   baby,
-  totalPrice,
+  amount,
+  create_at,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
@@ -79,10 +85,8 @@ const ReserveCard = ({
         />
         <DetailContainer>
           <Title>{title}</Title>
-          <Name>호스트: {name}님</Name>
-          <Date>
-            {startDate} ~ {endDate}
-          </Date>
+          <Name>예약자: {author}님</Name>
+          <Create>예약일: {create_at}</Create>
         </DetailContainer>
       </Container>
       {isModalOpen && (
@@ -90,7 +94,7 @@ const ReserveCard = ({
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           closeModal={closeModal}
-          name={name}
+          author={author}
           imageUrls={imageUrls}
           title={title}
           startDate={startDate}
@@ -98,7 +102,8 @@ const ReserveCard = ({
           adult={adult}
           child={child}
           baby={baby}
-          totalPrice={totalPrice}
+          amount={amount}
+          create_at={create_at}
         />
       )}
     </>

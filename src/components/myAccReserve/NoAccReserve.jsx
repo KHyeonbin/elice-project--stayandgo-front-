@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import noreserveImg from "../../assets/icons/noreserve.png";
-import travelImg from "../../assets/images/travel.png";
+import houseImg from "../../assets/images/house.jpg";
 
 const Container = styled.div`
   border: solid 1px #bebcbc;
@@ -35,7 +35,7 @@ const ImageContainer = styled.div`
   opacity: 0;
 
   @media (min-width: 500px) {
-    background-image: url(${travelImg});
+    background-image: url(${houseImg});
     background-size: cover;
     background-position: center;
     border-radius: 0 10px 10px 0;
@@ -82,7 +82,7 @@ const NoReservation = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/"); // 메인 페이지로 이동
+    navigate("/myaccommodation"); // 메인 페이지로 이동
   };
 
   return (

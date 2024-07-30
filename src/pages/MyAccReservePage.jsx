@@ -24,20 +24,20 @@ const MyAccReservePage = () => {
   //여행카드 세팅
   const [cardData, setCardData] = useState([]);
   //오늘 날짜 기준으로 지난여행, 다가오는여행 상태 세팅
-  const [pastTravelData, setPastTravelData] = useState([]);
-  const [upcomingTravelData, setUpcomingTravelData] = useState([]);
+  const [pastReserveData, setPastReserveData] = useState([]);
+  const [upcomingReserveData, setUpcomingReserveData] = useState([]);
 
   useEffect(() => {
-    const fetchTravelData = async () => {
+    const fetchReserveData = async () => {
       try {
-        const response = await axios.get("/travelData.json");
+        const response = await axios.get("/reserveData.json");
         setCardData(response.data);
       } catch (error) {
         console.error("데이터 가져오기 실패:", error);
       }
     };
 
-    fetchTravelData();
+    fetchReserveData();
   }, []);
 
   //오늘 날짜를 기준으로 과거, 미래 분류해서 state에 담기
@@ -49,21 +49,21 @@ const MyAccReservePage = () => {
     const upcomingData = cardData.filter(
       (item) => new Date(item.startDate) >= today
     );
-    setPastTravelData(pastData);
-    setUpcomingTravelData(upcomingData);
+    setPastReserveData(pastData);
+    setUpcomingReserveData(upcomingData);
   }, [cardData]);
 
   return (
     <>
       <Header user={loginUser} />
       <Container>
-        <Title>예약관리</Title>
+        <Title>나의 숙소 예약관리</Title>
         <MyAccCategory
-          title="다가오는 여행"
-          reserveData={upcomingTravelData}
+          title="예약 목록"
+          reserveData={upcomingReserveData}
           NoAccReserve={<NoAccReserve />}
         />
-        <MyAccCategory title="지난 여행" reserveData={pastTravelData} />
+        <MyAccCategory title="지난 예약 목록" reserveData={pastReserveData} />
       </Container>
       <Footer user={loginUser} />
     </>

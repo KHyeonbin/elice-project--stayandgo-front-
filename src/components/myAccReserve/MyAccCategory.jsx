@@ -28,15 +28,16 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
               <ReserveCard
                 key={item.id}
                 title={item.title}
-                name={item.name}
+                author={item.author}
                 startDate={item.startDate}
                 endDate={item.endDate}
-                totalPrice={item.totalPrice}
+                amount={item.amount}
                 main_image={item.main_image}
                 sub_images={item.sub_images}
                 adult={item.adult}
                 child={item.child}
                 baby={item.baby}
+                create_at={item.create_at}
               />
             ))}
           </CategoryBox>
