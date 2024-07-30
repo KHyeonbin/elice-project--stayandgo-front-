@@ -17,13 +17,16 @@ export const ProfileHeader = styled.header`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
-export const ProfileImage = styled.img`
+export const ProfileEmoji = styled.span`
   width: 60px;
   height: 60px;
   border-radius: 50%;
   background-color: #d9d9d9;
   margin-right: 20px;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
 `;
 
 export const ProfileName = styled.h3`

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import loginState from "../../atoms/loginState";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import {
   ProfileContainer,
   ProfileHeader,
-  ProfileImage,
+  ProfileEmoji,
   ProfileName,
   ProfileSection,
   ProfileLabel,
@@ -14,39 +13,50 @@ import {
   ProfileDelete,
   ProfileLogout,
 } from "./ProfilePageStyle";
-import ProfileModal from "./ProfileModal"; // 수정된 모달 컴포넌트
+import ProfileModal from "./ProfileModal";
 import { fetchEditUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
 import { logoutUser } from "../../api/logoutUser";
 
 const Profile = () => {
   // user 전역 상태(app.jsx 에서 체크됨) 확인
   const user = useRecoilValue(loginState);
+  const resetLoginState = useResetRecoilState(loginState); // 로그아웃 시 상태 초기화하기 위해 사용
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 모달 상태 추가
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 회원 탈퇴 모달 상태 추가
 
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
 
   useEffect(() => {
     /** 유저 데이터 가져오는 함수 */
-    const getUserData = async () => {
-      try {
-        const userData = await fetchEditUserData();
-        setUser(userData);
-      } catch (error) {
-        console.error("유저의 데이터를 찾을 수 없습니다.", error);
-      }
-    };
+    if (user.is_logined) {
+      const getUserData = async () => {
+        try {
+          await fetchEditUserData(user.id);
+        } catch (error) {
+          console.error("유저의 데이터를 찾을 수 없습니다.", error);
+        }
+      };
+  
+      getUserData();
+    }
+  }, [user]);
 
-    getUserData();
-  }, []);
 
   /** 개인정보 수정 페이지로 이동 */
   const onClickHandleProfileEdit = () => {
+    if (!user.is_logined) { // 로그아웃 상태일때 개인정보 수정 클릭 시 로그인 페이지로 이동
+      navigate('/login');
+      return;
+    }
     navigate(`/profile/edit/${user.id}`);
   };
 
   /** 회원 탈퇴 버튼 클릭 시 모달 열기 */
   const onClickHandleProfileDelete = () => {
+    if (!user.is_logined) { // 로그아웃 상태일때 회원 탈퇴 클릭 시 로그인 페이지로 이동
+      navigate('/login');
+      return;
+    }
     setIsDeleteModalOpen(true);
   };
 
@@ -58,7 +68,7 @@ const Profile = () => {
   /** 회원 탈퇴 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
-      await deleteUser(user.id); // 주석처리 후 탈퇴성공 테스트 확인 가능
+      await deleteUser(user.id);
       setIsDeleteModalOpen(false);
       navigate("/"); // 홈으로 이동
     } catch (error) {
@@ -71,6 +81,7 @@ const Profile = () => {
     logoutUser()
     .then(res => {
         if(res?.data && res.data.code === 200){
+            resetLoginState(); // 로그아웃 후 상태 초기화
             window.location.href = '/';
         } else {
             alert("로그아웃 오류가 발생하였습니다.");
@@ -81,8 +92,12 @@ const Profile = () => {
   return (
     <ProfileContainer>
       <ProfileHeader>
-        <ProfileImage src={user.profileImage} alt="Profile" />
-        <ProfileName>{user.name}</ProfileName>
+      <ProfileEmoji>{user.profileEmoji || "👤"}</ProfileEmoji>
+        {user.is_logined ? (
+          <ProfileName>{user.nickname} ({user.name})</ProfileName>
+        ) : (
+          <ProfileName>여행을 계획하려면 로그인하세요!</ProfileName>
+        )}
       </ProfileHeader>
       <ProfileSection>
         <ProfileLabel onClick={onClickHandleProfileEdit}>개인정보 수정</ProfileLabel>
@@ -95,7 +110,11 @@ const Profile = () => {
       <ProfileSection>
         <ProfileDelete onClick={onClickHandleProfileDelete}>회원 탈퇴</ProfileDelete>
       </ProfileSection>
-      <ProfileLogout onClick={onClickHandleProfileLogout}>로그아웃</ProfileLogout>
+      {user.is_logined ? (
+        <ProfileLogout onClick={onClickHandleProfileLogout}>로그아웃</ProfileLogout>
+      ) : (
+        <ProfileLogout onClick={() => navigate('/login')}>로그인</ProfileLogout>
+      )}
 
       {isDeleteModalOpen && (
         <ProfileModal
