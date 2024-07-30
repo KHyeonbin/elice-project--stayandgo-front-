@@ -3,7 +3,6 @@ import styled from "styled-components";
 import TravelCard from "./TravelCard";
 import {Checkbox} from 'antd';
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
-import loading from "../../assets/icons/loading.png";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -80,29 +79,11 @@ const CheckDelBtn = styled.button`
         background-color: #F0586F;
     }
 `
-const Loading_div = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 40%;
-`
-const Loading_img = styled.img`
-    /* 회전 애니메이션 */
-    @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-    }
-`
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
 const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
   // 1개 체크 박스 상태(nanoid : value)
   const [checkValue, setCheckValue] = useState([]);
-
-  // 삭제 후 페이지 리로딩 효과
-  const [isLoading, setIsLoading] = useState(false);
 
   // upcomingPage
   // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
@@ -207,34 +188,28 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
         <>
           <CategoryBox>
             <DelDiv>
-                <CheckDelBtn onClick={onClickDelete}>삭제</CheckDelBtn>
+                <CheckDelBtn onClick={onClickDelete}>취소</CheckDelBtn>
             </DelDiv>
-            {!isLoading &&
-                <CheckboxGroup value={checkValue} onChange={onChangeCheckbox}>
-                {upcomingTravelData.map((item, i) => (
-                    <>
-                        <TravelCard
-                        key={i}
-                        title={item.title}
-                        name={item.host_nickname}
-                        startDate={item.start_date}
-                        endDate={item.end_date}
-                        totalPrice={item.amount}
-                        main_image={item.main_image}
-                        sub_images={item.sub_images}
-                        adult={item.adult}
-                        child={item.child}
-                        baby={item.baby}
-                        />
-                        <CheckboxOption key={i+1} value={item.nanoid} />
-                    </>
-                ))}
-                </CheckboxGroup>
-            ||
-                <Loading_div>
-                <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
-                </Loading_div>
-            }
+            <CheckboxGroup value={checkValue} onChange={onChangeCheckbox}>
+            {upcomingTravelData.map((item, i) => (
+                <>
+                    <TravelCard
+                    key={i}
+                    title={item.title}
+                    name={item.host_nickname}
+                    startDate={item.start_date}
+                    endDate={item.end_date}
+                    totalPrice={item.amount}
+                    main_image={item.main_image}
+                    sub_images={item.sub_images}
+                    adult={item.adult}
+                    child={item.child}
+                    baby={item.baby}
+                    />
+                    <CheckboxOption key={i+1} value={item.nanoid} />
+                </>
+            ))}
+            </CheckboxGroup>
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>
