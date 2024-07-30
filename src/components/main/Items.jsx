@@ -93,25 +93,38 @@ const Items = ({page, setPage, startSearch, category}) => {
     const [isLoading, setIsLoading] = useState(false);
     
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
-    // 1. 일단 페이지 정보를 먼저 세팅
-    useEffect(() => {
-        mainPostLoad.getPostsPage({search: startSearch, category, mymode: false})
-        .then(res => {
-            setPage(res);
-        });
-    },[startSearch, category]);
-    
+    // 1. 일단 페이지 정보를 먼저 세팅 (페이지 정보는 case1. 검색 버튼으로 검색 시작, case2. category 변동 에만 추가로 필요함)
     // 2. 이후 페이지 조절 시 페이지에 맞도록 포스트 검색 진행
     useEffect(() => {
-        mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
-        .then(res => {
-            setPosts(res);
+        if(page && page.page === 1){
+            mainPostLoad.getPostsPage({search: startSearch, category, mymode: false})
+            .then(res => {
+                setPage(res);
+            });
             setIsLoading(true);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 250);
-        });
-    },[page]);
+            }, 100);
+            mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
+            .then(res => {
+                setPosts(res);
+            });
+            setIsLoading(true);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 200);
+        } else if(page && page.page > 1) {
+            mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
+            .then(res => {
+                setPosts(res);
+            });
+            setIsLoading(true);
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 200);
+        }        
+    },[startSearch, category, page.page]);
+
 
     // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
@@ -154,6 +167,8 @@ const Items = ({page, setPage, startSearch, category}) => {
           });   
     };
     console.log(page)
+    console.log(posts)
+    console.log(category)
     // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
     const pagePrevHandle = () => {
         // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
