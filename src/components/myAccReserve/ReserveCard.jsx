@@ -1,4 +1,4 @@
-//여행 탭에 나오는 개별여행컴포넌트
+//예약관리 탭에 나오는 예약컴포넌트
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MyAccModal from "./MyAccModal";
@@ -18,6 +18,7 @@ const Container = styled.div`
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 180px;
 `;
 const Title = styled.span`
   margin-top: 16px;
@@ -30,15 +31,41 @@ const Name = styled.span`
   font-size: 14px;
   line-height: 16.94px;
 `;
-const Create = styled.span`
+const DateContainer = styled.div`
+  width: 100%;
   margin-top: 8px;
+  display: flex;
+`;
+const StartDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  width: 50%;
+  color: #555555;
+  font-size: 14px;
+  line-height: 16.94px;
+  border-right: 2px solid #dddddd;
+`;
+const EndDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: end;
+  width: 50%;
+  color: #555555;
   font-size: 14px;
   line-height: 16.94px;
 `;
-const Date = styled.span`
-  margin-top: 8px;
-  font-size: 12px;
+const DescriptionBold = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 14px;
   line-height: 16.94px;
+`;
+const Description = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 12px;
+  line-height: 14.52px;
 `;
 
 const ReserveCard = ({
@@ -86,7 +113,16 @@ const ReserveCard = ({
         <DetailContainer>
           <Title>{title}</Title>
           <Name>예약자: {author}님</Name>
-          <Create>예약일: {create_at}</Create>
+          <DateContainer>
+            <StartDate>
+              <DescriptionBold>체크인</DescriptionBold>
+              <Description>{startDate}</Description>
+            </StartDate>
+            <EndDate>
+              <DescriptionBold>체크아웃</DescriptionBold>
+              <Description>{endDate}</Description>
+            </EndDate>
+          </DateContainer>
         </DetailContainer>
       </Container>
       {isModalOpen && (
