@@ -85,13 +85,14 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve }) => {
             </FilterSelect>
           </FilterContainer>
           <CategoryBox>
-            {currentItems.map((item) => (
+            {currentItems.map((item, i) => (
               <ReserveCard
-                key={item.id}
+                key={i}
+                id={item._id}
                 title={item.title}
-                author={item.author}
-                startDate={item.startDate}
-                endDate={item.endDate}
+                author={item.author.name}
+                startDate={item.start_date}
+                endDate={item.end_date}
                 amount={item.amount}
                 main_image={item.main_image}
                 sub_images={item.sub_images}

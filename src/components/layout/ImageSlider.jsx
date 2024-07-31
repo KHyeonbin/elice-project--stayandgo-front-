@@ -37,6 +37,8 @@ const ImageSlider = ({
           "--swiper-theme-color": "#fff",
           "--swiper-pagination-bullet-inactive-color": "#fff",
           "--swiper-pagination-bullet-inactive-opacity": "0.4",
+          width: '100%',
+          height: '100%',
         }}
       >
         {imageUrls.map((imageUrl, index) => (

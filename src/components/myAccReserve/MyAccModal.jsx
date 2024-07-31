@@ -78,7 +78,7 @@ const DescriptionBold = styled.span`
 const Description = styled.span`
   margin-top: 5px;
   color: #555555;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 14.52px;
   text-align: end;
 `;
