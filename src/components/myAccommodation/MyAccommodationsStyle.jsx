@@ -35,10 +35,9 @@ export const Button = styled.div`
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
-  width: 160px;
+  width: calc(50% - 10px);
   display: flex;
   flex-direction: column;
-  margin: 0;
 `;
 
 export const Image = styled.div`
@@ -56,7 +55,7 @@ export const CheckboxGroup = styled(Checkbox.Group)`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 34px;
+  gap: 10px;
   width: 100%;
 `
 // antd 체크박스 css style 정의
