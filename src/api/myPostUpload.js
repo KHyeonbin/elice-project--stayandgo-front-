@@ -8,7 +8,6 @@ export const myPostUpload = async (formData) => {
               },
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
-        console.log(res);
         return res;
     } catch (e) {
         alert(e.response?.data?.message);

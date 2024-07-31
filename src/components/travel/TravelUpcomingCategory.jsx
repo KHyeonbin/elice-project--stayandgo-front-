@@ -180,6 +180,9 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
             return;
         }
     })
+    .catch(e => {
+        console.log(e.response?.data?.message);
+    });
   }
 
   return (

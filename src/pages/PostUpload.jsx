@@ -621,7 +621,10 @@ const PostUpload = () => {
             } else {
                 alert(res?.data?.message);
             }
-        }); 
+        })
+        .catch(e => {
+            console.log(e);
+        });
     };
 
     // enter 클릭 시에는 폼이 제출되지 않음.

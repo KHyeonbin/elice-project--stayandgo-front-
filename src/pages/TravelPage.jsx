@@ -130,19 +130,31 @@ const TravelPage = () => {
       getTravelLoad.getReservePastPage({mymode: true})
       .then(res => {
         setPastPage(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       getTravelLoad.getReserveUpcomingPage({mymode: true})
       .then(res => {
         setUpcomingPage(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       // list
       getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
       .then(res => {
         setPastTravelData(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
       .then(res => {
         setUpcomingTravelData(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       setIsIngLoading(true);
       setIsPastLoading(true);
@@ -159,6 +171,9 @@ const TravelPage = () => {
       getTravelLoad.getReserveUpcomingRead({nowpage: upcomingPage.page, mymode: true})
       .then(res => {
         setUpcomingTravelData(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       setIsIngLoading(true);
       setTimeout(() => {
@@ -173,6 +188,9 @@ const TravelPage = () => {
       getTravelLoad.getReservePastRead({nowpage: pastPage.page, mymode: true})
       .then(res => {
         setPastTravelData(res);
+      })
+      .catch(e => {
+        console.log(e);
       });
       setIsPastLoading(true);
       setTimeout(() => {
@@ -186,8 +204,6 @@ const TravelPage = () => {
     setSelectValue(e);
   };
 
-  console.log(upcomingPage, pastPage)
-  console.log(upcomingTravelData, pastTravelData)
 
   return (
     <>
