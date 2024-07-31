@@ -3,128 +3,81 @@ import {
   Container,
   Header,
   Button,
-  ListContainer,
+  CheckboxGroup,
+  CheckboxOption
 } from "./MyAccommodationsStyle";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
+import mainPostLoad from "../../api/mainPostLoad";
 
 const MyAccommodations = () => {
   const navigate = useNavigate();
   const [accommodations, setAccommodations] = useState([]);
-  const [checkedButtons, setCheckedButtons] = useState([]);
+  const [checkValue, setCheckValue] = useState([]);
 
   /** 나의 숙소 데이터 가져오기 */
   useEffect(() => {
-    const fetchAccommodations = async () => {
-      try {
-        const response = await axios.get("/accommodations/"); // 임시 엔드포인트
-        setAccommodations(response.data);
-      } catch (error) {
-        console.error("숙소 데이터를 불러오는데 실패했습니다.", error);
-
-        // 가져올 숙소데이터가 없을때 더미 데이터 사용
-        setAccommodations([
-          {
-            id: 1,
-            title: "제주의 집",
-            description: "[제주애서 하루] 제주 힐링 여행",
-            price: "370000",
-            imageUrl: "https://a0.muscache.com/im/pictures/d0945841-4745-40d5-a877-de7a28150c19.jpg?im_w=720",
-          },
-          {
-            id: 2,
-            title: "부산의 집",
-            description: "[부산에서 하루] 부산 힐링 여행",
-            price: "420000",
-            imageUrl:
-              "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6OTc0MjgwMTc0OTgwMjIwNDUz/original/57709248-4e52-493b-83d5-4ad7737165a0.jpeg?im_w=320",
-          },
-          {
-            id: 3,
-            title: "여수의 집",
-            description: "[여수에서 하루] 여수 힐링 여행",
-            price: "640000",
-            imageUrl:
-              "https://a0.muscache.com/im/pictures/miso/Hosting-859232603817409995/original/419280ee-b2f6-49a9-b0f6-74f71e8c9c03.jpeg?im_w=320",
-          },
-          {
-            id: 4,
-            title: "제주의 집2",
-            description: "[제주애서 하루] 제주 힐링 여행",
-            price: "370000",
-            imageUrl: "https://a0.muscache.com/im/pictures/d0945841-4745-40d5-a877-de7a28150c19.jpg?im_w=720",
-          },
-          {
-            id: 5,
-            title: "부산의 집2",
-            description: "[부산에서 하루] 부산 힐링 여행",
-            price: "420000",
-            imageUrl:
-              "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6OTc0MjgwMTc0OTgwMjIwNDUz/original/57709248-4e52-493b-83d5-4ad7737165a0.jpeg?im_w=320",
-          },
-          {
-            id: 6,
-            title: "여수의 집2",
-            description: "[여수에서 하루] 여수 힐링 여행",
-            price: "640000",
-            imageUrl:
-              "https://a0.muscache.com/im/pictures/miso/Hosting-859232603817409995/original/419280ee-b2f6-49a9-b0f6-74f71e8c9c03.jpeg?im_w=320",
-          },
-        ]);
-      }
+    // 기존 메인에서 post read 하는 api 를 mymode 값으로 제어하기 때문에 나머지 값들은 기본 값으로 셋팅
+    const search = {
+      city: "전체",
+      adult: 0,
+      child: 0,
+      baby: 0
     };
-
-    fetchAccommodations();
+    mainPostLoad.getPostsRead({nowpage: 1, search, category: "전체", mymode: true})
+    .then(res => {
+      setAccommodations(res);
+    })
+    .catch(e => {
+      console.error("숙소 데이터를 불러오는데 실패했습니다.", e);
+    });
   }, []);
 
   /** 각 숙소 클릭 시 상세 페이지로 이동 */
-  const onClickHandleDetail = (id) => {
-    navigate(`/accommodation/${id}`);
+  const onClickHandleDetail = (nanoid) => {
+    navigate(`/room/my/details/${nanoid}`);
+    return;
   };
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
-  const onChangeHandleCheckBox = (checked, id) => {
-    setCheckedButtons((prev) => (checked ? [...prev, id] : prev.filter((buttonId) => buttonId !== id)));
+  const onChangeHandleCheckBox = (e) => {
+    if(e.length > 1){
+      alert("등록 삭제 및 수정은 1 개씩 가능합니다.");
+      return;
+    }
+    setCheckValue(e);
+    return;
   };
 
   /** 등록삭제 버튼 클릭 시 */
   const onClickHandleDelete = () => {
-    setAccommodations((prevAccommodations) => {
-      const newAccommodations = prevAccommodations.filter((item) => !checkedButtons.includes(item.id));
-      return newAccommodations;
-    });
-    setCheckedButtons([]); // 체크박스 카운트 리셋
+    
+
   };
 
   /** 수정 버튼 클릭 시 */
   const onClickHandleEdit = () => {
-    if (checkedButtons.length === 1) {
-      navigate(`/accommodations/edit/${checkedButtons[0]}`); // 임시 경로
-    }
+    navigate('/upload/edit', { state: { v: checkValue[0] } });
+    return;
   };
-
-  const isDisable = checkedButtons.length !== 1;
 
   return (
     <Container>
       <Header>
-        <Button onClick={onClickHandleDelete}>등록 삭제</Button>
-        <Button onClick={onClickHandleEdit} disabled={isDisable}>
-          수정
-        </Button>
+        <Button onClick={onClickHandleDelete} disabled={checkValue.length !== 1}>삭제</Button>
+        <Button onClick={onClickHandleEdit} disabled={checkValue.length !== 1}>수정</Button>
       </Header>
-      <ListContainer>
-        {accommodations.map((accommodation) => (
-          <AccommodationItem
-          key={accommodation.id}
-          accommodation={accommodation}
-          checkedButtons={checkedButtons}
-          onClickHandleDetail={onClickHandleDetail}
-          onChangeHandleCheckBox={onChangeHandleCheckBox}
-          />
-        ))}
-      </ListContainer>
+        <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
+          {accommodations.map((accommodation, i) => (
+            <AccommodationItem
+            keys={i}
+            accommodation={accommodation}
+            onClickHandleDetail={onClickHandleDetail}
+            onChangeHandleCheckBox={onChangeHandleCheckBox}
+            CheckboxOption={CheckboxOption}>
+            </AccommodationItem>
+          ))}
+        </CheckboxGroup>
     </Container>
   );
 };

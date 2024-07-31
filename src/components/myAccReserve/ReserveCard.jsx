@@ -1,7 +1,7 @@
-//여행 탭에 나오는 개별여행컴포넌트
+//나의숙소 예약관리에 나오는 예약카드
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TravelModal from "./TravelModal";
+import MyAccModal from "./MyAccModal";
 import ImageSlider from "../layout/ImageSlider";
 
 const Container = styled.div`
@@ -18,6 +18,7 @@ const Container = styled.div`
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 180px;
 `;
 const Title = styled.span`
   margin-top: 16px;
@@ -30,23 +31,55 @@ const Name = styled.span`
   font-size: 14px;
   line-height: 16.94px;
 `;
-const Date = styled.span`
+const DateContainer = styled.div`
+  width: 100%;
   margin-top: 8px;
-  font-size: 12px;
+  display: flex;
+`;
+const StartDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  width: 50%;
+  color: #555555;
+  font-size: 14px;
+  line-height: 16.94px;
+  border-right: 2px solid #dddddd;
+`;
+const EndDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: end;
+  width: 50%;
+  color: #555555;
+  font-size: 14px;
   line-height: 16.94px;
 `;
+const DescriptionBold = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 14px;
+  line-height: 16.94px;
+`;
+const Description = styled.span`
+  margin-top: 3px;
+  color: #555555;
+  font-size: 12px;
+  line-height: 14.52px;
+`;
 
-const TravelCard = ({
+const ReserveCard = ({
   title,
   main_image,
   sub_images = [],
-  name,
+  author,
   startDate,
   endDate,
   adult,
   child,
   baby,
-  totalPrice,
+  amount,
+  create_at,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
@@ -56,7 +89,7 @@ const TravelCard = ({
   //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
     setImageUrls([main_image, ...sub_images]);
-  }, []);
+  }, [main_image, sub_images]);
 
   const handleClick = () => {
     //모달창 열기 및 첫번째 이미지 보여주기
@@ -79,18 +112,25 @@ const TravelCard = ({
         />
         <DetailContainer>
           <Title>{title}</Title>
-          <Name>호스트: {name}님</Name>
-          <Date>
-            {startDate} ~ {endDate}
-          </Date>
+          <Name>예약자: {author}님</Name>
+          <DateContainer>
+            <StartDate>
+              <DescriptionBold>체크인</DescriptionBold>
+              <Description>{startDate}</Description>
+            </StartDate>
+            <EndDate>
+              <DescriptionBold>체크아웃</DescriptionBold>
+              <Description>{endDate}</Description>
+            </EndDate>
+          </DateContainer>
         </DetailContainer>
       </Container>
       {isModalOpen && (
-        <TravelModal
+        <MyAccModal
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           closeModal={closeModal}
-          name={name}
+          author={author}
           imageUrls={imageUrls}
           title={title}
           startDate={startDate}
@@ -98,11 +138,12 @@ const TravelCard = ({
           adult={adult}
           child={child}
           baby={baby}
-          totalPrice={totalPrice}
+          amount={amount}
+          create_at={create_at}
         />
       )}
     </>
   );
 };
 
-export default TravelCard;
+export default ReserveCard;

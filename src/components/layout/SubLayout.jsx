@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { isLoginSelector } from "../../atoms/TokenAtom";
 
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0 15px 60px 15px;
 `;
 
 const H2 = styled.h2`

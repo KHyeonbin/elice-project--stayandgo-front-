@@ -47,6 +47,16 @@ const Profile = () => {
     navigate(`/profile/edit/${user.id}`);
   };
 
+  /** 등록숙소 예약관리 페이지로 이동 */
+  const onClickHandleMyaccreserve = () => {
+    navigate(`/myaccreserve`);
+  };
+
+  /** 이용방법 페이지로 이동 */
+  const onClickHandleAbout = () => {
+    navigate(`/About`);
+  };
+
   /** 회원 탈퇴 버튼 클릭 시 모달 열기 */
   const onClickHandleProfileDelete = () => {
     if (!user.is_logined) { // 로그아웃 상태일때 회원 탈퇴 클릭 시 로그인 페이지로 이동
@@ -96,9 +106,25 @@ const Profile = () => {
           <ProfileName>여행을 계획하려면 로그인하세요!</ProfileName>
         )}
       </ProfileHeader>
-      <ProfileSection>
-        <ProfileLabel onClick={onClickHandleProfileEdit}>개인정보 수정</ProfileLabel>
-        <ProfileEdit onClick={onClickHandleProfileEdit}>
+      <ProfileSection onClick={onClickHandleProfileEdit}>
+        <ProfileLabel>개인정보 수정</ProfileLabel>
+        <ProfileEdit>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
+            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+          </svg>
+        </ProfileEdit>
+      </ProfileSection>
+      <ProfileSection onClick={onClickHandleMyaccreserve}>
+        <ProfileLabel>등록숙소 예약관리</ProfileLabel>
+        <ProfileEdit>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
+            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+          </svg>
+        </ProfileEdit>
+      </ProfileSection>
+      <ProfileSection onClick={onClickHandleAbout}>
+        <ProfileLabel>Stay and Go 이용방법</ProfileLabel>
+        <ProfileEdit>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
           </svg>

@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-export const loginUserCheck = async () => {
+export const detailPost = async ({nanoid}) => {
     try {
-        const res = await axios.get('http://localhost:3001/users/getuser', {
+        const res = await axios.get(`http://localhost:3001/post/read/${nanoid}`, {
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
-        return res.data;
+        return res;
     } catch (e) {
         alert(e.response?.data?.message);
         console.log(e);

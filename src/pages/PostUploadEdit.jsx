@@ -10,7 +10,8 @@ import ReservationModal from "../components/reservation/ReservationModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { detailPost } from "../api/detailPost";
 
 const Container = styled.div`
     width: 100%;
@@ -215,17 +216,11 @@ const SubmitButton = styled.button`
     }
 `
 
-const PostUpload = () => {
+const PostUploadEdit = () => {
     const loginUser = useRecoilValue(loginState);
     const navigate = useNavigate();
-    useEffect(() => {
-        if(!loginUser.is_logined){
-          alert('로그인이 필요한 페이지입니다.');
-          navigate('/');
-          return;
-        }
-      },[])
-
+    const location = useLocation();
+    // 수정 전 상태 정의
     // 등록 데이터 state
     const [data, setData] = useState({
         main_image: "",
@@ -290,6 +285,52 @@ const PostUpload = () => {
 
     // model 팝업 띄우기 위한 상태
     const [showFinishModal, setshowFinishModal] = useState(false);
+
+    useEffect(() => {
+        if(!loginUser.is_logined){
+          alert('로그인이 필요한 페이지입니다.');
+          navigate('/');
+          return;
+        }
+        console.log(location.state.v);
+        detailPost({nanoid: location.state.v})
+        .then(res => {
+          if(res.data && res.data.code === 200){
+              const saveData = res.data.data;
+              setData((current) => {
+                  const newData = {...current};
+                  newData.title = saveData.title;
+                  newData.room_num = saveData.room_num;
+                  setOptionRoom({value: saveData.room_num, label: saveData.room_num});
+                  newData.max_adult = saveData.max_adult;
+                  setOptionPerson({value: saveData.max_adult, label: saveData.max_adult});
+                  newData.max_child = saveData.max_child;
+                  setOptionChild({value: saveData.max_child, label: saveData.max_child});
+                  newData.max_baby = saveData.max_baby;
+                  setOptionBaby({value: saveData.max_baby, label: saveData.max_baby});
+                  newData.price = saveData.price;
+                  newData.main_location = saveData.main_location;
+                  setoptionMainLocation({value: saveData.main_location, label: saveData.main_location});
+                  newData.sub_location = saveData.sub_location;
+                  newData.contents = saveData.contents;
+                  newData.category = saveData.category;
+                  newData.host_intro = saveData.host_intro;
+                  return newData;
+              });
+          } else {
+              alert(res.data.message);
+              navigate('/');
+              return;
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          navigate('/');
+          return;
+        });
+      },[])
+      console.log(data)
+
 
     // 숙소 이름 data 반영
     const onChangeTitle = (e) => {
@@ -643,21 +684,19 @@ const PostUpload = () => {
         }
     }
 
-    console.log(data, imageName)
-
     return (
         <Container>
             <SubHeader/>
                 <ImageUploadForm onSubmit={onSubmitPost} onKeyDown={onHandleEnter}>
                     <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
-                        <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
+                        <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 변경해보세요 !</MainImageSpan>
                     </ImageUploadLabel>
                     <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
-                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled />
+                    <ShortInputText placeholder="첨부하지 않을 시 기존 이미지가 유지됩니다." value={imageName.main_image} disabled />
                     <OutlineDiv />
-                    <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
+                    <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 변경</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
+                    <ShortInputText placeholder="첨부하지 않을 시 기존 이미지가 유지됩니다. 최대 4장" value={imageName.sub_images} disabled />
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
@@ -719,4 +758,4 @@ const PostUpload = () => {
     );
 };
 
-export default PostUpload;
+export default PostUploadEdit;

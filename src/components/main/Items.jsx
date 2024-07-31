@@ -3,7 +3,7 @@ import styled from "styled-components";
 import mainPostLoad from "../../api/mainPostLoad";
 import main_no_data from '../../assets/images/main_no_data.png';
 import OneItem from "./OneItem";
-import loading from '../../assets/icons/loading.png'
+import loading from '../../assets/icons/loading.png';
 
 const Container = styled.div`
     width: 100%;
@@ -101,10 +101,6 @@ const Items = ({page, setPage, startSearch, category}) => {
             .then(res => {
                 setPage(res);
             });
-            setIsLoading(true);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 100);
             mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
             .then(res => {
                 setPosts(res);
@@ -112,7 +108,7 @@ const Items = ({page, setPage, startSearch, category}) => {
             setIsLoading(true);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 200);
+            }, 250);
         } else if(page && page.page > 1) {
             mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
             .then(res => {
@@ -121,11 +117,11 @@ const Items = ({page, setPage, startSearch, category}) => {
             setIsLoading(true);
             setTimeout(() => {
                 setIsLoading(false);
-            }, 200);
+            }, 250);
         }        
     },[startSearch, category, page.page]);
 
-
+    
     // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
     // 5 페이지만 출력하여야 함
     // 테스트로 2 개 씩 2 페이지 출력으로 체크 중

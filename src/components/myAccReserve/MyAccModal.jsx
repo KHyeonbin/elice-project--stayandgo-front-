@@ -1,4 +1,4 @@
-//여행 탭에서 항목 클릭시 나오는 모달 창
+//나의숙소 예약관리에서 항목 클릭시 나오는 모달 창
 import React from "react";
 import styled from "styled-components";
 import ImageSlider from "../layout/ImageSlider";
@@ -42,80 +42,66 @@ const CloseIcon = styled.img`
   height: 16px;
 `;
 const Name = styled.span`
+  font-weight: bold;
   margin: 20px;
   font-size: 20px;
   line-height: 24.2px;
 `;
 const Title = styled.span`
   margin: 10px 0;
-  font-weight: bold;
   color: #333333;
   font-size: 16px;
   line-height: 19.36px;
 `;
-const DateContainer = styled.div`
-  width: 80%;
-  display: flex;
-  padding-bottom: 10px;
-`;
-const StartDate = styled.div`
+const TextContent = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: start;
-  width: 50%;
-  color: #555555;
-  font-size: 14px;
-  line-height: 16.94px;
-  border-right: 2px solid #dddddd;
+  width: 200px;
+  margin-bottom: 5px;
 `;
-const EndDate = styled.div`
+const GuestContent = styled.div`
   display: flex;
-  flex-direction: column;
-  text-align: end;
-  width: 50%;
-  color: #555555;
-  font-size: 14px;
-  line-height: 16.94px;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 `;
 const DescriptionBold = styled.span`
   margin-top: 3px;
   color: #555555;
+  width: 55px;
+  font-weight: bold;
   font-size: 14px;
   line-height: 16.94px;
+  text-align: start;
 `;
 const Description = styled.span`
-  margin-top: 3px;
+  margin-top: 5px;
   color: #555555;
-  font-size: 12px;
-  line-height: 14.52px;
-`;
-const Price = styled.span`
-  font-weight: bold;
-  margin-top: 7px;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 14.52px;
+  text-align: end;
 `;
 
-const TravelModal = ({
+
+const MyAccModal = ({
   modalImageIndex,
   setModalImageIndex,
   closeModal,
-  name,
+  author,
   imageUrls,
   title,
-  startDate,
-  endDate,
   adult,
   child,
   baby,
-  totalPrice,
+  amount,
+  create_at,
 }) => (
   <ModalOverlay>
     <ModalContent>
       <CloseButton onClick={closeModal}>
         <CloseIcon src={closeImg} alt="닫기" />
       </CloseButton>
-      <Name>{name}님의 숙소</Name>
+      <Name>{author}님의 예약</Name>
       <ImageSlider
         imageUrls={imageUrls}
         currentIndex={modalImageIndex}
@@ -123,22 +109,30 @@ const TravelModal = ({
         size={200}
       />
       <Title>{title}</Title>
-      <DateContainer>
-        <StartDate>
-          <DescriptionBold>체크인</DescriptionBold>
-          <Description>{startDate}</Description>
-        </StartDate>
-        <EndDate>
-          <DescriptionBold>체크아웃</DescriptionBold>
-          <Description>{endDate}</Description>
-        </EndDate>
-      </DateContainer>
-      <Description>
-        게스트 수: 성인 {adult}명, 어린이 {child}명, 유아 {baby}명
-      </Description>
-      <Price>총 금액: {totalPrice.toLocaleString('ko-KR')}원</Price>
+      <TextContent>
+        <GuestContent>
+          <DescriptionBold>
+            게스트 : 
+          </DescriptionBold>
+          <Description>성인 {adult}명</Description>
+        </GuestContent>
+        <GuestContent>
+          <TextContent>
+            <Description>어린이 {child}명</Description>
+            <Description>유아 {baby}명</Description>
+          </TextContent>
+        </GuestContent>
+        <GuestContent>
+          <DescriptionBold>예약일 :  </DescriptionBold>
+          <Description>{create_at}</Description>
+        </GuestContent>
+        <GuestContent>
+          <DescriptionBold>총 금액 : </DescriptionBold>
+          <Description>{amount.toLocaleString()}원</Description>
+        </GuestContent>
+      </TextContent>
     </ModalContent>
   </ModalOverlay>
 );
 
-export default TravelModal;
+export default MyAccModal;
