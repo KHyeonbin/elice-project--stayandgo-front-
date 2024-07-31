@@ -14,6 +14,7 @@ const SwiperContainer = styled.div`
   height: ${(props) => props.size}px;
   border-radius: 15px;
   overflow: hidden;
+  z-index: 0;
 `;
 
 const ImageSlider = ({
