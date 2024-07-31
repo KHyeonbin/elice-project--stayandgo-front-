@@ -290,7 +290,7 @@ const RoomDetails = () => {
       const adultPrice = query.get('adult') * roomInfo.price;
       const childPrice = query.get('child') * roomInfo.price * 0.5;
       const babyPrice = query.get('baby') * roomInfo.price * 0.2;
-      totalPrice = Math.floor((adultPrice + childPrice + babyPrice)/10) * 10;
+      totalPrice = Math.floor((adultPrice + childPrice + babyPrice)/10) * 100;
     }
     
   }, [roomInfo, query]);
