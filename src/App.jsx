@@ -24,7 +24,7 @@ import loginState from "./atoms/loginState";
 import {getDateFormat} from './util/getDateFormat';
 import RoomMyDetailsPage from './pages/RoomMyDetailsPage';
 import PostUploadEdit from "./pages/PostUploadEdit";
-import AdminPage from "./components/admin/AdminPage";
+import AdminPage from "./components/Admin/AdminPage";
 
 
 
