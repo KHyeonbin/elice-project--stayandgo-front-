@@ -64,8 +64,8 @@ const MyAccommodations = () => {
   return (
     <Container>
       <Header>
-        <Button onClick={onClickHandleDelete} disabled={checkValue.length !== 1}>삭제</Button>
-        <Button onClick={onClickHandleEdit} disabled={checkValue.length !== 1}>수정</Button>
+        <Button key={1} onClick={onClickHandleDelete} disabled={checkValue.length !== 1}>삭제</Button>
+        <Button key={2} onClick={onClickHandleEdit} disabled={checkValue.length !== 1}>수정</Button>
       </Header>
         <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
           {accommodations.map((accommodation, i) => (
