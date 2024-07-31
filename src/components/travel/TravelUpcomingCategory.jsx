@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TravelCard from "./TravelCard";
 import {Checkbox} from 'antd';
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
+import ProfileModal from "../profile/ProfileModal";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -102,6 +103,9 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
   // 1개 체크 박스 상태(nanoid : value)
   const [checkValue, setCheckValue] = useState([]);
 
+  // 확인 모달 상태
+  const [isModal, setIsModal] = useState(false);
+
   // upcomingPage
   // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
   // 5 페이지만 출력하여야 함
@@ -188,48 +192,69 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
         alert("취소할 여행을 체크해주세요.");
         return;
     }
-    travelDeleteFromCheck({nanoid: checkValue[0]})
-    .then(res => {
-        if(res.data && res.data.code === 200){
-            alert('정상적으로 취소되었습니다.');
-            // 유사 새로고침 효과 부여
-            setSelectValue({value: "다가오는 여행", label: "다가오는 여행"});
-            return;
-        }
-    })
-    .catch(e => {
-        console.log(e.response?.data?.message);
-    });
+    setIsModal(true);
   }
+
+  /** 여행 취소 취소 */
+  const onClickHandleCancelDelete = () => {
+    setIsModal(false);
+  };
+
+  /** 여행 취소 확인 */
+  const onClickHandleConfirmDelete = async () => {
+    travelDeleteFromCheck({nanoid: checkValue[0]})
+        .then(res => {
+            if(res.data && res.data.code === 200){
+                alert('정상적으로 취소되었습니다.');
+                // 유사 새로고침 효과 부여
+                setSelectValue({value: "다가오는 여행", label: "다가오는 여행"});
+            }
+        })
+        .catch(e => {
+            console.log(e.response?.data?.message);
+        });
+        setIsModal(false);
+        return;
+    };
 
   return (
     <>
       {upcomingTravelData.length > 0 && (
         <>
           <CategoryBox>
-            <DelDiv>
-                <CheckDelBtn onClick={onClickDelete}>취소</CheckDelBtn>
-            </DelDiv>
-            <CheckboxGroup value={checkValue} onChange={onChangeCheckbox}>
-            {upcomingTravelData.map((item, i) => (
-                <>
-                    <TravelCard
-                    key={i}
-                    title={item.title}
-                    name={item.host_nickname}
-                    startDate={item.start_date}
-                    endDate={item.end_date}
-                    totalPrice={item.amount}
-                    main_image={item.main_image}
-                    sub_images={item.sub_images}
-                    adult={item.adult}
-                    child={item.child}
-                    baby={item.baby}
-                    />
-                    <CheckboxOption key={i+1} value={item.nanoid} />
-                </>
-            ))}
-            </CheckboxGroup>
+            {!isModal &&
+            <>
+                <DelDiv>
+                    <CheckDelBtn onClick={onClickDelete}>취소</CheckDelBtn>
+                </DelDiv>
+                <CheckboxGroup value={checkValue} onChange={onChangeCheckbox}>
+                {upcomingTravelData.map((item, i) => (
+                    <>
+                        <TravelCard
+                        key={i}
+                        title={item.title}
+                        name={item.host_nickname}
+                        startDate={item.start_date}
+                        endDate={item.end_date}
+                        totalPrice={item.amount}
+                        main_image={item.main_image}
+                        sub_images={item.sub_images}
+                        adult={item.adult}
+                        child={item.child}
+                        baby={item.baby}
+                        />
+                        <CheckboxOption key={i+1} value={item.nanoid} />
+                    </>
+                ))}
+                </CheckboxGroup>
+            </>
+            ||
+                <ProfileModal
+                    message="정말 취소하시겠습니까?"
+                    onConfirm={onClickHandleConfirmDelete}
+                    onCancel={onClickHandleCancelDelete}
+                />
+            }
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>

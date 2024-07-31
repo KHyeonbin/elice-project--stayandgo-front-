@@ -109,3 +109,19 @@ export const Price = styled.span`
   font-weight: bold;
   color: #000000;
 `;
+
+export const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
+export const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+`
