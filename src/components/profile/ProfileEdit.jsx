@@ -103,6 +103,17 @@ const ProfileEdit = () => {
 
     const { email, password, passwordCheck, nickname, phone, photo } = formData;
 
+    // 기존 정보와 중복 일 때 (닉네임, 전화번호)
+    if (nickname === loginUser.nickname) {
+      alert("중복된 닉네임입니다. 닉네임을 변경해주세요.")
+      return;
+    }
+
+    if (phone === loginUser.phone) {
+      alert("중복된 전화번호입니다. 전화번호를 변경해주세요.")
+      return;
+    }
+
     // 아무 입력하지 않고 완료 버튼 클릭 했을 때
     if (!password || !passwordCheck || !phone) {
       alert("모든 내용을 입력해주세요.");
@@ -120,7 +131,6 @@ const ProfileEdit = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      console.log("aaaa ", formData)
       await editUserData({ email, password, nickname, phone, photo});
       setIsModal(true);
     } catch (error) {
