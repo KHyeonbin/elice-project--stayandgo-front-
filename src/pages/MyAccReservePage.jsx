@@ -12,13 +12,23 @@ import MyAccCategory from "../components/myAccReserve/MyAccCategory";
 const Container = styled.div`
   padding-bottom: 60px;
 `;
-const Title = styled.h1` 
+const Wrap = styled.div`
+  display: flex;
+  justify-content: space-between;
   padding: 15px;
   border-radius: 10px;
   width: 100%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+`
+const Title = styled.h1` 
   font-size: 20px;
   line-height: 24.2px;
+`;
+const Select = styled.select`
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 `;
 
 const MyAccReservePage = () => {
@@ -29,6 +39,7 @@ const MyAccReservePage = () => {
   //오늘 날짜 기준으로 지난예약, 다가오는예약 상태 세팅
   const [pastReserveData, setPastReserveData] = useState([]);
   const [upcomingReserveData, setUpcomingReserveData] = useState([]);
+  const [filter, setFilter] = useState('upcoming');
 
   useEffect(() => {
     const fetchReserveData = async () => {
@@ -63,15 +74,25 @@ const MyAccReservePage = () => {
     <>
       <Header user={loginUser} />
       <Container>
-        <Title>나의 숙소 예약관리</Title>
-        <MyAccCategory
-          title="예약 목록"
-          reserveData={upcomingReserveData}
-          NoAccReserve={<NoAccReserve />}
-        />
-        <MyAccCategory 
-        title="지난 예약 목록" 
-        reserveData={pastReserveData} />
+        <Wrap>
+          <Title>나의 숙소 예약관리</Title>
+            <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
+              <option value="upcoming">예약 목록</option>
+              <option value="past">지난 예약 목록</option>
+            </Select>
+        </Wrap>
+          {filter === 'upcoming' ? (
+          <MyAccCategory
+            title="예약 목록"
+            reserveData={upcomingReserveData}
+            NoAccReserve={<NoAccReserve />}
+          />
+        ) : (
+          <MyAccCategory
+            title="지난 예약 목록"
+            reserveData={pastReserveData}
+          />
+        )}
       </Container>
       <Footer user={loginUser} />
     </>
