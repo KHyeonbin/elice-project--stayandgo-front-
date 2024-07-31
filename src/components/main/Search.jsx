@@ -11,6 +11,7 @@ import {ko} from 'date-fns/locale';
 import Select from 'react-select';
 import { korCity } from "../../util/data/arrayStaticData";
 import SearchGuestSetting from "./SearchGuestSetting";
+import { getNextNextDate } from "../../util/getNextNextDate";
 
 const Container = styled.div`
     width: 100%;
@@ -248,7 +249,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
     const defaultValue = {
         city: "전체",
         startDate: getDateFormat(getNextDate()),
-        endDate: getDateFormat(getNextDate()),
+        endDate: getDateFormat(getNextNextDate()),
         adult: 0,
         child: 0,
         baby: 0
@@ -263,7 +264,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
     
     // 시작 날짜, 끝 날짜 state
     const [startDate, setStartDate] = useState(getNextDate());
-    const [endDate, setEndDate] = useState(getNextDate());
+    const [endDate, setEndDate] = useState(getNextNextDate());
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
         setSearch((current) => {
@@ -366,7 +367,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
                                         <DatepickerCustom value={search.endDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                            minDate={startDate} // minDate 이전 날짜 선택 불가
+                                            minDate={defaultValue.endDate} // minDate 이전 날짜 선택 불가
                                             maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
                                             selected={endDate}
                                             onChange={(date) => setEndDate(date)}
