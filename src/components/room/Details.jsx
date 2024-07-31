@@ -16,14 +16,20 @@ import { tagArr } from "../../util/data/arrayStaticData";
 const SwiperDiv = styled.div` 
   position: relative;
   background: #eee;
-  & .swiper-wrapper {
-    display: flex;
-    align-items: center;
+  height: 120vw;
+
+  & .swiper {
+    height: 100%;
   }
 `;
 
 const ImgDiv = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   & img {
+    height: 100%;
     width: 100%;
   }
 `;
@@ -224,6 +230,15 @@ const PriceDiv = styled.div`
   }
 `;
 
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  font-size: 18px;
+`
+
+
 
 const RoomDetails = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -324,7 +339,7 @@ const RoomDetails = () => {
 
   // roomInfo가 null일 경우 로딩 상태를 표시
   if (!roomInfo) {
-    return <div>Loading...</div>;
+    return <LoadingDiv>Loading...</LoadingDiv>;
   }
 
   return (
