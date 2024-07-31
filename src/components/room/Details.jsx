@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -231,28 +231,36 @@ const RoomDetails = () => {
   const slideModal = useRecoilValue(SlideModal);
   const userState = useRecoilValue(loginState);
   const [roomInfo, setRoomInfo] = useState(null);
-  const [reservationInfo, setReservationInfo] = useState(null);
   const {id} = useParams();
   const sortedImages = useRef();
+  const [query, setQuery] = useSearchParams();
+  let totalPrice = 0;
+
+
+  // mainCatetory 디렉토리 이미지 가져오기
+  const importImages = (v) => {
+    return v.keys().map((key) => ({
+        src: v(key),
+        name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
+      }));
+  };
+  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+  // 파일 이름 순으로 정렬
+  sortedImages.current = images.sort((a, b) => {
+    const aNumber = parseInt(a.name.split('_')[0], 10);
+    const bNumber = parseInt(b.name.split('_')[0], 10);
+    return aNumber - bNumber;
+  });
 
   
   useEffect(() => {
-
-    // 로그인 여부 확인
-    if(!userState.is_logined) {
-      //로그인 상태로 변경되기 전에 로그인 여부 체크 함수가 실행되어 로그인 페이지로 이동하는 문제
-      /*
-      alert('로그인 후 이용하실 수 있습니다.');
-      navigate('/login');
-      */
-    }
-
     // 방 정보 가져오기
     (async() => {
       try {
         const response = await axios.get(`http://localhost:3001/post/read/${id}`); 
         const data = response.data.data;
         setRoomInfo(data);
+
       } catch(error) {
         console.error(error);
       }
@@ -260,48 +268,48 @@ const RoomDetails = () => {
 
   }, [id]);
 
-  // 카테고리 이미지 가져오기
-  useEffect(()=>{
-    // mainCatetory 디렉토리 이미지 가져오기
-    const importImages = (v) => {
-      return v.keys().map((key) => ({
-          src: v(key),
-          name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-        }));
+
+  useEffect(() => {
+    // 검색 정보 가져오기
+    if(query.get('adult') === '0') {
+      alert('예약 정보를 설정해주세요.');
+      navigate('/');
     };
-    const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
-    // 파일 이름 순으로 정렬
-    sortedImages.current = images.sort((a, b) => {
-      const aNumber = parseInt(a.name.split('_')[0], 10);
-      const bNumber = parseInt(b.name.split('_')[0], 10);
-      return aNumber - bNumber;
-    });
-  },[roomInfo])
+
+    if (roomInfo) {
+
+    // 로그인 여부 확인
+    if(!userState.is_logined) {
+      //로그인 상태로 변경되기 전에 로그인 여부 체크가 실행되어 로그인 페이지로 이동하는 문제
+      alert('로그인 후 이용하실 수 있습니다.');
+      window.location.href='/login';
+      //navigate('/login');
+    }  
+
+
+      const adultPrice = query.get('adult') * roomInfo.price;
+      const childPrice = query.get('child') * roomInfo.price * 0.5;
+      const babyPrice = query.get('baby') * roomInfo.price * 0.2;
+      totalPrice = Math.floor((adultPrice + childPrice + babyPrice)/10) * 10;
+    }
+    
+  }, [roomInfo, query]);
 
 
   const onReservate = async() => {
+    console.log(userState.email)
     try{
       await axios.post(
         'http://localhost:3001/reserve/write', 
         {
           post_nanoid: id, 
           email: userState.email,
-          author: roomInfo.author,
-          title: roomInfo.title,
-          host_email: roomInfo.author.email,
-          host_nickname: roomInfo.author.nickname,
-          host_phone: roomInfo.author.phone,
-          main_image: roomInfo.main_image,
-          sub_images: roomInfo.sub_images,
-          main_location: roomInfo.main_location,
-          sub_location: roomInfo.sub_location,
-          amount: 5, // 총 인원?
-          start_date: '2024-08-25',
-          end_date: '2024-08-30',
-          adult: 0,
-          child: 0,
-          baby: 0,
-          
+          amount: totalPrice,
+          start_date: query.get('startDate'),
+          end_date: query.get('endDate'),
+          adult: query.get('adult'),
+          child: query.get('child'),
+          baby: query.get('baby')
         }
       );
     } catch(error) {
