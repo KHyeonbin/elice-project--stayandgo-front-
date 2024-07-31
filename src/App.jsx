@@ -21,7 +21,8 @@ import {useEffect, useState} from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import loginState from "./atoms/loginState";
 import {getDateFormat} from './util/getDateFormat';
-
+import RoomMyDetailsPage from './pages/RoomMyDetailsPage';
+import PostUploadEdit from "./pages/PostUploadEdit";
 
 
 const App = () => {
@@ -95,6 +96,7 @@ const App = () => {
           <Route path="/joinEnd" element={<JoinEndPage />} />
           <Route path="/changePassword" element={<ChangePasswordPage />} />
           <Route path="/room/details/:id" element={<RoomDetailsPage />} />
+          <Route path="/room/my/details/:id" element={<RoomMyDetailsPage />} />
           <Route path="/Wish" element={<WishPage />}></Route>
           <Route path="/Travel" element={<TravelPage />}></Route>
           <Route path="/Reservation" element={<ReservationPage />}></Route>
@@ -103,6 +105,7 @@ const App = () => {
           <Route path="/myaccommodation" element={<MyAccommodationsPage />}></Route>
           <Route path="/About" element={<AboutPage />}></Route>
           <Route path="/upload" element={<PostUpload />} />
+          <Route path="/upload/edit" element={<PostUploadEdit />} />
         </Routes>
       </BrowserRouter>
   );

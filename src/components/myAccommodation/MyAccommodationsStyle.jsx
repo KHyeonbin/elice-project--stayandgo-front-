@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Checkbox} from 'antd';
 
 export const Container = styled.div`
   padding: 0;
@@ -6,7 +7,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  padding-bottom: 100px;
 `;
 
 export const Header = styled.div`
@@ -30,17 +31,6 @@ export const Button = styled.div`
 
 `;
 
-export const ListContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 17px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-`;
-
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
@@ -48,7 +38,6 @@ export const ListItem = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
   margin: 0;
 `;
 
@@ -60,20 +49,50 @@ export const Image = styled.div`
   background-image: url(${(props) => props.$imageUrl});
   background-size: cover;
   background-position: center;
+  position: relative;
 `;
 
-export const CheckBox = styled.input`
-  position: relative;
-  top: 5px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
-`;
+export const CheckboxGroup = styled(Checkbox.Group)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 34px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+`
+// antd 체크박스 css style 정의
+export const CheckboxOption = styled(Checkbox)`
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    // 체크'박스' css 
+    // 체크박스 크기
+    .ant-checkbox-input {
+        width: 27px;  
+        height: 27px; 
+    }
+    .ant-checkbox-inner {
+        width: 27px;  
+        height: 27px; 
+        border-radius: 4px; 
+    }
+    .ant-checkbox-inner:after {
+        width: 7px; 
+        height: 15px;
+    }
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #E61E51;
+        border: 1px solid #F0586F;
+    }
+`
 
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px 0 15px 0;
+  cursor: pointer;
 `;
 
 export const Title = styled.span`

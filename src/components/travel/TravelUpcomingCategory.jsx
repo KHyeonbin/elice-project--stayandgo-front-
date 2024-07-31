@@ -52,6 +52,20 @@ const CheckboxGroup = styled(Checkbox.Group)`
 `
 const CheckboxOption = styled(Checkbox)`
     // 체크'박스' css 
+    // 체크박스 크기
+    .ant-checkbox-input {
+        width: 24px;  
+        height: 24px; 
+    }
+    .ant-checkbox-inner {
+        width: 24px;  
+        height: 24px; 
+        border-radius: 4px; 
+    }
+    .ant-checkbox-inner:after {
+        width: 5px; 
+        height: 12px;
+    }
     .ant-checkbox-input:checked + .ant-checkbox-inner {
         background-color: #E61E51;
         border: 1px solid #F0586F;
