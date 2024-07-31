@@ -89,13 +89,13 @@ const MyAccReservePage = () => {
         <Wrap>
           <Title>나의 숙소 예약관리</Title>
             <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value="upcoming">예약 목록</option>
+              <option value="upcoming">현재 예약 목록</option>
               <option value="past">지난 예약 목록</option>
             </Select>
         </Wrap>
           {filter === 'upcoming' ? (
           <MyAccCategory
-            title="예약 목록"
+            title="현재 예약 목록"
             reserveData={upcomingReserveData}
             NoAccReserve={<NoAccReserve />}
           />
