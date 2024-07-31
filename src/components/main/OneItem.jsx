@@ -1,5 +1,6 @@
 import React, {useRef, useState} from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const ItemDiv = styled.div`
     width: 90%;
@@ -123,15 +124,13 @@ const OneItem = ({v}) => {
     }
 
     // 아이템 클릭 시 아이템 상세보기로 이동
-    const onClickItemDetail = (nanoid) => {
-        console.log(nanoid);
-    }
     console.log(images.length)
     return (
         <ItemDiv id={v.nanoid}>
+            <Link to={`room/details/${v.nanoid}`}>
                     <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                     <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
-                    <ItemBackgroundDiv ref={backgroundRef} onClick={() => onClickItemDetail(v.nanoid)} $background={images[index]} />
+                    <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
                         <DotDiv>
                             {images.map((v, i) => {
                                 return (
@@ -144,6 +143,7 @@ const OneItem = ({v}) => {
                         <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
                         <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
                     </ItemTextDiv>
+            </Link>
         </ItemDiv>
     )
 }
