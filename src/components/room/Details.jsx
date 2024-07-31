@@ -16,7 +16,7 @@ import { tagArr } from "../../util/data/arrayStaticData";
 const SwiperDiv = styled.div` 
   position: relative;
   background: #eee;
-  height: 120vw;
+  height: 110vw;
 
   & .swiper {
     height: 100%;
@@ -28,9 +28,11 @@ const ImgDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   & img {
     height: 100%;
-    width: 100%;
+    width:100%;
+    object-fit: cover;
   }
 `;
 
