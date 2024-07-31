@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-/** 유저 데이터 가져오기 (프로필 페이지) */
+/** 유저 데이터 가져오기 (프로필, 개인정보 수정 페이지) */
 export const fetchUserData = async (id) => {
     try {
         const response = await axios.get(`http://localhost:3001/users/${id}`, {
@@ -26,23 +26,10 @@ export const deleteUser = async (id) => {
     }
 };
 
-/** 유저 데이터 가져오기 (개인정보 수정 페이지) */
-export const fetchEditUserData = async (id) => {
-    try {
-        const response = await axios.get(`http://localhost:3001/users/edit/${id}`, {
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
-        });
-        return response.data;
-    } catch (error) {
-        console.error("사용자 정보를 불러오는데 실패했습니다.", error);
-        throw error;
-    }
-};
-
 /** 사용자 정보 수정 (개인정보 수정 페이지) */
 export const editUserData = async (data) => {
     try {
-        await axios.put(`http://localhost:3001/users/`, data, {
+        await axios.put(`http://localhost:3001/users`, data, {
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
   ProfileEditSection,
@@ -47,7 +47,7 @@ const ProfileEdit = () => {
     name: "",
     nickname: "",
     phone: "",
-    profileEmoji: "",
+    photo: "",
   });
 
   const [passwordError, setPasswordError] = useState("");
@@ -56,18 +56,17 @@ const ProfileEdit = () => {
   const [isEmojiModal, setIsEmojiModal] = useState(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
-  const navigate = useNavigate();
 
   /** 초기 사용자 정보 설정 */
   useEffect(() => {
     setFormData({
-      email: loginUser.email || "",
+      email: loginUser.email,
       password: "",
       passwordCheck: "",
-      name: loginUser.name || "",
-      nickname: loginUser.nickname || "",
-      phone: loginUser.phone || "",
-      profileEmoji: loginUser.profileEmoji || "",
+      name: loginUser.name,
+      nickname: loginUser.nickname,
+      phone: loginUser.phone,
+      photo: loginUser.photo,
     });
   }, [loginUser]);
 
@@ -82,7 +81,7 @@ const ProfileEdit = () => {
           name: userData.name,
           nickname: userData.nickname,
           phone: userData.phone,
-          profileEmoji: userData.profileEmoji,
+          photo: userData.photo,
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다.");
@@ -114,7 +113,7 @@ const ProfileEdit = () => {
   const onClickHandleSave = async (e) => {
     e.preventDefault();
 
-    const { password, passwordCheck, phone } = formData;
+    const { email, password, passwordCheck, nickname, phone, photo } = formData;
 
     // 아무 입력하지 않고 완료 버튼 클릭 했을 때
     if (!password || !passwordCheck || !phone) {
@@ -133,9 +132,9 @@ const ProfileEdit = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      await editUserData(id, formData);
+      console.log("aaaa ", formData)
+      await editUserData({ email, password, nickname, phone, photo});
       setIsModal(true);
-      navigate("/");
     } catch (error) {
       console.error("사용자 정보를 수정하는데 실패했습니다.");
     }
@@ -144,7 +143,7 @@ const ProfileEdit = () => {
   /** 모달 닫기 함수 */
   const onClickHandleCloseModal = () => {
     setIsModal(false);
-    navigate("/"); // 모달 닫기 클릭 시 홈으로 이동
+    window.location.href = "/";
   };
 
   /** 이모지 모달 열기 함수 */
@@ -154,7 +153,7 @@ const ProfileEdit = () => {
 
   /** 이모지 선택 */
   const onSelectHandleEmoji = (emoji) => {
-    setFormData((prev) => ({ ...prev, profileEmoji: emoji }));
+    setFormData((prev) => ({ ...prev, photo: emoji }));
     setIsEmojiModal(false);
   }
 
@@ -168,8 +167,8 @@ const ProfileEdit = () => {
       <ProfileEditContainer>
         <ProfileEditSection>
           <ProfileEditEmojiPlaceholder onClick={onClickHandleOpenModal}>
-            {formData.profileEmoji ? (
-              <ProfileEmoji>{formData.profileEmoji}</ProfileEmoji>
+            {formData.photo ? (
+              <ProfileEmoji>{formData.photo}</ProfileEmoji>
             ) : (
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="50" height="50">
                 <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
