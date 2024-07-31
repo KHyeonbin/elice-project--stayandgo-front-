@@ -77,11 +77,11 @@ const ProfileEdit = () => {
         const userData = await fetchUserData(id);
         setFormData((prev) => ({
           ...prev,
-          email: userData.email,
-          name: userData.name,
-          nickname: userData.nickname,
-          phone: userData.phone,
-          photo: userData.photo,
+          email: userData.email || "",
+          name: userData.name || "",
+          nickname: userData.nickname || "",
+          phone: userData.phone || "",
+          photo: userData.photo || "",
         }));
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다.");
