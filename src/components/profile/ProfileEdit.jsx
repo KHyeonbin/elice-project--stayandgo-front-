@@ -57,39 +57,27 @@ const ProfileEdit = () => {
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
 
-  /** 초기 사용자 정보 설정 */
-  useEffect(() => {
-    setFormData({
-      email: loginUser.email,
-      password: "",
-      passwordCheck: "",
-      name: loginUser.name,
-      nickname: loginUser.nickname,
-      phone: loginUser.phone,
-      photo: loginUser.photo,
-    });
-  }, [loginUser]);
-
   /** 사용자 정보 불러오기 */
   useEffect(() => {
     const getUserData = async () => {
       try {
         const userData = await fetchUserData(id);
-        setFormData((prev) => ({
-          ...prev,
-          email: userData.email || "",
-          name: userData.name || "",
-          nickname: userData.nickname || "",
-          phone: userData.phone || "",
-          photo: userData.photo || "",
-        }));
+        setFormData({
+          email: userData.email || loginUser.email,
+          password: "",
+          passwordCheck: "",
+          name: userData.name || loginUser.name,
+          nickname: userData.nickname || loginUser.nickname,
+          phone: userData.phone || loginUser.phone,
+          photo: userData.photo || loginUser.photo,
+        });
       } catch (error) {
         console.error("사용자 정보를 불러오는데 실패했습니다.");
       }
     };
 
     getUserData();
-  }, [id]);
+  }, [id, loginUser]);
 
   /** 인풋 변경 핸들러 */
   const onChangeHandler = useCallback((e) => {

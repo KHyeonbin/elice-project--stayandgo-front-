@@ -89,7 +89,7 @@ const Profile = () => {
   return (
     <ProfileContainer>
       <ProfileHeader>
-        <ProfileEmoji>{user.profileEmoji || "👤"}</ProfileEmoji>
+        <ProfileEmoji>{user.photo || "👤"}</ProfileEmoji>
         {user.is_logined ? (
           <ProfileName>{user.nickname} ({user.name})</ProfileName>
         ) : (
