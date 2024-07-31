@@ -24,18 +24,18 @@ export const Button = styled.div`
   margin-right: 5px;
   text-align: center;
   font-size: 12px;
+  font-weight: 500;
   color: ${(props) => (props.disabled ? "#ccc" : "#f87878")};
   border: ${(props) => (props.disabled ? "1px solid #ccc" : "1px solid #f87878")};
   border-radius: 10px;
   cursor: ${(props) => (props.disabled ? "" : "pointer")};
-
+  margin-bottom: 30px;
 `;
 
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
-  width: 173px;
-  box-sizing: border-box;
+  width: 160px;
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -44,7 +44,7 @@ export const ListItem = styled.div`
 export const Image = styled.div`
   background-color: #f1f1f1;
   width: 100%;
-  height: 173px;
+  height: 160px;
   border-radius: 15px;
   background-image: url(${(props) => props.$imageUrl});
   background-size: cover;
@@ -55,12 +55,9 @@ export const Image = styled.div`
 export const CheckboxGroup = styled(Checkbox.Group)`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   gap: 34px;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 `
 // antd 체크박스 css style 정의
 export const CheckboxOption = styled(Checkbox)`
