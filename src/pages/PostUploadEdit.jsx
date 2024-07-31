@@ -180,9 +180,11 @@ const CategoryCheckbox = styled(Checkbox.Group)`
 `
 const CategoryCheckboxOption = styled(Checkbox)`
     // 체크'박스' css 
+    // input 체크 후 hover 시에도 배경, 테두리 유지
+    // css 레벨에서 우선순위를 최상위로 높임 : !important
     .ant-checkbox-input:checked + .ant-checkbox-inner {
-        background-color: #E61E51;
-        border: 1px solid #F0586F;
+        background-color: #E61E51 !important;
+        border: 1px solid #F0586F !important;
     }
 `
 const InputTextArea = styled.textarea`
