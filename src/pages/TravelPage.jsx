@@ -14,7 +14,19 @@ import { useNavigate } from "react-router-dom";
 
 const SelectDiv = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: end;
+  width: calc(100% - 30px);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin: 15px auto 0;
+  & > div {
+    width: 100%;
+    border-radius: 10px;
+    > div {
+      width: 100%;
+      border-radius: 10px;
+    }
+  };
 `
 // react-select css
 const selectCustom = {
@@ -66,7 +78,7 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 20px;
   line-height: 24.2px;
-  margin: 25px 0 0 25px;
+  margin: 25px 0 0 15px;
   width: 320px;
 `;
 const Loading_div = styled.div`

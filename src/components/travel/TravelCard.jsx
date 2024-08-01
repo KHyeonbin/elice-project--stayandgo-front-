@@ -7,20 +7,19 @@ import ImageSlider from "../layout/ImageSlider";
 const Container = styled.div`
   background-color: white;
   border-radius: 15px;
-  margin: 15px;
-  width: 300px;
+  width: calc(100% - 60px);
   height: 111px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
+  margin-bottom: 10px;
 `;
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 const Title = styled.span`
-  margin-top: 16px;
   font-weight: bold;
   font-size: 16px;
   line-height: 19.36px;
