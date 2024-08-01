@@ -22,7 +22,7 @@ const MainPage = ({search, setSearch, startSearch, setStartSearch}) => {
     // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
     const [page, setPage] = useState({
         page: 1,
-        perPage: 0,
+        perPage: 6,
         total: 0,
         totalPage: 0,
     });
