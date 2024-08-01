@@ -57,6 +57,11 @@ const Profile = () => {
     navigate(`/About`);
   };
 
+   /** Q&A 클릭 시 챗봇 페이지로 이동 */
+  const onClickHandleChatBot = () => {
+    navigate('/chatbot');
+  };
+
   /** 회원 탈퇴 버튼 클릭 시 모달 열기 */
   const onClickHandleProfileDelete = () => {
     if (!user.is_logined) { // 로그아웃 상태일때 회원 탈퇴 클릭 시 로그인 페이지로 이동
@@ -124,6 +129,14 @@ const Profile = () => {
       </ProfileSection>
       <ProfileSection onClick={onClickHandleAbout}>
         <ProfileLabel>Stay and Go 이용방법</ProfileLabel>
+        <ProfileEdit>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
+            <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+          </svg>
+        </ProfileEdit>
+      </ProfileSection>
+      <ProfileSection onClick={onClickHandleChatBot}>
+        <ProfileLabel>Q&A</ProfileLabel>
         <ProfileEdit>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#333">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />

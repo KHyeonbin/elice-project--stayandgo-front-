@@ -25,6 +25,7 @@ import {getDateFormat} from './util/getDateFormat';
 import RoomMyDetailsPage from './pages/RoomMyDetailsPage';
 import PostUploadEdit from "./pages/PostUploadEdit";
 import AdminPage from "./components/admin/AdminPage";
+import ChatBotPage from "./pages/ChatBotPage";
 
 
 
@@ -111,6 +112,7 @@ const App = () => {
           <Route path="/upload" element={<PostUpload />} />
           <Route path="/upload/edit" element={<PostUploadEdit />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/chatbot" element={<ChatBotPage />} />
         </Routes>
       </BrowserRouter>
   );
