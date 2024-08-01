@@ -3,7 +3,6 @@ import { Link  } from "react-router-dom";
 import { logoutUser } from "../../api/logoutUser";
 
 const Container = styled.div`
-    position: sticky;
     top: 0;
     width: 100%;
     height: 65px;
@@ -13,7 +12,6 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
 `
 const LeftArea = styled.div`
     width: 200px; 
