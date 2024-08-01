@@ -33,7 +33,7 @@ const MainPage = ({search, setSearch, startSearch, setStartSearch}) => {
             <Search setPage={setPage} search={search} setSearch={setSearch} setStartSearch={setStartSearch} isModal={isModal} setIsModal={setIsModal}/>
             <Category setPage={setPage} setCategory={setCategory} />
             <Items page={page} setPage={setPage} startSearch={startSearch} category={category}/>
-            <Footer />
+            <Footer user={loginUser}/>
         </>
     );
 };

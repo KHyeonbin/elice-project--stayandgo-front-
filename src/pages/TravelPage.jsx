@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
@@ -11,6 +11,7 @@ import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
+import footerState from "../atoms/footerState";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -101,6 +102,11 @@ const TravelPage = () => {
   //로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
   const navigate = useNavigate();
+
+  // 메뉴 상태 체크
+  const menu = useRecoilValue(footerState);
+  const setMenu = useSetRecoilState(footerState);
+
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
   const [upcomingPage, setUpcomingPage] = useState({
     page: 1,
@@ -131,7 +137,14 @@ const TravelPage = () => {
   useEffect(() => {
     if(!loginUser.is_logined){
       alert('로그인이 필요한 페이지입니다.');
-      navigate('/');
+      setMenu((current) => {
+        const newMenu = {...current};
+        newMenu.menu = menu.menuArr[0];
+        return newMenu;
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 150);
       return;
     }
   },[])

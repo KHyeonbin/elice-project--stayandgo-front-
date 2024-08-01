@@ -12,14 +12,19 @@ import loading from "../../assets/icons/loading.png";
 import { useNavigate } from "react-router-dom";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import loginState from "../../atoms/loginState";
 import { mypostDelete } from "../../api/myPostDelete";
 import ProfileModal from "../profile/ProfileModal";
+import footerState from "../../atoms/footerState";
 
 const MyAccommodations = () => {
   // 페이지 진입 시 로그인 하지 않았을 경우 예외처리 추가
   const loginUser = useRecoilValue(loginState);
+
+  // 메뉴 상태 체크
+  const menu = useRecoilValue(footerState);
+  const setMenu = useSetRecoilState(footerState);
 
   // modal 호출 state
   const [isModal, setIsModal] = useState(false);
@@ -58,7 +63,14 @@ const MyAccommodations = () => {
   useEffect(() => {
     if(!loginUser.is_logined){
       alert("로그인이 필요한 페이지입니다.");
-      navigate('/');
+      setMenu((current) => {
+        const newMenu = {...current};
+        newMenu.menu = menu.menuArr[0];
+        return newMenu;
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 150);
       return;
     }
     setTimeout(() => {
