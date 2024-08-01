@@ -11,6 +11,9 @@ const CategoryBox = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
+  & .ant-checkbox-group {
+    width: 100%;
+  }
 `;
 const Pagenation_div = styled.div`
     width: 100%;
@@ -80,7 +83,7 @@ const DelDiv = styled.div`
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    padding-right: 30px;
+    padding-right: 15px;
 `
 // 삭제 버튼
 const CheckDelBtn = styled.button`
