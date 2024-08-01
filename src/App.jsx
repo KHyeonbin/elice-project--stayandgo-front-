@@ -24,6 +24,8 @@ import loginState from "./atoms/loginState";
 import {getDateFormat} from './util/getDateFormat';
 import RoomMyDetailsPage from './pages/RoomMyDetailsPage';
 import PostUploadEdit from "./pages/PostUploadEdit";
+import AdminPage from "./components/Admin/AdminPage";
+
 
 
 const App = () => {
@@ -108,6 +110,7 @@ const App = () => {
           <Route path="/About" element={<AboutPage />}></Route>
           <Route path="/upload" element={<PostUpload />} />
           <Route path="/upload/edit" element={<PostUploadEdit />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
   );
