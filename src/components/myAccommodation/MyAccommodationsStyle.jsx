@@ -25,17 +25,23 @@ export const Button = styled.div`
   text-align: center;
   font-size: 12px;
   font-weight: 500;
-  color: ${(props) => (props.disabled ? "#ccc" : "#f87878")};
-  border: ${(props) => (props.disabled ? "1px solid #ccc" : "1px solid #f87878")};
+  color: white;
+  border: none;
+  background-color: #E61E51;
   border-radius: 10px;
-  cursor: ${(props) => (props.disabled ? "" : "pointer")};
+  cursor: pointer;
   margin-bottom: 30px;
+  transition: background-color 1s;
+
+  &:hover{
+    background-color:#F0586F;
+  }
 `;
 
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
-  width: calc(50% - 10px);
+  width: 175px;
   display: flex;
   flex-direction: column;
 `;

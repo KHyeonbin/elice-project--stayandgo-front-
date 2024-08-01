@@ -61,14 +61,10 @@ const MyAccommodations = () => {
       navigate('/');
       return;
     }
-    loadingFunction();
+    setTimeout(() => {
+      loadingFunction();
+    }, 250);
   }, []);
-
-  /** 각 숙소 클릭 시 상세 페이지로 이동 */
-  const onClickHandleDetail = (nanoid) => {
-    navigate(`/room/my/details/${nanoid}`);
-    return;
-  };
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (e) => {
@@ -82,12 +78,22 @@ const MyAccommodations = () => {
 
   /** 등록 삭제 버튼 클릭 시 */
   const onClickHandleDelete = () => {
+    if(checkValue.length === 0){
+      alert("삭제할 숙소를 체크해주세요.");
+      return;
+    }
     setIsModal(true)
   };
 
   /** 수정 버튼 클릭 시 */
   const onClickHandleEdit = () => {
+    if(checkValue.length === 0){
+      alert("수정할 숙소를 체크해주세요.");
+      return;
+    }
     navigate('/upload/edit', { state: { v: checkValue[0] } });
+    // 체크 벨류 초기화
+    setCheckValue([]);
     return;
   };
 
@@ -103,6 +109,8 @@ const MyAccommodations = () => {
       .then(res => {
         if(res.data && res.data.code === 200){
           loadingFunction();
+          // 체크 벨류 초기화
+          setCheckValue([]);
         } 
         else {
           alert(res?.data?.message);
@@ -125,16 +133,16 @@ const MyAccommodations = () => {
     {!isModal &&
       <>
       <Header>
-        <Button key={1} onClick={onClickHandleDelete} disabled={checkValue.length !== 1}>삭제</Button>
-        <Button key={2} onClick={onClickHandleEdit} disabled={checkValue.length !== 1}>수정</Button>
+        <Button onClick={onClickHandleDelete}>삭제</Button>
+        <Button onClick={onClickHandleEdit}>수정</Button>
       </Header>
       {!isLoading &&
         <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
           {accommodations.map((accommodation, i) => (
             <AccommodationItem
-            keys={i}
+            key={i}
             accommodation={accommodation}
-            onClickHandleDetail={onClickHandleDetail}
+            // 각 나의 숙소 아이템 클릭 시의 동작은 AccommodationItem 에서 정의
             onChangeHandleCheckBox={onChangeHandleCheckBox}
             CheckboxOption={CheckboxOption}>
             </AccommodationItem>
