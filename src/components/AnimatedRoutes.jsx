@@ -20,7 +20,9 @@ import MyAccReservePage from "../pages/MyAccReservePage";
 import RoomMyDetailsPage from '../pages/RoomMyDetailsPage';
 import PostUploadEdit from "../pages/PostUploadEdit";
 import AdminPage from "../components/admin/AdminPage";
-import { AnimatePresence } from "framer-motion"
+import { AnimatePresence } from "framer-motion";
+import ChatBotPage from "../pages/ChatBotPage";
+
 
 
 const AnimatedRoutes = ({ search, setSearch, startSearch, setStartSearch }) => {
@@ -49,6 +51,7 @@ const AnimatedRoutes = ({ search, setSearch, startSearch, setStartSearch }) => {
                 <Route path="/upload" element={<PostUpload />} />
                 <Route path="/upload/edit" element={<PostUploadEdit />} />
                 <Route path="/admin" element={<AdminPage />} />
+                <Route path="/chatbot" element={<ChatBotPage />} />
             </Routes>
         </AnimatePresence>
     )
