@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
@@ -10,8 +10,6 @@ import TravelUpcomingCategory from "../components/travel/TravelUpcomingCategory"
 import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
-import { useNavigate } from "react-router-dom";
-import footerState from "../atoms/footerState";
 import { motion } from "framer-motion";
 
 const SelectDiv = styled.div`
@@ -102,11 +100,6 @@ const Loading_img = styled.img`
 const TravelPage = () => {
   //로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
-  const navigate = useNavigate();
-
-  // 메뉴 상태 체크
-  const menu = useRecoilValue(footerState);
-  const setMenu = useSetRecoilState(footerState);
 
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
   const [upcomingPage, setUpcomingPage] = useState({
@@ -138,14 +131,7 @@ const TravelPage = () => {
   useEffect(() => {
     if(!loginUser.is_logined){
       alert('로그인이 필요한 페이지입니다.');
-      setMenu((current) => {
-        const newMenu = {...current};
-        newMenu.menu = menu.menuArr[0];
-        return newMenu;
-      });
-      setTimeout(() => {
-        navigate('/');
-      }, 150);
+      window.location.href = '/';
       return;
     }
   },[])
@@ -184,6 +170,7 @@ const TravelPage = () => {
       });
       setIsIngLoading(true);
       setIsPastLoading(true);
+      // 강제 loading 효과 부여로 settimeout 사용
       setTimeout(() => {
         setIsIngLoading(false);
         setIsPastLoading(false);
@@ -202,6 +189,7 @@ const TravelPage = () => {
         console.log(e);
       });
       setIsIngLoading(true);
+      // 강제 loading 효과 부여로 settimeout 사용
       setTimeout(() => {
         setIsIngLoading(false);
       }, 250);
@@ -219,6 +207,7 @@ const TravelPage = () => {
         console.log(e);
       });
       setIsPastLoading(true);
+      // 강제 loading 효과 부여로 settimeout 사용
       setTimeout(() => {
         setIsPastLoading(false);
       }, 250);

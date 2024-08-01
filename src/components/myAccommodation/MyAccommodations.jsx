@@ -12,19 +12,14 @@ import loading from "../../assets/icons/loading.png";
 import { useNavigate } from "react-router-dom";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import loginState from "../../atoms/loginState";
 import { mypostDelete } from "../../api/myPostDelete";
 import ProfileModal from "../profile/ProfileModal";
-import footerState from "../../atoms/footerState";
 
 const MyAccommodations = () => {
   // 페이지 진입 시 로그인 하지 않았을 경우 예외처리 추가
   const loginUser = useRecoilValue(loginState);
-
-  // 메뉴 상태 체크
-  const menu = useRecoilValue(footerState);
-  const setMenu = useSetRecoilState(footerState);
 
   // modal 호출 state
   const [isModal, setIsModal] = useState(false);
@@ -54,6 +49,7 @@ const MyAccommodations = () => {
       console.error("숙소 데이터를 불러오는데 실패했습니다.", e);
     });
     setIsLoading(true);
+    // 강제 로딩 효과 부여로 settimeout 사용
     setTimeout(() => {
       setIsLoading(false);
     }, 250);
@@ -61,22 +57,14 @@ const MyAccommodations = () => {
 
   /** 나의 숙소 데이터 가져오기 */
   useEffect(() => {
-    if(!loginUser.is_logined){
-      alert("로그인이 필요한 페이지입니다.");
-      setMenu((current) => {
-        const newMenu = {...current};
-        newMenu.menu = menu.menuArr[0];
-        return newMenu;
-      });
-      setTimeout(() => {
-        navigate('/');
-      }, 150);
-      return;
-    }
-    setTimeout(() => {
+    if(loginUser.is_logined){
       loadingFunction();
-    }, 250);
+    } else {
+      alert('로그인이 필요한 페이지입니다.');
+      window.location.href = '/';
+    }
   }, []);
+
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (e) => {
