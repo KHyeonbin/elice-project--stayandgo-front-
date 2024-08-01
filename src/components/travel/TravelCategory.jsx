@@ -8,6 +8,7 @@ const CategoryBox = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
+  padding-top: 30px;
 `;
 const Pagenation_div = styled.div`
     width: 100%;

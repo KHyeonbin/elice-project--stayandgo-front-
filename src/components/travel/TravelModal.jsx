@@ -14,7 +14,8 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  padding-bottom: 20px;
+  z-index: 98;
 `;
 const ModalContent = styled.div`
   background-color: white;
@@ -27,6 +28,7 @@ const ModalContent = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  z-index: 99;
 `;
 const CloseButton = styled.button`
   margin: 10px 10px 0 0;

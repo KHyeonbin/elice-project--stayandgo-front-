@@ -74,7 +74,7 @@ const DotDiv = styled.div`
     left: 43%;
     bottom: 25%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
 `
 const Dot = styled.div.attrs(props => ({
@@ -86,6 +86,7 @@ const Dot = styled.div.attrs(props => ({
   height: 10px;
   border-radius: 50%;
   opacity: 0.7;
+  z-index: 90;
 `;
 
 

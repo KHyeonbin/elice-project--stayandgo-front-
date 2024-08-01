@@ -11,6 +11,7 @@ import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
 import { Navigate, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Container = styled.div`
     width: 100%;
@@ -650,6 +651,10 @@ const PostUpload = () => {
     return (
         <Container>
             <SubHeader/>
+            <motion.div 
+                initial={{ opacity: 0, transform: 'translateX(100%)' }}
+                animate={{ opacity: 1, transform: 'translateX(0)' }}
+                transition={{ duration: 0.3 }}>
                 <ImageUploadForm onSubmit={onSubmitPost} onKeyDown={onHandleEnter}>
                     <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
                         <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
@@ -714,6 +719,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
                 </ImageUploadForm>
+            </motion.div>
             <Footer/>
             {showFinishModal && <ReservationModal message="숙소 등록이 완료되었습니다 !"
                 onClose={() => setshowFinishModal(false)} />}

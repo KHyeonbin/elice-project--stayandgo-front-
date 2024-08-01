@@ -164,7 +164,7 @@ const ModalFooter = styled.div`
     padding-bottom: 60px;
     margin-top: 10px;
     width: 100%;
-    height: 10%;
+    height: 150px;
     background-color: white;
 
     // 보은 반응형 요청

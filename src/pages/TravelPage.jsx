@@ -20,7 +20,7 @@ const SelectDiv = styled.div`
   width: calc(100% - 30px);
   border: 1px solid #ddd;
   border-radius: 10px;
-  margin: 15px auto 0;
+  margin: 10px auto 0;
   & > div {
     width: 100%;
     border-radius: 10px;
