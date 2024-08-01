@@ -6,7 +6,7 @@ import addImg from '../assets/icons/addImg.png';
 import Select from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostEdit } from "../api/myPostEdit";
-import ReservationModal from "../components/reservation/ReservationModal";
+import AccommodationModal from "../components/myAccommodation/AccommodationModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
@@ -719,7 +719,7 @@ const PostUploadEdit = () => {
         myPostEdit(formData)
         .then(res => {
             if(res.data && res.data.code === 200){
-                // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
+                // 성공 모달 창을 띄우며 나의 숙소 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
                 alert(res?.data?.message);
@@ -753,7 +753,7 @@ const PostUploadEdit = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText defaultValue={data.title} onChange={onChangeTitle} maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내" />
+                        <ShortInputText value={data.title} onChange={onChangeTitle} maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내" />
                     </InputDiv>    
                     <OutlineDiv />
                     <InputDiv>
@@ -779,7 +779,7 @@ const PostUploadEdit = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea defaultValue={data.contents} onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                        <InputTextArea value={data.contents} onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
@@ -794,18 +794,18 @@ const PostUploadEdit = () => {
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
                         <InputSubTitle>성인: 1인 1박 가격<br />어린이: 성인의 50% 가격<br/>유아:   성인의 20% 가격으로 반영</InputSubTitle>
-                        <ShortInputText type="number" defaultValue={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
+                        <ShortInputText type="number" value={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength="500" defaultValue={data.host_intro}  onChange={onChangeHostIntro} />
+                        <InputTextArea maxLength="500" value={data.host_intro}  onChange={onChangeHostIntro} />
                     </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
                 </ImageUploadForm>
             <Footer/>
-            {showFinishModal && <ReservationModal message="숙소 수정이 완료되었습니다 !"
+            {showFinishModal && <AccommodationModal message="숙소 수정이 완료되었습니다 !"
                 onClose={() => setshowFinishModal(false)} />}
         </Container>
     );

@@ -12,14 +12,19 @@ import loading from "../../assets/icons/loading.png";
 import { useNavigate } from "react-router-dom";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import loginState from "../../atoms/loginState";
 import { mypostDelete } from "../../api/myPostDelete";
 import ProfileModal from "../profile/ProfileModal";
+import footerState from "../../atoms/footerState";
 
 const MyAccommodations = () => {
   // 페이지 진입 시 로그인 하지 않았을 경우 예외처리 추가
   const loginUser = useRecoilValue(loginState);
+
+  // 메뉴 상태 체크
+  const menu = useRecoilValue(footerState);
+  const setMenu = useSetRecoilState(footerState);
 
   // modal 호출 state
   const [isModal, setIsModal] = useState(false);
@@ -58,17 +63,20 @@ const MyAccommodations = () => {
   useEffect(() => {
     if(!loginUser.is_logined){
       alert("로그인이 필요한 페이지입니다.");
-      navigate('/');
+      setMenu((current) => {
+        const newMenu = {...current};
+        newMenu.menu = menu.menuArr[0];
+        return newMenu;
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 150);
       return;
     }
-    loadingFunction();
+    setTimeout(() => {
+      loadingFunction();
+    }, 250);
   }, []);
-
-  /** 각 숙소 클릭 시 상세 페이지로 이동 */
-  const onClickHandleDetail = (nanoid) => {
-    navigate(`/room/my/details/${nanoid}`);
-    return;
-  };
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (e) => {
@@ -82,12 +90,22 @@ const MyAccommodations = () => {
 
   /** 등록 삭제 버튼 클릭 시 */
   const onClickHandleDelete = () => {
+    if(checkValue.length === 0){
+      alert("삭제할 숙소를 체크해주세요.");
+      return;
+    }
     setIsModal(true)
   };
 
   /** 수정 버튼 클릭 시 */
   const onClickHandleEdit = () => {
+    if(checkValue.length === 0){
+      alert("수정할 숙소를 체크해주세요.");
+      return;
+    }
     navigate('/upload/edit', { state: { v: checkValue[0] } });
+    // 체크 벨류 초기화
+    setCheckValue([]);
     return;
   };
 
@@ -103,6 +121,8 @@ const MyAccommodations = () => {
       .then(res => {
         if(res.data && res.data.code === 200){
           loadingFunction();
+          // 체크 벨류 초기화
+          setCheckValue([]);
         } 
         else {
           alert(res?.data?.message);
@@ -125,16 +145,16 @@ const MyAccommodations = () => {
     {!isModal &&
       <>
       <Header>
-        <Button key={1} onClick={onClickHandleDelete} disabled={checkValue.length !== 1}>삭제</Button>
-        <Button key={2} onClick={onClickHandleEdit} disabled={checkValue.length !== 1}>수정</Button>
+        <Button onClick={onClickHandleDelete}>삭제</Button>
+        <Button onClick={onClickHandleEdit}>수정</Button>
       </Header>
       {!isLoading &&
         <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
           {accommodations.map((accommodation, i) => (
             <AccommodationItem
-            keys={i}
+            key={i}
             accommodation={accommodation}
-            onClickHandleDetail={onClickHandleDetail}
+            // 각 나의 숙소 아이템 클릭 시의 동작은 AccommodationItem 에서 정의
             onChangeHandleCheckBox={onChangeHandleCheckBox}
             CheckboxOption={CheckboxOption}>
             </AccommodationItem>

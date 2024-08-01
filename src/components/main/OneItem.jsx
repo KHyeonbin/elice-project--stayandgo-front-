@@ -132,25 +132,25 @@ const OneItem = ({v, startSearch}) => {
     // 아이템 클릭 시 아이템 상세보기로 이동
     console.log(images.length)
     return (
-        <ItemDiv id={v.nanoid}>
-            <Link to={`room/details/${v.nanoid}?${formattedString}`}>
-                    <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
-                    <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
+            <ItemDiv id={v.nanoid}>
+                <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
+                <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
+                <Link to={`/room/details/${v.nanoid}?${formattedString}`}>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
-                        <DotDiv>
-                            {images.map((v, i) => {
-                                return (
-                                    <Dot key={i} $index={i} $imgIndex={index} />
-                                )
-                            })}
-                        </DotDiv>    
-                    <ItemTextDiv>
-                        <ItemTitle>{v.title}<br /></ItemTitle>
-                        <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
-                        <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
-                    </ItemTextDiv>
-            </Link>
-        </ItemDiv>
+                </Link>
+                    <DotDiv>
+                        {images.map((v, i) => {
+                            return (
+                                <Dot key={i} $index={i} $imgIndex={index} />
+                            )
+                        })}
+                    </DotDiv>    
+                <ItemTextDiv>
+                    <ItemTitle>{v.title}<br /></ItemTitle>
+                    <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
+                    <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
+                </ItemTextDiv>
+            </ItemDiv>
     )
 }
 

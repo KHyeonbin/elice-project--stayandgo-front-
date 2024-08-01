@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
@@ -11,10 +11,23 @@ import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
+import footerState from "../atoms/footerState";
 
 const SelectDiv = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: end;
+  width: calc(100% - 30px);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin: 15px auto 0;
+  & > div {
+    width: 100%;
+    border-radius: 10px;
+    > div {
+      width: 100%;
+      border-radius: 10px;
+    }
+  };
 `
 // react-select css
 const selectCustom = {
@@ -66,7 +79,7 @@ const Container = styled.div`
 const Title = styled.h1`
   font-size: 20px;
   line-height: 24.2px;
-  margin: 25px 0 0 25px;
+  margin: 25px 0 0 15px;
   width: 320px;
 `;
 const Loading_div = styled.div`
@@ -89,6 +102,11 @@ const TravelPage = () => {
   //로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
   const navigate = useNavigate();
+
+  // 메뉴 상태 체크
+  const menu = useRecoilValue(footerState);
+  const setMenu = useSetRecoilState(footerState);
+
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
   const [upcomingPage, setUpcomingPage] = useState({
     page: 1,
@@ -119,7 +137,14 @@ const TravelPage = () => {
   useEffect(() => {
     if(!loginUser.is_logined){
       alert('로그인이 필요한 페이지입니다.');
-      navigate('/');
+      setMenu((current) => {
+        const newMenu = {...current};
+        newMenu.menu = menu.menuArr[0];
+        return newMenu;
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 150);
       return;
     }
   },[])

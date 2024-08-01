@@ -12,12 +12,13 @@ import KakaoMap from "../layout/KakaoMap";
 import { SlideModal } from "../../atoms/modalAtom";
 import loginState from "../../atoms/loginState";
 import { tagArr } from "../../util/data/arrayStaticData";
+import loading from "../../assets/icons/loading.png";
 
 const SwiperDiv = styled.div` 
   position: relative;
   background: #eee;
   height: 110vw;
-
+  max-height: 700px;
   & .swiper {
     height: 100%;
   }
@@ -113,6 +114,7 @@ const Location = styled.div`
   overflow: hidden;
   background: #eee;
   height: 60vw;
+  max-height: 400px;
 `;
 
 const LocationText = styled.div`
@@ -232,12 +234,19 @@ const PriceDiv = styled.div`
   }
 `;
 
-const LoadingDiv = styled.div`
+const Loading_div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 60vh;
   font-size: 18px;
+`
+const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
 `
 
 
@@ -295,17 +304,15 @@ const RoomDetails = () => {
       navigate('/');
     };
 
-    if (roomInfo) {
-      const adultPrice = query.get('adult') * roomInfo.price;
-      const childPrice = query.get('child') * roomInfo.price * 0.5;
-      const babyPrice = query.get('baby') * roomInfo.price * 0.2;
-      totalPrice.current = Math.floor((adultPrice + childPrice + babyPrice)/100) * 100;
-    }
-
     const startDate = new Date(query.get('startDate'));
     const endDate = new Date(query.get('endDate'));
     
     totalDate.current = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+    if (roomInfo) {
+      totalPrice.current = Math.floor((roomInfo.price * totalDate.current)/100) * 100;
+    }
+
     
   }, [roomInfo, query]);
 
@@ -341,7 +348,11 @@ const RoomDetails = () => {
 
   // roomInfo가 null일 경우 로딩 상태를 표시
   if (!roomInfo) {
-    return <LoadingDiv>Loading...</LoadingDiv>;
+    return (
+      <Loading_div>
+        <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+      </Loading_div>
+    );
   }
 
   return (
