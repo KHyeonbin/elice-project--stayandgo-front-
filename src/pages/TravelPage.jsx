@@ -12,6 +12,7 @@ import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
 import footerState from "../atoms/footerState";
+import { motion } from "framer-motion";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -233,32 +234,37 @@ const TravelPage = () => {
   return (
     <>
       <Header user={loginUser} />
-      <SelectDiv>
-        <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
-      </SelectDiv>
-      
-      <MainContainer>
-      <Container style={selectValue.value === "다가오는 여행" ? {display:"block"} : {display:"none"}}>
-        <Title>다가오는 여행</Title>
-        {isingLoading &&
-          <Loading_div>
-          <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
-          </Loading_div>
-        ||
-          <TravelUpcomingCategory setSelectValue={setSelectValue} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
-        }
-      </Container>
-      <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
-        <Title>지난 여행</Title>
-        {isPastLoading &&
-          <Loading_div>
+      <motion.div 
+      initial={{ opacity: 0, transform: 'translateX(100%)' }}
+      animate={{ opacity: 1, transform: 'translateX(0)' }}
+      transition={{ duration: 0.3 }}>
+        <SelectDiv>
+          <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
+        </SelectDiv>
+        
+        <MainContainer>
+        <Container style={selectValue.value === "다가오는 여행" ? {display:"block"} : {display:"none"}}>
+          <Title>다가오는 여행</Title>
+          {isingLoading &&
+            <Loading_div>
             <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
-          </Loading_div>
-        ||
-          <TravelCategory pastPage={pastPage} setPastPage={setPastPage} title="지난 여행" pastTravelData={pastTravelData} noReservation={<NoReservation />}/>
-        }
-      </Container>
-      </MainContainer>
+            </Loading_div>
+          ||
+            <TravelUpcomingCategory setSelectValue={setSelectValue} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
+          }
+        </Container>
+        <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
+          <Title>지난 여행</Title>
+          {isPastLoading &&
+            <Loading_div>
+              <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+            </Loading_div>
+          ||
+            <TravelCategory pastPage={pastPage} setPastPage={setPastPage} title="지난 여행" pastTravelData={pastTravelData} noReservation={<NoReservation />}/>
+          }
+        </Container>
+        </MainContainer>
+      </motion.div>
       <Footer user={loginUser} />
     </>
   );
