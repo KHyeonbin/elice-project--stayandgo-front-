@@ -28,14 +28,15 @@ const FilterContainer = styled.div`
 `;
 const FilterSelect = styled.select`
   padding: 5px;
-  font-size: 15px;
+  width: 90px;
+  font-size: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-right: 15px;
 `;
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약 없음 안내
-const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
+const MyAccCategory = ({ title, reserveData, NoAccReserve }) => {
   const itemsPerPage = 6; //한페이지에 6개씩
   const [currentPage, setCurrentPage] = useState(1); // 현재페이지 기본값 1
   const [selectedFilter, setSelectedFilter] = useState("all"); //숙소필터 기본값 모든숙소
@@ -51,15 +52,15 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
   //페이지수 계산
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   //현재 페이지 아이템 시작,끝 계산
   const currentItems = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
@@ -70,7 +71,6 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
     <>
       {reserveData.length > 0 ? (
         <Container>
-          
           <FilterContainer>
           <CategoryTitle>{title}</CategoryTitle>
             <FilterSelect
@@ -85,13 +85,14 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
             </FilterSelect>
           </FilterContainer>
           <CategoryBox>
-            {currentItems.map((item) => (
+            {currentItems.map((item, i) => (
               <ReserveCard
-                key={item.id}
+                key={i}
+                id={item._id}
                 title={item.title}
-                author={item.author}
-                startDate={item.startDate}
-                endDate={item.endDate}
+                author={item.author.name}
+                startDate={item.start_date}
+                endDate={item.end_date}
                 amount={item.amount}
                 main_image={item.main_image}
                 sub_images={item.sub_images}
@@ -115,4 +116,4 @@ const NoAccCategory = ({ title, reserveData, NoAccReserve }) => {
   );
 };
 
-export default NoAccCategory;
+export default MyAccCategory;
