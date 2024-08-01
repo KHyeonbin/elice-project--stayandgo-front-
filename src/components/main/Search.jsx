@@ -158,6 +158,9 @@ const ModalContentBigger2 = styled(ModalContentBigger)`
 const ModalFooter = styled.div`
     position: fixed;
     bottom: 0;
+    // mainFooter height 60px
+    padding-bottom: 60px;
+    margin-top: 10px;
     width: 100%;
     height: 10%;
     background-color: white;

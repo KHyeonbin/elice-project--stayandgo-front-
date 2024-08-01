@@ -79,7 +79,7 @@ const TravelCard = ({
         />
         <DetailContainer>
           <Title>{title}</Title>
-          <Name>호스트: {name}님</Name>
+          <Name>호스트: {name}</Name>
           <Date>
             {startDate} ~ {endDate}
           </Date>
