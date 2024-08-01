@@ -74,6 +74,8 @@ const ModalContainer = styled.div`
     height: 100%;
     transform: translate(-50%, -50%); 
     scrollbar-width: none;
+    // 보은 반응형 요청
+    max-width: 700px;
     
     opacity: 1;
     transition: all 0.5s;
@@ -164,6 +166,10 @@ const ModalFooter = styled.div`
     width: 100%;
     height: 10%;
     background-color: white;
+
+    // 보은 반응형 요청
+    max-width: 700px;
+    border-radius: 30px 30px 0 0;
 
     display: flex;
     justify-content: space-around;
