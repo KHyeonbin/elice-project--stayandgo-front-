@@ -90,21 +90,21 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
      );
   };
 
-// 체크 1개 지정 후 삭제 버튼
-const onClickDelete = () => {
-  if(checkValue.length === 0){
-      alert("삭제할 여행을 체크해주세요.");
-      return;
+  // 체크 1개 지정 후 삭제 
+  const onClickDelete = () => {
+    if(checkValue.length === 0){
+        alert("삭제할 여행을 체크해주세요.");
+        return;
+    }
+    setIsModal(true);
   }
-  setIsModal(true);
-}
+  
+  /** 여행 삭제하기 모달창에서 취소 */
+  const onClickHandleCancelDelete = () => {
+    setIsModal(false);
+  };
 
-/** 여행 취소 취소 */
-const onClickHandleCancelDelete = () => {
-  setIsModal(false);
-};
-
-  /** 여행 취소 확인 */
+  /** 여행 삭제하기 모달창에서 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
       const res = await travelDeleteFromCheck({ nanoid: checkValue[0], mymode: false });
@@ -119,10 +119,8 @@ const onClickHandleCancelDelete = () => {
     }
   };
 
-  // page
   // page 상태 값에 따라 하단 페이지네이션 원소 배열 생성
   // 5 페이지만 출력하여야 함
-  // 테스트로 2 개 씩 2 페이지 출력으로 체크 중
   const pagenationing = useCallback(() => {
     const pageArray = [];
     // 페이지 시작점 계산
@@ -143,6 +141,7 @@ const onClickHandleCancelDelete = () => {
     }
     return pageArray;
   },[page]);
+
   // 선택한 페이지로 이동 기능
   const pagenateHandle = (i) => {
       setPage((current) => {
@@ -155,6 +154,7 @@ const onClickHandleCancelDelete = () => {
           behavior: 'smooth'
         });   
   };
+
   // 이전 버튼 클릭 시 최대 5 페이지 이동 기능
   const pagePrevHandle = () => {
       // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 첫 페이지로)
@@ -172,6 +172,7 @@ const onClickHandleCancelDelete = () => {
           behavior: 'smooth'
         });
   };
+  
   // 다음 버튼 클릭 시 최대 5 페이지 이동 기능
   const pageNextHandle = () => {
       // 이동할 페이지 최대 5 페이지(5 페이지가 안되면 최대한 마지막 페이지로)
@@ -221,17 +222,17 @@ const onClickHandleCancelDelete = () => {
             ))}
           </CategoryBox>
           <Pagenation_div>
-              <Pagenation_ul>
-                  <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
-                      {
-                        pagenationing().map((v,i) => {
-                          return (
-                              <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
-                          );
-                        })
-                      }
-                <Pagenation_span onClick={pageNextHandle}>{">>"}</Pagenation_span>
-              </Pagenation_ul>
+            <Pagenation_ul>
+              <Pagenation_span onClick={pagePrevHandle}>{"<<"}</Pagenation_span>
+                {
+                  pagenationing().map((v,i) => {
+                    return (
+                      <Pagenation_li key={i} onClick={() => pagenateHandle(v)} style={page.page === v ? {fontWeight: "bold", color: "#E61E51"} : {fontWeight: "400", color: "#797979"}}>{v}</Pagenation_li>
+                    );
+                  })
+                }
+              <Pagenation_span onClick={pageNextHandle}>{">>"}</Pagenation_span>
+            </Pagenation_ul>
           </Pagenation_div>
           {isModal && (
             <ProfileModal

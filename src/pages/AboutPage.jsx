@@ -13,14 +13,14 @@ const AboutPage = () => {
 
   return (
     <>
-    <Header user={loginUser} />
-    <motion.div
-      initial={{ opacity: 0, transform: 'translateX(100%)'}}
-      animate={{ opacity: 1, transform: 'translateX(0)'}}
-      transition={{ duration: 0.3 }}>
+      <motion.div
+        initial={{ opacity: 0, transform: 'translateX(100%)'}}
+        animate={{ opacity: 1, transform: 'translateX(0)'}}
+        transition={{ duration: 0.3 }}>
+          <Header user={loginUser} />
           <About />
-    </motion.div>
-    <Footer user={loginUser} />
+      </motion.div>
+      <Footer user={loginUser} />
     </>
   );
 };

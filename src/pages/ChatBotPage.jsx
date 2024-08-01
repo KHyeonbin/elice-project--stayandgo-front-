@@ -17,7 +17,7 @@ const ChatBotPage = () => {
           </SubLayout>
         </motion.div>
         <MainFooter />
-        </>
+      </>
     );
 };
 

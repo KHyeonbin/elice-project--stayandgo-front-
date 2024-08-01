@@ -75,8 +75,8 @@ const CheckboxOption = styled(Checkbox)`
   top: 5px;
 
   .ant-checkbox-inner {
-    width: 22px;  
-    height: 22px; 
+    width: 24px;  
+    height: 24px; 
     border-radius: 5px; 
   }
 
@@ -91,7 +91,7 @@ const CheckboxOption = styled(Checkbox)`
   }
 `;
 
-const ReserveCard = ({
+const MyAccReserveCard = ({
   id,
   title,
   main_image,
@@ -178,4 +178,4 @@ const ReserveCard = ({
   );
 };
 
-export default ReserveCard;
+export default MyAccReserveCard;

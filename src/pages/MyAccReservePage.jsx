@@ -154,36 +154,36 @@ const MyAccReservePage = () => {
 
   return (
     <>
-    <Header user={loginUser} />
     <motion.div
-    initial={{ opacity: 0, transform: 'translateX(100%)'}}
-    animate={{ opacity: 1, transform: 'translateX(0)'}}
-    transition={{ duration: 0.3 }}>
-      <SelectDiv>
-        <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
-      </SelectDiv>
-
-      <Container>
-      {selectValue.value === "현재 예약 목록" && (
-        <MyAccCategory
-          title="현재 예약 목록"
-          reserveData={upcomingReserveData}
-          onDataUpdate={handleDataUpdate}
-          NoAccReserve={<NoAccReserve />}
-          page={upcomingPage}
-          setPage={setUpcomingPage}
-        />
-        )}
-        {selectValue.value === "지난 예약 목록" && (
-          <MyAccCategory
-            title="지난 예약 목록"
-            reserveData={pastReserveData}
-            onDataUpdate={handleDataUpdate}
-            page={pastPage}
-            setPage={setPastPage}
-          />
-        )}
-      </Container>
+      initial={{ opacity: 0, transform: 'translateX(100%)'}}
+      animate={{ opacity: 1, transform: 'translateX(0)'}}
+      transition={{ duration: 0.3 }}>
+        <Header user={loginUser} />
+        <SelectDiv>
+          <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
+        </SelectDiv>
+  
+        <Container>
+          {selectValue.value === "현재 예약 목록" && (
+            <MyAccCategory
+              title="현재 예약 목록"
+              reserveData={upcomingReserveData}
+              onDataUpdate={handleDataUpdate}
+              NoAccReserve={<NoAccReserve />}
+              page={upcomingPage}
+              setPage={setUpcomingPage}
+            />
+          )}
+          {selectValue.value === "지난 예약 목록" && (
+            <MyAccCategory
+              title="지난 예약 목록"
+              reserveData={pastReserveData}
+              onDataUpdate={handleDataUpdate}
+              page={pastPage}
+              setPage={setPastPage}
+            />
+          )}
+        </Container>
     </motion.div>
     <Footer user={loginUser} />
     </>

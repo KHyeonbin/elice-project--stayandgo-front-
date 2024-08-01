@@ -7,15 +7,15 @@ import { motion } from "framer-motion";
 const ProfilePage = () => {
   return (
     <>
-    <motion.div
-      initial={{ opacity: 0, transform: 'translateX(-100%)'}}
-      animate={{ opacity: 1, transform: 'translateX(0)'}}
-      transition={{ duration: 0.3 }}>
-        <SubLayout pageTitle="프로필">
-          <Profile />
-        </SubLayout>
-    </motion.div>
-    <MainFooter />
+      <motion.div
+        initial={{ opacity: 0, transform: 'translateX(-100%)'}}
+        animate={{ opacity: 1, transform: 'translateX(0)'}}
+        transition={{ duration: 0.3 }}>
+          <SubLayout pageTitle="프로필">
+            <Profile />
+          </SubLayout>
+      </motion.div>
+      <MainFooter />
     </>
   );
 };
