@@ -212,7 +212,7 @@ const Items = ({page, setPage, startSearch, category}) => {
                 &&
             <>    
                 {posts && posts.map((v, i) => (
-                    <OneItem key={i} v={v} />
+                    <OneItem key={i} v={v} startSearch={startSearch} />
                 ))}
                 {posts && posts.length === 0 &&
                     <NoItemContainer>
