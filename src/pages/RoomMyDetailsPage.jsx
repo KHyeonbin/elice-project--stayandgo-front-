@@ -4,7 +4,7 @@ import RoomMyDetails from "../components/room/MyDetails";
 import { useRecoilValue } from "recoil";
 import { isLoginSelector } from "../atoms/TokenAtom";
 
-const RoomDetailsPage = () => {
+const RoomMyDetailsPage = () => {
   const isLogin = useRecoilValue(isLoginSelector);
   return (
     <>
@@ -14,4 +14,4 @@ const RoomDetailsPage = () => {
   );
 };
 
-export default RoomDetailsPage;
+export default RoomMyDetailsPage;

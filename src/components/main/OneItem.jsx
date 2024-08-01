@@ -132,10 +132,10 @@ const OneItem = ({v, startSearch}) => {
     // 아이템 클릭 시 아이템 상세보기로 이동
     console.log(images.length)
     return (
-        <ItemDiv id={v.nanoid}>
+            <ItemDiv id={v.nanoid}>
                 <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                 <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
-                <Link to={`room/details/${v.nanoid}?${formattedString}`}>
+                <Link to={`/room/details/${v.nanoid}?${formattedString}`}>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
                 </Link>
                     <DotDiv>
@@ -150,7 +150,7 @@ const OneItem = ({v, startSearch}) => {
                     <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
                     <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
                 </ItemTextDiv>
-        </ItemDiv>
+            </ItemDiv>
     )
 }
 

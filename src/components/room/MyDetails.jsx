@@ -1,35 +1,42 @@
-import { useState, useEffect } from "react";
-import { SlideModal } from "../../atoms/modalAtom";
+import { useRef, useState, useEffect } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import styled from "styled-components";
-import favoriteOffImg from "../../assets/icons/favorite_off.png";
 import SlideUpModal from "../layout/SlideUpModal";
 import KakaoMap from "../layout/KakaoMap";
+import { SlideModal } from "../../atoms/modalAtom";
+import { tagArr } from "../../util/data/arrayStaticData";
+import { detailPost } from "../../api/detailPost";
 
-const SwiperDiv = styled.div`
+const SwiperDiv = styled.div` 
   position: relative;
-`;
-const ImgBox = styled.div`
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  z-index: 10;
+  background: #eee;
+  height: 110vw;
+
+  & .swiper {
+    height: 100%;
+  }
 `;
 
 const ImgDiv = styled.div`
-  min-height: 100vw;
-  background: ${(props) => (props.bg ? props.bg : "#ddd")};
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   & img {
-    width: 100%;
+    height: 100%;
+    width:100%;
+    object-fit: cover;
   }
 `;
 
 const Container = styled.div`
-  padding: 0 15px 81px;
+  padding: 0 15px;
 `;
 
 const Title = styled.h2`
@@ -56,6 +63,10 @@ const MainOption = styled.li`
   align-items: center;
   padding-bottom: 10px;
   font-size: 16px;
+  & img {
+    width: 24px;
+    margin-right: 5px;
+  }
 `;
 
 const RoomInfoDiv = styled.div`
@@ -103,6 +114,11 @@ const Location = styled.div`
   height: 60vw;
 `;
 
+const LocationText = styled.div`
+  font-size: 16px;
+  padding-top: 10px;
+`;
+
 const HostInfoDiv = styled.div`
   padding: 20px 0;
   border-top: 1px solid #ddd;
@@ -113,10 +129,50 @@ const HostInfoDiv = styled.div`
   }
 `;
 
+const HostInfoBox = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+  gap: 15px;
+  & p {
+    margin:0;
+    font-size: 16px;
+  }
+`;
+
+const HostName = styled.div`
+  font-weight: bold;
+  font-size: 16px;
+  padding-bottom: 5px;
+`;
+
+const HostImg = styled.div`
+  font-size: 36px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  line-height: 68px;
+`;
+
+const HostPhone = styled.a`
+  text-decoration: underline;
+  font-size: 16px;
+  display: inline-block;
+  margin-top: 3px;
+  & svg {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+`;
+
 const HostText = styled.div`
   font-size: 16px;
-  padding: 20px 0;
-  border-top: 1px solid #ddd;
+  padding: 10px 0 0 0;
+
 
   & > p {
     font-size: 20px;
@@ -130,6 +186,7 @@ const HostText = styled.div`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 5;
+    padding:0;
   }
   & > button {
     background: none;
@@ -140,58 +197,64 @@ const HostText = styled.div`
     text-decoration: underline;
   }
 `;
-
-const OrderBtnDiv = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 100;
-  width: 100%;
+const LoadingDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 15px 15px;
-  background: #fff;
-  border-top: 1px solid #ddd;
-`;
-
-const ReservationBtn = styled.button`
-  font-size: 16px;
-  padding: 0 15px;
-  background: #f87878;
-  color: #fff;
-  height: 50px;
-  border: 0;
-  border-radius: 15px;
-`;
-
-const PriceDiv = styled.div`
-  font-size: 16px;
-  & p {
-    font-size: 14px;
-    margin: 0;
-  }
-`;
-
-const ModalText = styled.div`
-  padding-top: 20px;
-  font-size: 16px;
-`;
+  justify-content: center;
+  height: 60vh;
+  font-size: 18px;
+`
 
 const RoomMyDetails = () => {
-  const [slideIndex, setSlideIndex] = useState(0);
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
+  const sortedImages = useRef();
+  const [query, setQuery] = useSearchParams();
+  const {id} = useParams();
+  // sub_images, category, author 부분은 null, undefined 방지
+  const [roomInfo, setRoomInfo] = useState({
+    sub_images: [],
+    category: [],
+    author: {nickname: ""}
+  });
 
-  // 방 정보 가져오기
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // 방 정보 가져오기
+    detailPost({nanoid: id})
+    .then(res => {
+      if(res.data && res.data.code === 200){
+        setRoomInfo(res.data.data);
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    return;
+  }, [id]);
+  
+  // mainCatetory 디렉토리 이미지 가져오기
+  const importImages = (v) => {
+    return v.keys().map((key) => ({
+        src: v(key),
+        name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
+      }));
+  };
+  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+  // 파일 이름 순으로 정렬
+  sortedImages.current = images.sort((a, b) => {
+    const aNumber = parseInt(a.name.split('_')[0], 10);
+    const bNumber = parseInt(b.name.split('_')[0], 10);
+    return aNumber - bNumber;
+  });
+
+  // roomInfo가 null일 경우 로딩 상태를 표시
+  if (!roomInfo) {
+    return <LoadingDiv>Loading...</LoadingDiv>;
+  }
 
   return (
     <>
       <SwiperDiv>
-        <ImgBox>
-          <img src={favoriteOffImg} />
-        </ImgBox>
         <Swiper
           modules={[Pagination]}
           slidesPerView={1}
@@ -209,105 +272,103 @@ const RoomMyDetails = () => {
             "--swiper-pagination-bullet-inactive-opacity": "0.4",
           }}
         >
-          <SwiperSlide>
-            <ImgDiv bg="orange" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ImgDiv bg="skyblue" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ImgDiv bg="black" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <ImgDiv bg="pink" />
-          </SwiperSlide>
+            <SwiperSlide key={`slide0`}>
+              <ImgDiv><img src={query.get('main_image')}></img></ImgDiv>
+            </SwiperSlide>
+          {roomInfo.sub_images.length > 0 &&
+          roomInfo.sub_images.map((img, i)=>{
+          return (
+            <SwiperSlide key={`slide${i + 1}`}>
+              <ImgDiv><img src={img}></img></ImgDiv>
+            </SwiperSlide>
+          )
+          })}
         </Swiper>
       </SwiperDiv>
 
       <Container>
-        <Title>[옥탑방의 하루]</Title>
+        <Title>[{query.get('title')}]</Title>
         <InfoText>
-          가격 / 위치
+        {query.get('price').toLocaleString()}원 / {query.get('main_location')}
           <br />
-          최대 인원 2명 * 침실 1개 * 침대 1 * 욕실 1개
+          최대 인원 {query.get('max_adult') + query.get('max_baby') + query.get('max_child')}명 * 
+          침실 {query.get('room_num')}개
         </InfoText>
         <MainOptionBox>
-          <MainOption>
-            <img />
-            최고의 전망
-          </MainOption>
-          <MainOption>
-            <img />
-            슈퍼호스트
-          </MainOption>
-          <MainOption>
-            <img />
-            서면 근처
-          </MainOption>
-          <MainOption>
-            <img />
-            셀프 체크인
-          </MainOption>
+          {roomInfo.category.length > 0 && 
+          roomInfo.category.map((cate, i)=>
+            tagArr.map((tag, ii) => {
+              if(tag === cate) {
+                return <MainOption key={i}><img src={sortedImages.current[ii].src} />{cate}</MainOption>
+              }
+              else {
+                return null;
+              }
+            })
+          )
+        }
         </MainOptionBox>
 
         <RoomInfoDiv>
           <p>숙소 소개</p>
           <div>
-            독립된 공간의 단층(1층)형의 모던 스타일의 독채형 풀빌라로써
-            프라이빗한 개인전용풀장(6MX3M), 개별 테라스와 잔디정원이 갖추어져
-            있으며, 테라스에서 북유럽풍의 고급 바베큐 그릴로 개별 바베큐와
-            캠프파이어장작으로 불멍을 즐길수 있습니다. 독립된 공간의
-            단층(1층)형의 모던 스타일의 독채형 풀빌라로써 프라이빗한
-            개인전용풀장(6MX3M), 개별 테라스와 잔디정원이 갖추어져 있으며,
-            테라스에서 북유럽풍의 고급 바베큐 그릴로 개별 바베큐와
-            캠프파이어장작으로 불멍을 즐길수 있습니다.
+            {query.get('contents')}
           </div>
           <button
             type="button"
-            onClick={() => {
-              setSlideModal(true);
-            }}
+            onClick={()=>setSlideModal(prev => ({
+              isOpen: true,
+              title: '숙소 소개',
+              text: query.get('contents'),
+            }))}
           >
-            더보기 >
+            더보기 &gt;
           </button>
         </RoomInfoDiv>
 
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap />
+            <KakaoMap address={query.get('sub_location')} title={query.get('title')} />
           </Location>
+          <LocationText>{query.get('sub_location')}</LocationText>
         </LocationDiv>
 
         <HostInfoDiv>
           <p>호스트 소개</p>
+          <HostInfoBox>
+            <HostImg>{roomInfo.author?.photo}</HostImg>
+            <div>
+              <HostName>{roomInfo.author?.nickname}({roomInfo.author?.name})</HostName>
+              <p>{roomInfo.author.email}</p>
+              <HostPhone href={`tel:${roomInfo.author?.phone}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#333">
+                  <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/>
+                </svg>
+                {roomInfo.author?.phone}
+              </HostPhone>
+            </div>
+          </HostInfoBox>
           <HostText>
             <div>
-              1. 국내 풀빌라 순위 TOP 5 2. 인기 휴가지 고급 풀빌라 TOP 5 3. 해외
-              리조트 안 부러운 국내 럭셔리펜션 4. 동남아 부럽지 않은 국내
-              프라이빗 풀빌라 TOP 5 5. 낭만 끝판왕 국내 럭셔리 풀빌라 BEST 5 6.
-              물좋은 숙소, 수영장이 근사한 숙소 BEST5 7. 국내 여름 풀빌라 TOP 5
-              8. 강원도 풀빌라 펜션 추천 BEST 4 커플여행 가족여행까지 9. 강원도
-              힐링숙소 6곳 10. 국내 신혼여행지 &amp; 럭셔리 숙소 추천 11. 강원도
-              신혼여행 떠난다면? 강원도 호텔, 풀빌라 추천 5
+              {query.get('host_intro')}
             </div>
             <button
               type="button"
-              onClick={() => {
-                setSlideModal(true);
-              }}
+              onClick={()=>setSlideModal(prev => ({
+                isOpen: true,
+                title: '호스트 소개',
+                text: query.get('host_intro'),
+              }))}
             >
-              더보기 >
+              더보기 &gt;
             </button>
           </HostText>
         </HostInfoDiv>
       </Container>
 
-      {slideModal && (
-        <SlideUpModal>
-          <h2>숙소 소개</h2>
-          <ModalText>텍스트~~~~~~~~~~</ModalText>
-        </SlideUpModal>
+      {slideModal.isOpen && (
+        <SlideUpModal title={slideModal.title} text={slideModal.text} />
       )}
     </>
   );
