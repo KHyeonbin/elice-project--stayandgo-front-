@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MyAccModal from "./MyAccModal";
 import ImageSlider from "../layout/ImageSlider";
+import { Checkbox } from 'antd';
 
 const Container = styled.div`
   background-color: white;
@@ -14,6 +15,7 @@ const Container = styled.div`
   align-items: center;
   gap: 20px;
   cursor: pointer;
+  position: relative;
 `;
 const DetailContainer = styled.div`
   display: flex;
@@ -67,8 +69,30 @@ const Description = styled.span`
   font-size: 12px;
   line-height: 14.52px;
 `;
+const CheckboxOption = styled(Checkbox)`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+
+  .ant-checkbox-inner {
+    width: 22px;  
+    height: 22px; 
+    border-radius: 5px; 
+  }
+
+  .ant-checkbox-inner:after {
+    width: 7px; 
+    height: 12px;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #E61E51 !important;
+    border: 1px solid #F0586F !important;
+  }
+`;
 
 const ReserveCard = ({
+  id,
   title,
   main_image,
   sub_images = [],
@@ -80,6 +104,8 @@ const ReserveCard = ({
   baby,
   amount,
   create_at,
+  onCheckboxChange,
+  isChecked
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
@@ -102,9 +128,15 @@ const ReserveCard = ({
     setIsModalOpen(false);
   };
 
+  const handleCheckboxClick = (e) => {
+    e.stopPropagation();
+    onCheckboxChange(id);
+  };
+
   return (
     <>
       <Container onClick={handleClick}>
+      <CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
         <ImageSlider
           imageUrls={imageUrls}
           currentIndex={currentImageIndex}
