@@ -138,9 +138,7 @@ const About = () => {
         <DescriptionWrapper>
           <SubTitle>1. 검색</SubTitle>
           <Description>
-            먼저 숙소나 체험을 둘러보며 마음에 드는 것을 찾으세요. 집 전체 숙소,
-            셀프 체크인, 반려동물 허용 등 필터를 적용해 검색 결과를 좁힐 수
-            있습니다. 마음에 드는 숙소나 체험은 위시리스트에 저장할 수도
+            먼저 숙소를 둘러보며 마음에 드는 것을 찾으세요. 지역과 다양한 숙소 카테고리 등 필터를 적용해 검색 결과를 좁힐 수
             있습니다.
           </Description>
         </DescriptionWrapper>
@@ -154,8 +152,7 @@ const About = () => {
         <DescriptionWrapper>
           <SubTitle>2. 예약</SubTitle>
           <Description>
-            마음에 드는 숙소나 체험을 찾아 호스트 소개, 이전 게스트가 남긴 후기,
-            예약 취소 옵션을 모두 살펴보았다면 클릭 몇 번으로 간단히 예약을
+            마음에 드는 숙소를 찾아 사진, 호스트 소개, 예약 취소 옵션을 모두 살펴보았다면 클릭 몇 번으로 간단히 예약을
             완료하세요.
           </Description>
         </DescriptionWrapper>
@@ -169,9 +166,8 @@ const About = () => {
         <DescriptionWrapper>
           <SubTitle>3. 여행</SubTitle>
           <Description>
-            모든 준비가 끝났습니다! 앱을 이용해 호스트에게 연락하여 궁금한
-            사항을 질문하고 여행지 정보나 팁을 얻으세요. 다른 도움이 필요한
-            부분이 있다면 언제든 에어비앤비에 연락하실 수도 있습니다.
+            모든 준비가 끝났습니다! 다른 도움이 필요한
+            부분이 있다면 언제든 스테이앤고에 연락하실 수도 있습니다.
           </Description>
         </DescriptionWrapper>
       </Item>
