@@ -2,35 +2,68 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
 import NoAccReserve from "../components/myAccReserve/NoAccReserve";
 import MyAccCategory from "../components/myAccReserve/MyAccCategory";
 import getTravelLoad from "../api/getTravelLoad";
+import Select from 'react-select';
 
 const Container = styled.div`
   padding-bottom: 60px;
 `;
-const Wrap = styled.div`
+const SelectDiv = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: 15px;
+  justify-content: end;
+  width: calc(100% - 30px);
+  border: 1px solid #ddd;
   border-radius: 10px;
-  width: 100%;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin: 15px auto 0;
+  & > div {
+    width: 100%;
+    border-radius: 10px;
+    > div {
+      width: 100%;
+      border-radius: 10px;
+    }
+  };
 `
-const Title = styled.h1` 
-  font-size: 20px;
-  line-height: 24.2px;
-`;
-const Select = styled.select`
-  padding: 5px;
-  font-size: 12px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-`;
+// react-select css
+const selectCustom = {
+  option: (provided, state) => {
+    let backgroundColor = 'white';
+    let color = '#333';
+    if(state.isSelected){
+        backgroundColor = '#F0586F';
+        color = 'white';
+    } else if(state.isFocused){
+        backgroundColor = '#F07C8C';
+        color = 'white';
+    }
+  return {
+    ...provided,
+    backgroundColor,
+    color,
+    padding: 20,
+    border: "none" 
+  }},
+  control: (provided) => ({
+    ...provided,
+    border: "none",
+    boxShadow: 'none',
+    width: "220px",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    border: "none",
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#333',
+  }),
+};
+
 
 const MyAccReservePage = () => {
   //로그인 상태 확인
@@ -39,7 +72,12 @@ const MyAccReservePage = () => {
   //오늘 날짜 기준으로 지난예약, 다가오는예약 상태 세팅
   const [pastReserveData, setPastReserveData] = useState([]);
   const [upcomingReserveData, setUpcomingReserveData] = useState([]);
-  const [filter, setFilter] = useState('upcoming');
+
+  // react-select 에는 key 값이 없어서 미리 option 정의
+  const option = [{value: "현재 예약 목록", label: "현재 예약 목록"},
+                  {value: "지난 예약 목록", label: "지난 예약 목록"}];
+  // react-select box value 설정하기 위함
+   const [selectValue, setSelectValue] = useState(option[0]);
 
 
   const fetchData = async () => {
@@ -65,26 +103,27 @@ const MyAccReservePage = () => {
     await fetchData(); // 데이터 새로 고침
   };
 
+  const onChangeSelect = (e) => {
+    setSelectValue(e);
+  };
 
   return (
     <>
       <Header user={loginUser} />
+      <SelectDiv>
+        <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
+      </SelectDiv>
+
       <Container>
-        <Wrap>
-          <Title>나의 숙소 예약관리</Title>
-            <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value="upcoming">현재 예약 목록</option>
-              <option value="past">지난 예약 목록</option>
-            </Select>
-        </Wrap>
-          {filter === 'upcoming' ? (
-          <MyAccCategory
-            title="현재 예약 목록"
-            reserveData={upcomingReserveData}
-            onDataUpdate={handleDataUpdate}
-            NoAccReserve={<NoAccReserve />}
-          />
-        ) : (
+      {selectValue.value === "현재 예약 목록" && (
+        <MyAccCategory
+          title="현재 예약 목록"
+          reserveData={upcomingReserveData}
+          onDataUpdate={handleDataUpdate}
+          NoAccReserve={<NoAccReserve />}
+        />
+        )}
+        {selectValue.value === "지난 예약 목록" && (
           <MyAccCategory
             title="지난 예약 목록"
             reserveData={pastReserveData}

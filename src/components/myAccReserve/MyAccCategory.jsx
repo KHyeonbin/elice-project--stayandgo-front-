@@ -9,14 +9,12 @@ import ProfileModal from "../profile/ProfileModal";
 
 const Container = styled.div`
 padding: 15px 0;
-border-radius: 10px;
 width: 100%;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 `;
 const CategoryTitle = styled.h2`
-  font-size: 18px;
+  font-size: 20px;
   margin: 5px 0 5px 15px;
-  width: 90%;
+  width: 200px;
 `;
 const CategoryBox = styled.div`
   display: flex;
@@ -26,49 +24,38 @@ const CategoryBox = styled.div`
 `;
 const FilterContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
 `;
-const FilterSelect = styled.select`
-  padding: 5px;
-  width: 90px;
-  font-size: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 15px;
-`;
 const StyledButton = styled(Button)`
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 20px;
+  background-color: #E61E51;
+  transition: background-color 1s;
+  cursor: pointer;
+  padding: 1px 6px;
   margin-right: 15px;
-  height: 27px;
-  padding: 5px;
-  font-size: 12px;
+  color: white;
 `
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약 없음 안내
 const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate }) => {
   const itemsPerPage = 6; //한페이지에 6개씩
   const [currentPage, setCurrentPage] = useState(1); // 현재페이지 기본값 1
-  const [selectedFilter, setSelectedFilter] = useState("all"); //숙소필터 기본값 모든숙소
  // 1개 체크 박스 상태(nanoid : value)
  const [checkValue, setCheckValue] = useState([]);
 
  // 확인 모달 상태
  const [isModal, setIsModal] = useState(false);
 
-
-  // 모든 제목을 필터 옵션으로 추가
-  const uniqueTitles = ["all", ...new Set(reserveData.map(item => item.title))];
-
-  // 선택된 필터에 따라 데이터 필터링
-  const filteredData = selectedFilter === "all"
-    ? reserveData
-    : reserveData.filter(item => item.title === selectedFilter);
-
   //페이지수 계산
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(reserveData.length / itemsPerPage);
 
   //현재 페이지 아이템 시작,끝 계산
-  const currentItems = filteredData.slice(
+  const currentItems = reserveData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -77,11 +64,6 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate }) => {
     setCurrentPage(pageNumber);
   };
 
-  const handleFilterChange = (event) => {
-    setSelectedFilter(event.target.value);
-    setCurrentPage(1); // 필터 변경 시 현재 페이지는 1
-  };
-  
  // checkbox 1개 씩 선택 가능하다.
  const onChangeCheckbox = (id) => {
   setCheckValue((prevCheckValue) =>
@@ -125,17 +107,7 @@ const onClickHandleCancelDelete = () => {
       {reserveData.length > 0 ? (
         <Container>
           <FilterContainer>
-          <CategoryTitle>{title}</CategoryTitle>
-            <FilterSelect
-              value={selectedFilter}
-              onChange={handleFilterChange}
-            >
-              {uniqueTitles.map((titleOption) => (
-                <option key={titleOption} value={titleOption}>
-                  {titleOption === "all" ? "모든 숙소" : titleOption}
-                </option>
-              ))}
-            </FilterSelect>
+            <CategoryTitle>{title}</CategoryTitle>
             <StyledButton onClick={onClickDelete}> 선택 삭제
             </StyledButton>
           </FilterContainer>
