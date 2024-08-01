@@ -89,7 +89,7 @@ const Dot = styled.div.attrs(props => ({
 `;
 
 
-const OneItem = ({v}) => {
+const OneItem = ({v, startSearch}) => {
     // 캐러셀 이미지 인덱스
     const [index, setIndex] = useState(0);
     // 캐러셀 이미지 배열
@@ -123,11 +123,17 @@ const OneItem = ({v}) => {
         }, 350);
     }
 
+    function formatObject(obj) {
+        return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+    }
+    const formattedString = formatObject(startSearch);
+    console.log(formattedString)
+
     // 아이템 클릭 시 아이템 상세보기로 이동
     console.log(images.length)
     return (
         <ItemDiv id={v.nanoid}>
-            <Link to={`room/details/${v.nanoid}`}>
+            <Link to={`room/details/${v.nanoid}?${formattedString}`}>
                     <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                     <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />

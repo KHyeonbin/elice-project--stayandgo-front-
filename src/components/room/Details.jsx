@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, NavLink } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -16,15 +16,23 @@ import { tagArr } from "../../util/data/arrayStaticData";
 const SwiperDiv = styled.div` 
   position: relative;
   background: #eee;
-  & .swiper-wrapper {
-    display: flex;
-    align-items: center;
+  height: 110vw;
+
+  & .swiper {
+    height: 100%;
   }
 `;
 
 const ImgDiv = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
   & img {
-    width: 100%;
+    height: 100%;
+    width:100%;
+    object-fit: cover;
   }
 `;
 
@@ -203,6 +211,7 @@ const OrderBtnDiv = styled.div`
   padding: 15px 15px;
   background: #fff;
   border-top: 1px solid #ddd;
+  box-sizing: border-box;
 `;
 
 const ReservationBtn = styled.button`
@@ -223,6 +232,15 @@ const PriceDiv = styled.div`
   }
 `;
 
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  font-size: 18px;
+`
+
+
 
 const RoomDetails = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -234,7 +252,8 @@ const RoomDetails = () => {
   const {id} = useParams();
   const sortedImages = useRef();
   const [query, setQuery] = useSearchParams();
-  let totalPrice = 0;
+  let totalPrice = useRef(0);
+  let totalDate = useRef(0);
 
 
   // mainCatetory 디렉토리 이미지 가져오기
@@ -277,41 +296,43 @@ const RoomDetails = () => {
     };
 
     if (roomInfo) {
-
-    // 로그인 여부 확인
-    if(!userState.is_logined) {
-      //로그인 상태로 변경되기 전에 로그인 여부 체크가 실행되어 로그인 페이지로 이동하는 문제
-      alert('로그인 후 이용하실 수 있습니다.');
-      window.location.href='/login';
-      //navigate('/login');
-    }  
-
-
       const adultPrice = query.get('adult') * roomInfo.price;
       const childPrice = query.get('child') * roomInfo.price * 0.5;
       const babyPrice = query.get('baby') * roomInfo.price * 0.2;
-      totalPrice = Math.floor((adultPrice + childPrice + babyPrice)/100) * 100;
+      totalPrice.current = Math.floor((adultPrice + childPrice + babyPrice)/100) * 100;
     }
+
+    const startDate = new Date(query.get('startDate'));
+    const endDate = new Date(query.get('endDate'));
+    
+    totalDate.current = (endDate - startDate) / (1000 * 60 * 60 * 24);
     
   }, [roomInfo, query]);
 
 
   const onReservate = async() => {
-    console.log(userState.email)
     try{
-      await axios.post(
+      const response = await axios.post(
         'http://localhost:3001/reserve/write', 
         {
           post_nanoid: id, 
           email: userState.email,
-          amount: totalPrice,
+          amount: totalPrice.current,
           start_date: query.get('startDate'),
           end_date: query.get('endDate'),
           adult: query.get('adult'),
           child: query.get('child'),
           baby: query.get('baby')
+        },
+        {
+          withCredentials: true // 쿠키를 포함시키기 위해 필요
         }
       );
+
+      if(response.data.code === 200) {
+        alert('예약이 완료되었습니다.');
+        navigate('/travel');
+      };
     } catch(error) {
       console.error(error)
     }
@@ -320,7 +341,7 @@ const RoomDetails = () => {
 
   // roomInfo가 null일 경우 로딩 상태를 표시
   if (!roomInfo) {
-    return <div>Loading...</div>;
+    return <LoadingDiv>Loading...</LoadingDiv>;
   }
 
   return (
@@ -431,17 +452,25 @@ const RoomDetails = () => {
           </HostText>
         </HostInfoDiv>
       </Container>
+
       <OrderBtnDiv>
-        <PriceDiv>
-          <b>{roomInfo.price.toLocaleString()}원</b> / 박
-          <p onClick={()=>setSlideModal(prev => ({
-              ...prev, 
-              isOpen: true,
-            }))}>
-              날짜를 선택해주세요
-            </p>
-        </PriceDiv>
-        <ReservationBtn onClick={onReservate}>예약하기</ReservationBtn>
+        {!userState.is_logined && (
+          <>
+          <PriceDiv>
+            <b>로그인이 필요합니다.</b>
+          </PriceDiv>
+          <ReservationBtn onClick={()=>navigate('/login')}>로그인하기</ReservationBtn>
+          </>
+        )}
+        {userState.is_logined && (
+          <>
+          <PriceDiv>
+            <b>{totalPrice.current.toLocaleString()}원</b> / {totalDate.current}박
+            <p>{query.get('startDate').substring(5)}~{query.get('endDate').substring(5)}</p>
+          </PriceDiv>
+          <ReservationBtn onClick={onReservate}>예약하기</ReservationBtn>
+          </>
+        )}
       </OrderBtnDiv>
 
       {slideModal.isOpen && (
