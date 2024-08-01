@@ -9,6 +9,7 @@ import NoAccReserve from "../components/myAccReserve/NoAccReserve";
 import MyAccCategory from "../components/myAccReserve/MyAccCategory";
 import getTravelLoad from "../api/getTravelLoad";
 import Select from 'react-select';
+import { motion } from "framer-motion";
 
 const Container = styled.div`
   padding-bottom: 60px;
@@ -153,7 +154,11 @@ const MyAccReservePage = () => {
 
   return (
     <>
-      <Header user={loginUser} />
+    <Header user={loginUser} />
+    <motion.div
+    initial={{ opacity: 0, transform: 'translateX(100%)'}}
+    animate={{ opacity: 1, transform: 'translateX(0)'}}
+    transition={{ duration: 0.3 }}>
       <SelectDiv>
         <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
       </SelectDiv>
@@ -179,7 +184,8 @@ const MyAccReservePage = () => {
           />
         )}
       </Container>
-      <Footer user={loginUser} />
+    </motion.div>
+    <Footer user={loginUser} />
     </>
   );
 };
