@@ -6,7 +6,7 @@ import ChatBot from '../components/profile/ChatBot'
 const ChatBotPage = () => {
     return (
         <>
-        <SubLayout pageTitle="챗봇 🤔">
+        <SubLayout pageTitle="Q&A 챗봇 🤔">
             <ChatBot />
         </SubLayout>
         <MainFooter />
