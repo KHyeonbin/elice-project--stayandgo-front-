@@ -16,6 +16,8 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    // 보은 추가
+    max-width: 700px;
 `
 const Item = styled.div`
     width: 25%;
