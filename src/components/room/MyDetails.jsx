@@ -291,7 +291,7 @@ const RoomMyDetails = () => {
         <InfoText>
         {Number(query.get('price')).toLocaleString()}원 / {query.get('main_location')}
           <br />
-          최대 인원 {query.get('max_adult') + query.get('max_baby') + query.get('max_child')}명 * 
+          최대 인원 {Number(query.get('max_adult')) + Number(query.get('max_baby')) + Number(query.get('max_child'))}명 * 
           침실 {query.get('room_num')}개
         </InfoText>
         <MainOptionBox>

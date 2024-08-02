@@ -261,6 +261,7 @@ const RoomDetails = () => {
   const {id} = useParams();
   const sortedImages = useRef();
   const [query, setQuery] = useSearchParams();
+  const [footerPrice, setFooterPrice] = useState(0);
   let totalPrice = useRef(0);
   let totalDate = useRef(0);
 
@@ -307,12 +308,15 @@ const RoomDetails = () => {
     const startDate = new Date(query.get('startDate'));
     const endDate = new Date(query.get('endDate'));
     
-    totalDate.current = (endDate - startDate) / (1000 * 60 * 60 * 24);
+    totalDate.current = Number(endDate - startDate) / (1000 * 60 * 60 * 24);
 
     if (roomInfo) {
-      totalPrice.current = Math.floor((roomInfo.price * totalDate.current)/100) * 100;
+      totalPrice.current = Math.floor((Number(roomInfo.price) * totalDate.current)/100) * 100 * Number(query.get('adult'))
+        + Math.floor((Number(roomInfo.price) * 0.5 * totalDate.current)/100) * 100 * Number(query.get('child'))
+        + Math.floor((Number(roomInfo.price) * 0.2 * totalDate.current)/100) * 100 * Number(query.get('baby'));
+      console.log(totalPrice.current)
+        setFooterPrice(totalPrice.current);
     }
-
     
   }, [roomInfo, query]);
 
@@ -391,9 +395,9 @@ const RoomDetails = () => {
       <Container>
         <Title>[{roomInfo.title}]</Title>
         <InfoText>
-        {roomInfo.price.toLocaleString()}원 / {roomInfo.main_location}
+        {Number(roomInfo.price).toLocaleString()}원 / {roomInfo.main_location}
           <br />
-          최대 인원 {roomInfo.max_adult + roomInfo.max_baby + roomInfo.max_child}명 * 
+          최대 인원 {Number(roomInfo.max_adult) + Number(roomInfo.max_baby) + Number(roomInfo.max_child)}명 * 
           침실 {roomInfo.room_num}개
         </InfoText>
         <MainOptionBox>
@@ -476,7 +480,7 @@ const RoomDetails = () => {
         {userState.is_logined && (
           <>
           <PriceDiv>
-            <b>{totalPrice.current.toLocaleString()}원</b> / {totalDate.current}박
+            <b>{footerPrice.toLocaleString()}원</b> / {totalDate.current}박
             <p>{query.get('startDate').substring(5)}~{query.get('endDate').substring(5)}</p>
           </PriceDiv>
           <ReservationBtn onClick={onReservate}>예약하기</ReservationBtn>
