@@ -61,6 +61,10 @@ const SlideUpModal = ({ title, text }) => {
   useEffect(() => {
     if (slideModal) {
       timer.current = setTimeout(() => setIsSlideUp(true), 100);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     } else {
       clearTimeout(timer.current);
     }

@@ -221,11 +221,11 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
     };
 
   return (
+    !isModal &&
     <>
       {upcomingTravelData.length > 0 && (
         <>
           <CategoryBox>
-            {!isModal &&
             <>
                 <DelDiv>
                     <CheckDelBtn onClick={onClickDelete}>취소</CheckDelBtn>
@@ -251,13 +251,6 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
                 ))}
                 </CheckboxGroup>
             </>
-            ||
-                <ProfileModal
-                    message="정말 취소하시겠습니까?"
-                    onConfirm={onClickHandleConfirmDelete}
-                    onCancel={onClickHandleCancelDelete}
-                />
-            }
           </CategoryBox>
           <Pagenation_div>
               <Pagenation_ul>
@@ -279,6 +272,12 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
         noReservation
       )}
     </>
+    ||
+    <ProfileModal
+        message="정말 취소하시겠습니까?"
+        onConfirm={onClickHandleConfirmDelete}
+        onCancel={onClickHandleCancelDelete}
+    />
   );
 };
 

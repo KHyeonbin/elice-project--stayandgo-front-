@@ -7,7 +7,7 @@ const KakaoMap = ({ address, title }) => {
     script.async = true;
     // Geocoder메서드를 사용하려면 script에 libraries=services속성이 들어가야 함
     script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=b27bdfb85b1124cb1f51e1859cd1da16&autoload=false&libraries=services";
+      `https://dapi.kakao.com/v2/maps/sdk.js?appkey=05c99365e383306e960a1c7a52d46f9b&autoload=false&libraries=services`;
     document.head.appendChild(script);
 
     script.onload = () => {
