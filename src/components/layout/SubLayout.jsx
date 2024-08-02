@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { isLoginSelector } from "../../atoms/TokenAtom";
 
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0 15px 60px 15px;
 `;
 
 const H2 = styled.h2`
@@ -16,7 +16,6 @@ const SubLayout = ({ pageTitle, children }) => {
   const isLogin = useRecoilValue(isLoginSelector);
   return (
     <>
-      <SubHeader isLogin={isLogin} />
       <Container>
         <H2>{pageTitle}</H2>
         {children}

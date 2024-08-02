@@ -46,7 +46,12 @@ const ModalCloseBtn = styled.button`
   padding: 5px 0;
 `;
 
-const RoomModal = ({ children }) => {
+const Text = styled.div`
+  padding-top: 10px;
+  font-size: 16px;
+`
+
+const SlideUpModal = ({ title, text }) => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const [isSlideUp, setIsSlideUp] = useState(false);
@@ -56,6 +61,10 @@ const RoomModal = ({ children }) => {
   useEffect(() => {
     if (slideModal) {
       timer.current = setTimeout(() => setIsSlideUp(true), 100);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     } else {
       clearTimeout(timer.current);
     }
@@ -101,10 +110,11 @@ const RoomModal = ({ children }) => {
             </svg>
           </ModalCloseBtn>
         </ModalHeader>
-        {children}
+        {title && <h2>{title}</h2>}
+        {text && <Text>{text}</Text>}
       </ModalContainer>
     </ModalOverlay>
   );
 };
 
-export default RoomModal;
+export default SlideUpModal;

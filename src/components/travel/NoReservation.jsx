@@ -61,7 +61,7 @@ const Description = styled.span`
 `;
 const SearchButton = styled.button`
   margin-top: 10px;
-  width: 250px;
+  width: 90%;
   height: 50px;
   border: none;
   border-radius: 10px;

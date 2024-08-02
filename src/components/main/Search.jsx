@@ -11,6 +11,7 @@ import {ko} from 'date-fns/locale';
 import Select from 'react-select';
 import { korCity } from "../../util/data/arrayStaticData";
 import SearchGuestSetting from "./SearchGuestSetting";
+import { getNextNextDate } from "../../util/getNextNextDate";
 
 const Container = styled.div`
     width: 100%;
@@ -73,6 +74,8 @@ const ModalContainer = styled.div`
     height: 100%;
     transform: translate(-50%, -50%); 
     scrollbar-width: none;
+    // 보은 반응형 요청
+    max-width: 700px;
     
     opacity: 1;
     transition: all 0.5s;
@@ -157,9 +160,16 @@ const ModalContentBigger2 = styled(ModalContentBigger)`
 const ModalFooter = styled.div`
     position: fixed;
     bottom: 0;
+    // mainFooter height 60px
+    padding-bottom: 60px;
+    margin-top: 10px;
     width: 100%;
-    height: 10%;
+    height: 150px;
     background-color: white;
+
+    // 보은 반응형 요청
+    max-width: 700px;
+    border-radius: 30px 30px 0 0;
 
     display: flex;
     justify-content: space-around;
@@ -248,7 +258,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
     const defaultValue = {
         city: "전체",
         startDate: getDateFormat(getNextDate()),
-        endDate: getDateFormat(getNextDate()),
+        endDate: getDateFormat(getNextNextDate()),
         adult: 0,
         child: 0,
         baby: 0
@@ -263,7 +273,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
     
     // 시작 날짜, 끝 날짜 state
     const [startDate, setStartDate] = useState(getNextDate());
-    const [endDate, setEndDate] = useState(getNextDate());
+    const [endDate, setEndDate] = useState(getNextNextDate());
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
         setSearch((current) => {
@@ -366,7 +376,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
                                         <DatepickerCustom value={search.endDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                            minDate={startDate} // minDate 이전 날짜 선택 불가
+                                            minDate={defaultValue.endDate} // minDate 이전 날짜 선택 불가
                                             maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
                                             selected={endDate}
                                             onChange={(date) => setEndDate(date)}

@@ -7,20 +7,19 @@ import ImageSlider from "../layout/ImageSlider";
 const Container = styled.div`
   background-color: white;
   border-radius: 15px;
-  margin: 15px;
-  width: 300px;
+  width: calc(100% - 60px);
   height: 111px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
+  margin-bottom: 10px;
 `;
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 const Title = styled.span`
-  margin-top: 16px;
   font-weight: bold;
   font-size: 16px;
   line-height: 19.36px;
@@ -56,7 +55,7 @@ const TravelCard = ({
   //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
     setImageUrls([main_image, ...sub_images]);
-  }, [main_image, sub_images]);
+  }, []);
 
   const handleClick = () => {
     //모달창 열기 및 첫번째 이미지 보여주기
@@ -79,7 +78,7 @@ const TravelCard = ({
         />
         <DetailContainer>
           <Title>{title}</Title>
-          <Name>호스트: {name}님</Name>
+          <Name>호스트: {name}</Name>
           <Date>
             {startDate} ~ {endDate}
           </Date>

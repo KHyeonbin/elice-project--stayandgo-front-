@@ -6,7 +6,7 @@ const ModalOverlay = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
@@ -20,7 +20,7 @@ const ModalContent = styled.div`
   border-radius: 10px;
   text-align: center;
   position: fixed;
-  top: 30%;
+  top: 35%;
   display: flex;
   flex-direction: column;
   align-items: center;
