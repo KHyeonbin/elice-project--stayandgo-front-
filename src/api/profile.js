@@ -4,7 +4,7 @@ import axios from 'axios';
 export const fetchUserData = async (id) => {
     try {
         const response = await axios.get(`/users/${id}`, {
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
+             // 쿠키를 포함시키기 위해 필요
         });
         return response.data;
     } catch (error) {
@@ -18,7 +18,7 @@ export const deleteUser = async (id) => {
     try {
         await axios.delete(`/users/delete`, {
             data: { email: id },
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
+             // 쿠키를 포함시키기 위해 필요
         });
     } catch (error) {
         console.error("회원 탈퇴에 실패했습니다.", error);
@@ -30,7 +30,7 @@ export const deleteUser = async (id) => {
 export const editUserData = async (data) => {
     try {
         await axios.put(`/users`, data, {
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
+             // 쿠키를 포함시키기 위해 필요
         });
     } catch (error) {
         console.error("사용자 정보를 수정하는데 실패했습니다.", error);
@@ -43,7 +43,7 @@ export const adminDeleteUser = async (email) => {
     try {
         const response = await axios.delete('/users/delete', {
             data: { email: email },
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
+             // 쿠키를 포함시키기 위해 필요
         });
         return response; // 응답 반환
     } catch (error) {

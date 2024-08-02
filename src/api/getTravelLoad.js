@@ -7,7 +7,7 @@ class GetTravelLoad {
             const res = await axios.post(`/reserve/getreservepast/page`,{
                 mymode
             }, {
-                withCredentials: true // 쿠키를 포함시키기 위해 필요
+                 // 쿠키를 포함시키기 위해 필요
             });
             return res.data.result;
         }
@@ -23,7 +23,7 @@ class GetTravelLoad {
             const res = await axios.post(`/reserve/getreservepast/page/read`,{
                 mymode, nowpage
             }, {
-                withCredentials: true // 쿠키를 포함시키기 위해 필요
+                 // 쿠키를 포함시키기 위해 필요
             });
             return /*posts*/ res.data.result;
         } catch (e) {
@@ -38,7 +38,7 @@ class GetTravelLoad {
             const res = await axios.post(`/reserve/getreserveupcoming/page`,{
                 mymode
             }, {
-                withCredentials: true // 쿠키를 포함시키기 위해 필요
+                 // 쿠키를 포함시키기 위해 필요
             });
             return res.data.result;
         }
@@ -54,7 +54,7 @@ class GetTravelLoad {
             const res = await axios.post(`/reserve/getreserveupcoming/page/read`,{
                 mymode, nowpage
             }, {
-                withCredentials: true // 쿠키를 포함시키기 위해 필요
+                 // 쿠키를 포함시키기 위해 필요
             });
             return /*posts*/ res.data.result;
         } catch (e) {

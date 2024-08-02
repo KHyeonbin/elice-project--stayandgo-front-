@@ -332,7 +332,7 @@ const RoomDetails = () => {
           baby: query.get('baby')
         },
         {
-          withCredentials: true // 쿠키를 포함시키기 위해 필요
+           // 쿠키를 포함시키기 위해 필요
         }
       );
 

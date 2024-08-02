@@ -63,7 +63,7 @@ const Login = () => {
 
     try {
       const response = await axios.post("/login", { email, password }, {
-        withCredentials: true // 쿠키를 포함시키기 위해 필요
+         // 쿠키를 포함시키기 위해 필요
     });
       // 엑세스 토큰 Recoil 전역 상태에 저장
       //console.log(response.data);

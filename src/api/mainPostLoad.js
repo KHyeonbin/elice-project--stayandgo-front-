@@ -27,7 +27,7 @@ class MainPostLoad {
                 category,
                 mymode
             },{
-                withCredentials: true // 쿠키를 포함시키기 위해 필요
+                 // 쿠키를 포함시키기 위해 필요
             });
             // 기존 db 방식일 때 
             /*

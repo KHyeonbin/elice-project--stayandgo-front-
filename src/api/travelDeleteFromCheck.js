@@ -6,7 +6,7 @@ export const travelDeleteFromCheck = async ({nanoid}) => {
         // delete 요청에서는 axios 옵션을 2번째 옵션에 같이 넣는다 !
         const res = await axios.delete('/reserve/delete',{
             data: { nanoid },
-            withCredentials: true // 쿠키를 포함시키기 위해 필요
+             // 쿠키를 포함시키기 위해 필요
         });
         return res;
     } catch (e) {
