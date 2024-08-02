@@ -18,7 +18,8 @@ const MyAccReserveCard = ({
   amount,
   create_at,
   onCheckboxChange,
-  isChecked
+  isChecked,
+  showCheckbox
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
   const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
@@ -48,7 +49,9 @@ const MyAccReserveCard = ({
   return (
     <>
       <Card.Container onClick={handleClick}>
-      <Card.CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
+      {showCheckbox && (
+          <Card.CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
+        )}
         <ImageSlider
           imageUrls={imageUrls}
           currentIndex={currentImageIndex}
