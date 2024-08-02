@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const findIDUser = async (name, phone) => {
     try {
-        const res = await axios.post('http://localhost:3001/users/findid',{
+        const res = await axios.post('/users/findid',{
             name: name,
             phone: phone
         });

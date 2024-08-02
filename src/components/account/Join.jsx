@@ -133,7 +133,7 @@ const Join = () => {
         alert("비밀번호를 확인해주세요.");
         return false;
       }
-      await axios.post("http://localhost:3001/users", {
+      await axios.post("/users", {
         email: userInfo.email,
         password: userInfo.password,
         name: userInfo.name,
@@ -152,7 +152,7 @@ const Join = () => {
   const onEmailRequestHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3001/users/verify", {
+      await axios.post("/users/verify", {
         email: userInfo.email,
       });
       e.target.disabled = true;
@@ -172,7 +172,7 @@ const Join = () => {
     //e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/users/verify/confirm",
+        "/users/verify/confirm",
         {
           email: userInfo.email,
           secret: userInfo.code,

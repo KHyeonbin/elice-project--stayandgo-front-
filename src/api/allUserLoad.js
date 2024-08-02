@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const allUserLoad = async () => {
     try {
-        const res = await axios.get("http://localhost:3001/users/alluserdata", {
+        const res = await axios.get("/users/alluserdata", {
         withCredentials: true
       });
         return res;

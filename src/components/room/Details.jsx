@@ -285,7 +285,7 @@ const RoomDetails = () => {
     // 방 정보 가져오기
     (async() => {
       try {
-        const response = await axios.get(`http://localhost:3001/post/read/${id}`); 
+        const response = await axios.get(`/post/read/${id}`); 
         const data = response.data.data;
         setRoomInfo(data);
 
@@ -320,7 +320,7 @@ const RoomDetails = () => {
   const onReservate = async() => {
     try{
       const response = await axios.post(
-        'http://localhost:3001/reserve/write', 
+        '/reserve/write', 
         {
           post_nanoid: id, 
           email: userState.email,

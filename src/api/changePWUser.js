@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const changePWUser = async (email, password) => {
     try {
-        const res = await axios.put("http://localhost:3001/users/", {
+        const res = await axios.put("/users/", {
         email,
         password,
       });

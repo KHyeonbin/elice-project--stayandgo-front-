@@ -3,7 +3,7 @@ import axios from 'axios';
 /** 유저 데이터 가져오기 (프로필, 개인정보 수정 페이지) */
 export const fetchUserData = async (id) => {
     try {
-        const response = await axios.get(`http://localhost:3001/users/${id}`, {
+        const response = await axios.get(`/users/${id}`, {
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
         return response.data;
@@ -16,7 +16,7 @@ export const fetchUserData = async (id) => {
 /** 회원 탈퇴 (프로필 페이지) */
 export const deleteUser = async (id) => {
     try {
-        await axios.delete(`http://localhost:3001/users/delete`, {
+        await axios.delete(`/users/delete`, {
             data: { email: id },
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
@@ -29,7 +29,7 @@ export const deleteUser = async (id) => {
 /** 사용자 정보 수정 (개인정보 수정 페이지) */
 export const editUserData = async (data) => {
     try {
-        await axios.put(`http://localhost:3001/users`, data, {
+        await axios.put(`/users`, data, {
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });
     } catch (error) {
@@ -41,7 +41,7 @@ export const editUserData = async (data) => {
 /** 관리자 페이지 회원 삭제 */
 export const adminDeleteUser = async (email) => {
     try {
-        const response = await axios.delete('http://localhost:3001/users/delete', {
+        const response = await axios.delete('/users/delete', {
             data: { email: email },
             withCredentials: true // 쿠키를 포함시키기 위해 필요
         });

@@ -4,7 +4,7 @@ class MainPostLoad {
     // 페이지 정보 불러오기
     async getPostsPage({search, category, mymode}){
         try {
-            const res = await axios.post(`http://localhost:3001/post/getposts/page`,{
+            const res = await axios.post(`/post/getposts/page`,{
                 search,
                 category,
                 mymode
@@ -21,7 +21,7 @@ class MainPostLoad {
     // 숙소 정보 불러오기
     async getPostsRead({nowpage, search, category, mymode}){
         try{
-            const res = await axios.post(`http://localhost:3001/post/getposts/page/read`,{
+            const res = await axios.post(`/post/getposts/page/read`,{
                 nowpage,
                 search,
                 category,

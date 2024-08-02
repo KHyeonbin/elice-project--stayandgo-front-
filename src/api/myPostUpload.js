@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const myPostUpload = async (formData) => {
     try {
-        const res = await axios.post('http://localhost:3001/post/write', formData, {
+        const res = await axios.post('/post/write', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
               },
