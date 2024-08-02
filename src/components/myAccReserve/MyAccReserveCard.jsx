@@ -1,95 +1,8 @@
 //나의숙소 예약관리에 나오는 예약카드
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import MyAccModal from "./MyAccModal";
 import ImageSlider from "../layout/ImageSlider";
-import { Checkbox } from 'antd';
-
-const Container = styled.div`
-  background-color: white;
-  border-radius: 15px;
-  margin: 15px;
-  width: 300px;
-  height: 111px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  cursor: pointer;
-  position: relative;
-`;
-const DetailContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 180px;
-`;
-const Title = styled.span`
-  margin-top: 16px;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 19.36px;
-`;
-const Name = styled.span`
-  margin-top: 16px;
-  font-size: 14px;
-  line-height: 16.94px;
-`;
-const DateContainer = styled.div`
-  width: 100%;
-  margin-top: 8px;
-  display: flex;
-`;
-const StartDate = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: start;
-  width: 50%;
-  color: #555555;
-  font-size: 14px;
-  line-height: 16.94px;
-  border-right: 2px solid #dddddd;
-`;
-const EndDate = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: end;
-  width: 50%;
-  color: #555555;
-  font-size: 14px;
-  line-height: 16.94px;
-`;
-const DescriptionBold = styled.span`
-  margin-top: 3px;
-  color: #555555;
-  font-size: 14px;
-  line-height: 16.94px;
-`;
-const Description = styled.span`
-  margin-top: 3px;
-  color: #555555;
-  font-size: 12px;
-  line-height: 14.52px;
-`;
-const CheckboxOption = styled(Checkbox)`
-  position: absolute;
-  right: 5px;
-  top: 5px;
-
-  .ant-checkbox-inner {
-    width: 24px;  
-    height: 24px; 
-    border-radius: 5px; 
-  }
-
-  .ant-checkbox-inner:after {
-    width: 7px; 
-    height: 12px;
-  }
-
-  .ant-checkbox-checked .ant-checkbox-inner {
-    background-color: #E61E51 !important;
-    border: 1px solid #F0586F !important;
-  }
-`;
+import * as Card from "./MyAccReserveCard.style";
 
 const MyAccReserveCard = ({
   id,
@@ -117,14 +30,13 @@ const MyAccReserveCard = ({
     setImageUrls([main_image, ...sub_images]);
   }, [main_image, sub_images]);
 
+  //모달창 열기 및 첫번째 이미지 보여주기
   const handleClick = () => {
-    //모달창 열기 및 첫번째 이미지 보여주기
     setModalImageIndex(0);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    //모달창 닫기
     setIsModalOpen(false);
   };
 
@@ -135,28 +47,28 @@ const MyAccReserveCard = ({
 
   return (
     <>
-      <Container onClick={handleClick}>
-      <CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
+      <Card.Container onClick={handleClick}>
+      <Card.CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
         <ImageSlider
           imageUrls={imageUrls}
           currentIndex={currentImageIndex}
           setCurrentIndex={setCurrentImageIndex}
         />
-        <DetailContainer>
-          <Title>{title}</Title>
-          <Name>예약자: {author}님</Name>
-          <DateContainer>
-            <StartDate>
-              <DescriptionBold>체크인</DescriptionBold>
-              <Description>{startDate}</Description>
-            </StartDate>
-            <EndDate>
-              <DescriptionBold>체크아웃</DescriptionBold>
-              <Description>{endDate}</Description>
-            </EndDate>
-          </DateContainer>
-        </DetailContainer>
-      </Container>
+        <Card.DetailContainer>
+          <Card.Title>{title}</Card.Title>
+          <Card.Name>예약자: {author}님</Card.Name>
+          <Card.DateContainer>
+            <Card.StartDate>
+              <Card.DescriptionBold>체크인</Card.DescriptionBold>
+              <Card.Description>{startDate}</Card.Description>
+            </Card.StartDate>
+            <Card.EndDate>
+              <Card.DescriptionBold>체크아웃</Card.DescriptionBold>
+              <Card.Description>{endDate}</Card.Description>
+            </Card.EndDate>
+          </Card.DateContainer>
+        </Card.DetailContainer>
+      </Card.Container>
       {isModalOpen && (
         <MyAccModal
           modalImageIndex={modalImageIndex}

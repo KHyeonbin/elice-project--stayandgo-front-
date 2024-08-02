@@ -3,7 +3,7 @@ import {  useRecoilValue } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
-import About from "../components/account/About";
+import About from "../components/profile/About";
 import { motion } from "framer-motion";
 
 
