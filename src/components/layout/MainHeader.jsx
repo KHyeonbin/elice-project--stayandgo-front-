@@ -71,6 +71,10 @@ const Header = ({user, isModal}) => {
         logoutUser()
         .then(res => {
             if(res?.data && res.data.code === 200){
+                // 여행, 등록숙소 페이지에서 새로고침 시 로그인 상태 확인용 localstorage data 추가
+                // : front 에서 강제로 localstorage 를 수정하더라도 그 때는 전역 상태 loginstate 에 저장된 값에 따라 
+                // 데이터를 출력하기 때문에 빈 값이 나오도록 함.
+                localStorage.setItem('is_logined', "false");
                 window.location.href = '/';
             } else {
                 alert("로그아웃 오류가 발생하였습니다.");

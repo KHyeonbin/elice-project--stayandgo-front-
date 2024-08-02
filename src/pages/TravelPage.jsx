@@ -102,18 +102,14 @@ const TravelPage = () => {
   const loginUser = useRecoilValue(loginState);
 
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
-  const [upcomingPage, setUpcomingPage] = useState({
+  const defaultPage = {
     page: 1,
     perPage: 0,
     total: 0,
     totalPage: 0,
-  });
-  const [pastPage, setPastPage] = useState({
-    page: 1,
-    perPage: 0,
-    total: 0,
-    totalPage: 0,
-  });
+  }
+  const [upcomingPage, setUpcomingPage] = useState(defaultPage);
+  const [pastPage, setPastPage] = useState(defaultPage);
   // 로딩 상태 정의
   const [isingLoading, setIsIngLoading] = useState(false);
   const [isPastLoading, setIsPastLoading] = useState(false);
@@ -127,55 +123,50 @@ const TravelPage = () => {
   // react-select box value 설정하기 위함
   const [selectValue, setSelectValue] = useState(option[0]);
 
-  // 첫 화면 진입
+  // 첫 화면 진입 및 page 와 datalist read
   useEffect(() => {
-    if(!loginUser.is_logined){
-      alert('지정된 경로로 이동하지 않거나, 로그인하지 않은 사용자입니다.');
+    // page
+    getTravelLoad.getReservePastPage({mymode: true})
+    .then(res => {
+      setPastPage(res || defaultPage);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    getTravelLoad.getReserveUpcomingPage({mymode: true})
+    .then(res => {
+      setUpcomingPage(res || defaultPage);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    // list
+    getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
+    .then(res => {
+      setPastTravelData(res || []);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
+    .then(res => {
+      setUpcomingTravelData(res || []);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+    if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
+      alert('로그인하지 않은 사용자입니다.');
       window.location.href = '/';
       return;
     }
-  },[loginUser])
-
-  useEffect(() => {
-    if(loginUser.is_logined){
-      // page
-      getTravelLoad.getReservePastPage({mymode: true})
-      .then(res => {
-        setPastPage(res);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-      getTravelLoad.getReserveUpcomingPage({mymode: true})
-      .then(res => {
-        setUpcomingPage(res);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-      // list
-      getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
-      .then(res => {
-        setPastTravelData(res);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-      getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
-      .then(res => {
-        setUpcomingTravelData(res);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-      setIsIngLoading(true);
-      setIsPastLoading(true);
-      // 강제 loading 효과 부여로 settimeout 사용
-      setTimeout(() => {
-        setIsIngLoading(false);
-        setIsPastLoading(false);
-      }, 350);
-    }
+    setIsIngLoading(true);
+    setIsPastLoading(true);
+    // 강제 loading 효과 부여로 settimeout 사용
+    setTimeout(() => {
+      setIsIngLoading(false);
+      setIsPastLoading(false);
+    }, 350);
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
