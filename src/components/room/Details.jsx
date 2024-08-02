@@ -285,7 +285,9 @@ const RoomDetails = () => {
     // 방 정보 가져오기
     (async() => {
       try {
-        const response = await axios.get(`http://localhost:3001/post/read/${id}`); 
+        const response = await axios.get(`http://localhost:3001/post/read/${id}`, {
+          withCredentials: true
+        }); 
         const data = response.data.data;
         setRoomInfo(data);
 

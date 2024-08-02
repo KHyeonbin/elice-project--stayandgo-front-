@@ -8,7 +8,9 @@ class MainPostLoad {
                 search,
                 category,
                 mymode
-            });
+            }, {
+                withCredentials: true
+              });
             return res.data.result;
         }
         catch(e) {

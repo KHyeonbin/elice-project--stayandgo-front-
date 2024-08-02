@@ -84,7 +84,9 @@ const Findpassword = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/users/verify/findpw', {email});
+      const response = await axios.post('http://localhost:3001/users/verify/findpw', {email}, {
+        withCredentials: true
+      });
       e.target.disabled = true;
       alert(response.data.message);
     } catch(error) {
@@ -97,7 +99,9 @@ const Findpassword = () => {
   const onEmailCheckHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3001/users/verify/confirm', {email, secret: code});
+      const res = await axios.post('http://localhost:3001/users/verify/confirm', {email, secret: code}, {
+        withCredentials: true
+      });
       console.log(res);
       if(res.data.code === 200){
         navigate("/changePassword", {state: {email} });
