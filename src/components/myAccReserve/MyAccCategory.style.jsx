@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Button } from 'antd';
 
 export const Container = styled.div`
   padding: 15px 0;
@@ -22,15 +21,22 @@ export const FilterContainer = styled.div`
   align-items: center;
   margin-bottom: 15px;
 `;
-export const StyledButton = styled(Button)`
-  width: 100px;
-  height: 40px;
-  border: none;
-  border-radius: 20px;
-  background-color: #E61E51;
-  transition: background-color 1s;
-  cursor: pointer;
-  padding: 1px 6px;
-  margin-right: 15px;
-  color: white;
+
+export const Button = styled.button`
+    width: 85px;
+    height: 38px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 10px 10px;
+    margin-right: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #E61E51;
+    transition: background-color 1s;
+    cursor: pointer;
+    color: white;
+
+    &:hover{
+        background-color: #F0586F;
+    }
 `
