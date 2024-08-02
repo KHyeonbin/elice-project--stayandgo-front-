@@ -100,30 +100,15 @@ const ProfileEdit = () => {
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e) => {
     e.preventDefault();
-
     const { email, password, passwordCheck, nickname, phone, photo } = formData;
 
-    // 기존 정보와 중복 일 때 (닉네임, 전화번호)
-    if (nickname === loginUser.nickname) {
-      alert("중복된 닉네임입니다. 닉네임을 변경해주세요.")
+    if(password.length >= 10 && password !== passwordCheck){
+      alert("패스워드와 패스워드 확인이 일치하지 않습니다.");
       return;
     }
-
-    if (phone === loginUser.phone) {
-      alert("중복된 전화번호입니다. 전화번호를 변경해주세요.")
-      return;
-    }
-
-    // 아무 입력하지 않고 완료 버튼 클릭 했을 때
-    if (!password || !passwordCheck || !phone) {
-      alert("모든 내용을 입력해주세요.");
-      return;
-    }
-
     if (passwordError || passwordCheckError) {
       return;
     }
-
     if (!phoneRegex.test(phone)) {
       alert("휴대폰 번호는 000-0000-0000 형태로 입력해야 합니다.");
       return;
@@ -134,6 +119,7 @@ const ProfileEdit = () => {
       await editUserData({ email, password, nickname, phone, photo});
       setIsModal(true);
     } catch (error) {
+      alert(error.response?.data?.message || error.code);
       console.error("사용자 정보를 수정하는데 실패했습니다.");
     }
   };
