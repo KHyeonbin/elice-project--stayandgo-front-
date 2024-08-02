@@ -16,7 +16,6 @@ const SubLayout = ({ pageTitle, children }) => {
   const isLogin = useRecoilValue(isLoginSelector);
   return (
     <>
-      <SubHeader isLogin={isLogin} />
       <Container>
         <H2>{pageTitle}</H2>
         {children}
