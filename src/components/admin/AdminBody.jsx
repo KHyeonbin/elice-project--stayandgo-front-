@@ -4,7 +4,7 @@ import { allUserLoad } from '../../api/allUserLoad';
 import { useRecoilValue } from 'recoil';
 import loginState from '../../atoms/loginState';
 import { useNavigate } from 'react-router-dom';
-import { deleteUser } from '../../api/profile';
+import { adminDeleteUser } from '../../api/profile';
 import ProfileModal from "../profile/ProfileModal";
 
 const AdminContainer = styled.div`
@@ -158,19 +158,25 @@ const AdminBody = () => {
 
   // 첫 페이지 진입 시
   useEffect(() => {
-    if(!loginUser.is_admin){
+    if (!loginUser.is_admin) {
       alert('지정된 경로로 이동하지 않거나, 관리자가 아닙니다.');
       navigate('/');
       return;
     }
-    allUserLoad()
-    .then(res => {
+    // 유저 목록 불러오기
+    loadUsers();
+  }, [loginUser.is_admin, navigate]);
+
+  // 유저 목록을 불러오는 함수
+  const loadUsers = async () => {
+    try {
+      const res = await allUserLoad();
       setUserAll(res.data);
-    })
-    .catch(e => {
+    } catch (e) {
       console.error(e);
-    })
-  },[userDetail])
+    }
+  };
+
 
   // user list 중 특정 유저 선택
   const onClickUserItem = (v) => {
@@ -199,26 +205,31 @@ const AdminBody = () => {
   };
 
   /** 삭제 확인 */
-  const onClickHandleConfirmDelete = async () => {
-    if(userDetail.isAdmin){
-      alert('관리자 아이디는 삭제할 수 없습니다.');
+const onClickHandleConfirmDelete = async () => {
+  if (userDetail.isAdmin) {
+    alert('관리자 아이디는 삭제할 수 없습니다.');
+    setIsModal(false);
+    return;
+  }
+  try {
+    const res = await adminDeleteUser(userDetail.email);
+    if (res.data && res.data.code === 200) {
+      alert(userDetail.email + ' 유저가 정상적으로 삭제되었습니다.');
       setIsModal(false);
-      return;
+      // 유저 목록 새로고침
+      loadUsers();
+      // 상세 정보 초기화
+      setUserDetail(detailDefaultValue);
+    } else {
+      alert("유저 삭제에 실패하였습니다.");
     }
-    deleteUser(userDetail.email)
-    .then(res => {
-      if(res.data && res.data.code === 200){
-        alert(userDetail.email + ' 유저가 정상적으로 삭제되었습니다.');
-        // 새로고침 효과 부여
-        setUserDetail(detailDefaultValue);
-      } else {
-        alert("유저 삭제에 실패하였습니다.");
-      }
-    })
-    .catch(e => {
-        console.log(e.response?.data?.message);
-    });
-  };
+  } catch (e) {
+    console.error('삭제 중 오류:', e);
+    alert("유저 삭제 중 오류가 발생했습니다.");
+    setIsModal(false);
+  }
+};
+
 
   return (
     <AdminContainer>
@@ -227,7 +238,7 @@ const AdminBody = () => {
         <UserList>
           {userAll.map((v, i) => {
             return (
-              <UserItem onClick={() => onClickUserItem(v)} $is_clicked={v.email === userDetail.email}>
+              <UserItem key={v.email} onClick={() => onClickUserItem(v)} $is_clicked={v.email === userDetail.email}>
                 <span>{v.name}<br/></span>
                 <span>({v.email})</span>
               </UserItem>
