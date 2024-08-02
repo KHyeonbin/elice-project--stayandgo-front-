@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginState from "../../atoms/loginState";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import {
   ProfileContainer,
   ProfileHeader,
@@ -19,7 +19,6 @@ import { logoutUser } from "../../api/logoutUser";
 
 const Profile = () => {
   const user = useRecoilValue(loginState);
-  const resetLoginState = useResetRecoilState(loginState); // 로그아웃 시 상태 초기화하기 위해 사용
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 회원 탈퇴 모달 상태 추가
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
@@ -80,8 +79,7 @@ const Profile = () => {
   const onClickHandleConfirmDelete = async () => {
     try {
       await deleteUser(user.email); 
-      resetLoginState(); // 로그인 상태 초기화
-      navigate("/"); // 홈으로 이동
+      window.location.href = '/';
     } catch (error) {
       console.error("회원 탈퇴에 실패했습니다.", error);
       alert("회원 탈퇴에 실패했습니다. 다시 시도해 주세요.");
@@ -93,7 +91,7 @@ const Profile = () => {
     logoutUser()
       .then(res => {
         if (res?.data && res.data.code === 200) {
-          resetLoginState(); // 로그아웃 후 상태 초기화
+          localStorage.setItem('is_logined', "false");
           window.location.href = '/';
         } else {
           alert("로그아웃 오류가 발생하였습니다.");
