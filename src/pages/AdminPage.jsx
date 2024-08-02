@@ -1,5 +1,6 @@
 import React from 'react';
 import AdminBody from '../components/admin/AdminBody';
+import SubHeader from "../components/layout/SubHeader";
 import SubLayout from '../components/layout/SubLayout';
 import styled from 'styled-components';
 import { logoutUser } from '../api/logoutUser';
@@ -51,6 +52,7 @@ const onClickHandleLogout = () => {
 const AdminPage = () => {
   return (
     <>
+      <SubHeader />
       <SubLayout pageTitle="관리자 페이지">
         <AdminContainer>
           <AdminBody />
