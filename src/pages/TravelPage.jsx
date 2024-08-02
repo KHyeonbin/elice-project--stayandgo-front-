@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import Header from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
@@ -98,7 +98,7 @@ const Loading_img = styled.img`
 `
 
 const TravelPage = () => {
-  //로그인 상태 확인
+  // 로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
 
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
@@ -130,11 +130,11 @@ const TravelPage = () => {
   // 첫 화면 진입
   useEffect(() => {
     if(!loginUser.is_logined){
-      alert('로그인이 필요한 페이지입니다.');
+      alert('지정된 경로로 이동하지 않거나, 로그인하지 않은 사용자입니다.');
       window.location.href = '/';
       return;
     }
-  },[])
+  },[loginUser])
 
   useEffect(() => {
     if(loginUser.is_logined){

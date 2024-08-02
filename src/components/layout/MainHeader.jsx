@@ -77,6 +77,7 @@ const Header = ({user, isModal}) => {
             }
         });
     };
+    console.log(user)
 
     return (
         <>
@@ -93,6 +94,9 @@ const Header = ({user, isModal}) => {
                     <RightArea>
                         {user.is_logined &&
                             <>
+                                {user.is_admin &&
+                                    <LinkDiv><LinkText to={'/admin'}>관리자</LinkText></LinkDiv>
+                                }
                                 <LinkDiv><LinkText to={'/upload'}>숙소등록</LinkText></LinkDiv>
                                 <LinkDiv><LinkText onClick={onClickLogout}>로그아웃</LinkText></LinkDiv>
                             </>

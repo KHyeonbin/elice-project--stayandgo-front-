@@ -108,6 +108,7 @@ const OneItem = ({v, startSearch}) => {
             setIndex(index - 1);
         }
         backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        // 애니메이션 효과에서 settimeout 사용
         setTimeout(() => {
             backgroundRef.current.style.animation = "none";
         }, 350);
@@ -119,6 +120,7 @@ const OneItem = ({v, startSearch}) => {
             setIndex(index + 1);
         }
         backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        // 애니메이션 효과에서 settimeout 사용
         setTimeout(() => {
             backgroundRef.current.style.animation = "none";
         }, 350);

@@ -19,7 +19,8 @@ import MyAccommodationsPage from "../pages/MyAccommodationsPage";
 import MyAccReservePage from "../pages/MyAccReservePage";
 import RoomMyDetailsPage from '../pages/RoomMyDetailsPage';
 import PostUploadEdit from "../pages/PostUploadEdit";
-import AdminPage from "../components/admin/AdminPage";
+import AdminIntroPage from "../pages/AdminIntroPage";
+import AdminPage from '../pages/AdminPage';
 import { AnimatePresence } from "framer-motion";
 import ChatBotPage from "../pages/ChatBotPage";
 
@@ -50,7 +51,8 @@ const AnimatedRoutes = ({ search, setSearch, startSearch, setStartSearch }) => {
                 <Route path="/About" element={<AboutPage />} />
                 <Route path="/upload" element={<PostUpload />} />
                 <Route path="/upload/edit" element={<PostUploadEdit />} />
-                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/admin" element={<AdminIntroPage />} />
+                <Route path="/admin/users" element={<AdminPage />} />
                 <Route path="/chatbot" element={<ChatBotPage />} />
             </Routes>
         </AnimatePresence>
