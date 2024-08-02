@@ -56,8 +56,9 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
         <Cate.Container>
           <Cate.FilterContainer>
             <Cate.CategoryTitle>{title}</Cate.CategoryTitle>
-            <Cate.StyledButton onClick={onClickDelete}> 선택 삭제
-            </Cate.StyledButton>
+            {title === "현재 예약 목록" && (
+              <Cate.StyledButton onClick={onClickDelete}> 선택 삭제 </Cate.StyledButton>
+            )}
           </Cate.FilterContainer>
           <Cate.CategoryBox>
             {reserveData.map((item, i) => (
@@ -75,8 +76,9 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
                 child={item.child}
                 baby={item.baby}
                 create_at={item.create_at}
-                onCheckboxChange={() => onChangeCheckbox(item.nanoid)}
+                onCheckboxChange={title === "현재 예약 목록" ? () => onChangeCheckbox(item.nanoid) : null}
                 isChecked={checkValue.includes(item.nanoid)}
+                showCheckbox={title === "현재 예약 목록"}
            />
             ))}
           </Cate.CategoryBox>
