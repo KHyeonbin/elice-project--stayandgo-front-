@@ -1,114 +1,127 @@
-//나의숙소 예약관리 페이지네이션
-import React from "react";
-import styled from "styled-components";
-import arrowImg from "../../assets/icons/arrow.png"
+import React, { useCallback } from 'react';
+import styled from 'styled-components';
 
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+const PaginationDiv = styled.div`
+    width: 100%;
+    font-size: 17px;
+    margin: 0 auto;
+    margin-bottom: 100px;
 `;
-const PageNumber = styled.button`
-  margin: 0 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  color: ${(props) => (props.isActive ? "#E61E51" : "#797979")};
-  background-color: white;
-  border: none;
-  font-size: 15px;
-  font-weight: ${(props) => (props.isActive ? "bold" : "normal")};
-`;
-const ArrowButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
-  margin: 0 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transform: ${(props) => (props.flip ? "scaleX(-1)" : "none")};
-
-  img {
+const PaginationUl = styled.ul`
     width: 100%;
     height: 100%;
-    display: block;
-  }
+    padding-left: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+`;
+const PaginationSpan = styled.span`
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.5s;
+    color: #797979;
 
-  &:disabled {
-    cursor: not-allowed;
-  }
+    &:hover {
+        color: #E61E51;
+    }
+`;
+const PaginationLi = styled.li`
+    width: 10px;
+    list-style: none;
+    cursor: pointer;
+    transition: color 0.5s;
+    color: #797979;
+
+    &:hover {
+        color: #E61E51;
+    }
 `;
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-    //페이지 최대 5개 보여주기
-    const MAX_PAGE_DISPLAY = 5;
-  
-    // 페이지 번호 배열 생성
-    const getPageNumbers = () => {
-      const pageNumbers = [];
-      let startPage, endPage;
-  
-      //항상 5페이지씩 나오게 (start, end 페이지번호) 조건설정
-      if (totalPages <= MAX_PAGE_DISPLAY) {
-        // 페이지가 전체 페이지 수(5)보다 적거나 같은 경우
-        startPage = 1;
-        endPage = totalPages;
-      } else {
-        // 페이지가 전체 페이지 수(5)보다 많은 경우
-          if (currentPage <= 3) {
-            // 현재 페이지가 3페이지 이하인 경우
-            startPage = 1;
-            endPage = Math.min(MAX_PAGE_DISPLAY, totalPages);
-          } else if (currentPage >= totalPages - 2) {
-            // 현재 페이지가 마지막 3페이지 이상인 경우
-            startPage = Math.max(totalPages - MAX_PAGE_DISPLAY + 1, 1);
-            endPage = totalPages;
-          } else {
-            // 현재 페이지가 중앙에 위치한 경우
-            startPage = currentPage - 2;
-            endPage = currentPage + 2;
-          }
-      }
-      //start~end 페이지번호 배열에 추가
-      for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
-      }
-  
-      return pageNumbers;
-    };
-  
-    const pageNumbers = getPageNumbers();
-  
-    return (
-      <PaginationContainer>
-        <ArrowButton
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-        >
-          <img src={arrowImg} alt="이전" />
-        </ArrowButton>
-        {pageNumbers.map((number) => (
-          <PageNumber
-            key={number}
-            isActive={number === currentPage}
-            onClick={() => onPageChange(number)}
-          >
-            {number}
-          </PageNumber>
-        ))}
-        <ArrowButton
-          flip
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-        >
-          <img src={arrowImg} alt="다음" />
-        </ArrowButton>
-      </PaginationContainer>
-    );
+const Pagination = ({ page, setPage }) => {
+  const getPaginationArray = useCallback(() => {
+    const pageArray = [];
+    let remainPage = page.page;
+    let count = 0;
+    while ((remainPage - count) % 5 !== 1) {
+      count++;
+    }
+    const startPage = page.page - count;
+    remainPage = startPage + 4;
+    if (remainPage > page.totalPage) {
+      remainPage = page.totalPage;
+    }
+    const lastPage = remainPage;
+    for (let i = startPage; i <= lastPage; i++) {
+      pageArray.push(i);
+    }
+    return pageArray;
+  }, [page]);
+
+  const pageCurrentHandle = (i) => {
+    setPage((current) => {
+      const newPage = { ...current };
+      newPage.page = i;
+      return newPage;
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
-  
-  export default Pagination;
+
+  const pagePrevHandle = () => {
+    let i = page.page - 5;
+    if (i < 1) {
+      i = 1;
+    }
+    setPage((current) => {
+      const newPage = { ...current };
+      newPage.page = i;
+      return newPage;
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  const pageNextHandle = () => {
+    let i = page.page + 5;
+    if (i > page.totalPage) {
+      i = page.totalPage;
+    }
+    setPage((current) => {
+      const newPage = { ...current };
+      newPage.page = i;
+      return newPage;
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <PaginationDiv>
+      <PaginationUl>
+        <PaginationSpan onClick={pagePrevHandle}>{"<<"}</PaginationSpan>
+        {getPaginationArray().map((v, i) => (
+          <PaginationLi
+            key={i}
+            onClick={() => pageCurrentHandle(v)}
+            style={
+              page.page === v
+                ? { fontWeight: "bold", color: "#E61E51" }
+                : { fontWeight: "400", color: "#797979" }
+            }
+          >
+            {v}
+          </PaginationLi>
+        ))}
+        <PaginationSpan onClick={pageNextHandle}>{">>"}</PaginationSpan>
+      </PaginationUl>
+    </PaginationDiv>
+  );
+};
+
+export default Pagination;
