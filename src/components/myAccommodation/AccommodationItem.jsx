@@ -16,7 +16,7 @@ const AccommodationItem = ({ CheckboxOption, accommodation }) => {
 
   // detail 페이지 연결은 쿼리 포멧팅 후 쿼리를 적용한 Link 컴포넌트로 연결 
   const formatObject = useCallback((obj, nanoid) => {
-    setLink(`/room/mydetails/${nanoid}`);
+    setLink(`/room/my/details/${nanoid}`);
     setQuery(`?${Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&')}`);
     return;
   },[])
