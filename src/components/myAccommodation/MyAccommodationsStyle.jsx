@@ -41,7 +41,7 @@ export const Button = styled.div`
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
-  width: 175px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -60,7 +60,8 @@ export const Image = styled.div`
 export const CheckboxGroup = styled(Checkbox.Group)`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between; 
+  & > a {display: block; width: calc(50% - 10px)}
   gap: 10px;
   width: 100%;
 `
