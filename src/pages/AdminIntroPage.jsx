@@ -1,4 +1,5 @@
 import React from "react";
+import SubHeader from "../components/layout/SubHeader";
 import SubLayout from "../components/layout/SubLayout";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -29,6 +30,7 @@ const UserBtn = styled.button`
 const AdminIntroPage = () => {
     return (
         <>
+            <SubHeader />
             <SubLayout pageTitle="관리자 페이지" />
             <Container>
                 <Link to={'users/'}>
