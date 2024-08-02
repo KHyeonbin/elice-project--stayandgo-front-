@@ -37,3 +37,17 @@ export const editUserData = async (data) => {
         throw error;
     }
 };
+
+/** 관리자 페이지 회원 삭제 */
+export const adminDeleteUser = async (email) => {
+    try {
+        const response = await axios.delete('http://localhost:3001/users/delete', {
+            data: { email: email },
+            withCredentials: true // 쿠키를 포함시키기 위해 필요
+        });
+        return response; // 응답 반환
+    } catch (error) {
+        console.error("회원 탈퇴에 실패했습니다.", error);
+        throw error;
+    }
+};
