@@ -57,7 +57,7 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
           <Cate.FilterContainer>
             <Cate.CategoryTitle>{title}</Cate.CategoryTitle>
             {title === "현재 예약 목록" && (
-              <Cate.StyledButton onClick={onClickDelete}> 선택 삭제 </Cate.StyledButton>
+              <Cate.Button onClick={onClickDelete}> 취소 </Cate.Button>
             )}
           </Cate.FilterContainer>
           <Cate.CategoryBox>
