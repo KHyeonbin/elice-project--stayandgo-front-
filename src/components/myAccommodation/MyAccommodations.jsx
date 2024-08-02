@@ -26,6 +26,9 @@ const MyAccommodations = () => {
   // 로딩 state
   const [isLoading, setIsLoading] = useState(false);
 
+  // 로그인 확인 상태 추가
+  const [isLoginChecked, setIsLoginChecked] = useState(false);
+
   const navigate = useNavigate();
   // 나의 숙소 state
   const [accommodations, setAccommodations] = useState([]);
@@ -43,32 +46,42 @@ const MyAccommodations = () => {
     };
     mainPostLoad.getPostsRead({nowpage: 1, search, category: "전체", mymode: true})
     .then(res => {
-      setAccommodations(res);
+      setAccommodations(res || []); // 데이터가 없을 때 빈 배열로 설정
+      setIsLoading(false); // 데이터 로딩 완료 후 로딩 상태 해제
+      setIsLoginChecked(true); // 데이터 로드 후 로그인 상태 확인
     })
     .catch(e => {
       console.error("숙소 데이터를 불러오는데 실패했습니다.", e);
+      setIsLoading(false); // 에러 발생 시에도 로딩 상태 해제
+      setIsLoginChecked(true); // 에러 발생 시에도 로그인 상태 확인
     });
     setIsLoading(true);
-    // 강제 로딩 효과 부여로 settimeout 사용
-    setTimeout(() => {
+     // 강제 로딩 효과 부여로 settimeout 사용
+      setTimeout(() => {
       setIsLoading(false);
     }, 250);
   };
 
   /** 나의 숙소 데이터 가져오기 */
   useEffect(() => {
-    if(loginUser.is_logined){
+    if (loginUser.is_logined) {
       loadingFunction();
     } else {
-      alert('로그인이 필요한 페이지입니다.');
-      window.location.href = '/';
+      loadingFunction();
     }
-  }, []);
+  }, [loginUser.is_logined]);
 
+  // 로그인 확인 후 경고창과 리다이렉트 처리
+  useEffect(() => {
+    if (isLoginChecked && !loginUser.is_logined) {
+      alert('로그인이 필요한 페이지입니다.');
+      window.location.href = "/";
+    }
+  }, [isLoginChecked, loginUser.is_logined, navigate]);
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (e) => {
-    if(e.length > 1){
+    if (e.length > 1) {
       alert("등록 삭제 및 수정은 1 개씩 가능합니다.");
       return;
     }
@@ -78,16 +91,16 @@ const MyAccommodations = () => {
 
   /** 등록 삭제 버튼 클릭 시 */
   const onClickHandleDelete = () => {
-    if(checkValue.length === 0){
+    if (checkValue.length === 0) {
       alert("삭제할 숙소를 체크해주세요.");
       return;
     }
-    setIsModal(true)
+    setIsModal(true);
   };
 
   /** 수정 버튼 클릭 시 */
   const onClickHandleEdit = () => {
-    if(checkValue.length === 0){
+    if (checkValue.length === 0) {
       alert("수정할 숙소를 체크해주세요.");
       return;
     }
@@ -105,14 +118,13 @@ const MyAccommodations = () => {
   /** 숙소 삭제 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
-      mypostDelete({nanoid: checkValue[0]})
+      mypostDelete({ nanoid: checkValue[0] })
       .then(res => {
-        if(res.data && res.data.code === 200){
+        if (res.data && res.data.code === 200) {
           loadingFunction();
           // 체크 벨류 초기화
           setCheckValue([]);
-        } 
-        else {
+        } else {
           alert(res?.data?.message);
         }
       })
@@ -128,40 +140,42 @@ const MyAccommodations = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <Loading_div>
+        <Loading_img src={loading} style={{ animation: "spin 0.5s 3 linear" }} />
+      </Loading_div>
+    );
+  }
+
   return (
     <Container>
-    {!isModal &&
-      <>
-      <Header>
-        <Button onClick={onClickHandleDelete}>삭제</Button>
-        <Button onClick={onClickHandleEdit}>수정</Button>
-      </Header>
-      {!isLoading &&
-        <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
-          {accommodations.map((accommodation, i) => (
-            <AccommodationItem
-            key={i}
-            accommodation={accommodation}
-            // 각 나의 숙소 아이템 클릭 시의 동작은 AccommodationItem 에서 정의
-            onChangeHandleCheckBox={onChangeHandleCheckBox}
-            CheckboxOption={CheckboxOption}>
-            </AccommodationItem>
-          ))}
-        </CheckboxGroup>
-      ||
-          <Loading_div>
-            <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
-          </Loading_div>
-        }
-      </>
-    ||
-      <ProfileModal
-      message="정말 삭제하시겠습니까?"
-      onConfirm={onClickHandleConfirmDelete}
-      onCancel={onClickHandleCancelDelete}
-      />
-    }      
+      {!isModal &&
+        <>
+          <Header>
+            <Button onClick={onClickHandleDelete}>삭제</Button>
+            <Button onClick={onClickHandleEdit}>수정</Button>
+          </Header>
+          <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
+            {accommodations.map((accommodation, i) => (
+              <AccommodationItem
+                key={i}
+                accommodation={accommodation}
+                onChangeHandleCheckBox={onChangeHandleCheckBox}
+                CheckboxOption={CheckboxOption}>
+              </AccommodationItem>
+            ))}
+          </CheckboxGroup>
+        </>
+        ||
+        <ProfileModal
+          message="정말 삭제하시겠습니까?"
+          onConfirm={onClickHandleConfirmDelete}
+          onCancel={onClickHandleCancelDelete}
+        />
+      }
     </Container>
   );
 }
+
 export default MyAccommodations;
