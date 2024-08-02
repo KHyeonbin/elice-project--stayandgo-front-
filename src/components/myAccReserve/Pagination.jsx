@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 const PaginationDiv = styled.div`
     width: 100%;
     font-size: 17px;
-    margin: 0 auto;
+    margin: 0 auto; 
     margin-bottom: 100px;
 `;
 const PaginationUl = styled.ul`
@@ -24,6 +24,17 @@ const PaginationSpan = styled.span`
     &:hover {
         color: #E61E51;
     }
+
+    ${(props) =>
+        props.disabled &&
+        css`
+        cursor: not-allowed;
+        color: #d3d3d3;
+
+        &:hover {
+            color: #d3d3d3;
+        }
+    `}
 `;
 const PaginationLi = styled.li`
     width: 10px;
@@ -104,7 +115,7 @@ const Pagination = ({ page, setPage }) => {
   return (
     <PaginationDiv>
       <PaginationUl>
-        <PaginationSpan onClick={pagePrevHandle}>{"<<"}</PaginationSpan>
+        <PaginationSpan onClick={pagePrevHandle} disabled={page.page === 1}>{"<<"}</PaginationSpan>
         {getPaginationArray().map((v, i) => (
           <PaginationLi
             key={i}
@@ -118,7 +129,7 @@ const Pagination = ({ page, setPage }) => {
             {v}
           </PaginationLi>
         ))}
-        <PaginationSpan onClick={pageNextHandle}>{">>"}</PaginationSpan>
+        <PaginationSpan onClick={pageNextHandle} disabled={page.page === page.totalPage}>{">>"}</PaginationSpan>
       </PaginationUl>
     </PaginationDiv>
   );

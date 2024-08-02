@@ -1,6 +1,6 @@
 //나의숙소 예약관리 페이지
 //Reserve(필터링 및 데이터불러오기) > Category(현재예약, 이전예약 구분 및 페이지네이션) > Card(예약 개별항목 체크박스) , NoAcc(예약없을때)
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Select from 'react-select';
 import { useRecoilValue } from "recoil";
 import loginState from "../../atoms/loginState";
@@ -84,13 +84,16 @@ const MyAccommodationReserve = () => {
     }
   },[pastPage.page]);
 
-  const handleDataUpdate = async () => {
+  const handleDataUpdate = useCallback(async () => {
     await fetchData(); // 데이터 새로 고침
-  };
+  }, [fetchData]);
 
-  const onChangeSelect = (e) => {
+  const onChangeSelect = useCallback((e) => {
     setSelectValue(e);
-  };
+    setUpcomingPage((current) => ({ ...current, page: 1 }));
+    setPastPage((current) => ({ ...current, page: 1 }));
+  }, []);
+
 
   return (
     <>
