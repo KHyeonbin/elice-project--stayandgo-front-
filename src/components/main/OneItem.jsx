@@ -1,6 +1,7 @@
 import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { calc } from "antd/es/theme/internal";
 
 const ItemDiv = styled.div`
     width: 90%;
@@ -69,9 +70,13 @@ const ItemPriceText = styled.span`
     font-size: 13px;
     font-weight: 600;
 `
-const DotDiv = styled.div`
+const DotDiv = styled.div.attrs(props => ({
+    style: {
+        // 10px : dot 의 width(10px) / 2 + gap (10px) / 2
+        left: `calc(50% - (10px * ${props.$dotNum}) + 5px)`
+    }
+}))`
     position: absolute;
-    left: 43%;
     bottom: 25%;
     display: flex;
     justify-content: flex-start;
@@ -141,13 +146,13 @@ const OneItem = ({v, startSearch}) => {
                 <Link to={`/room/details/${v.nanoid}?${formattedString}`}>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
                 </Link>
-                    <DotDiv>
-                        {images.map((v, i) => {
-                            return (
-                                <Dot key={i} $index={i} $imgIndex={index} />
-                            )
-                        })}
-                    </DotDiv>    
+                <DotDiv $dotNum={images.length} >
+                    {images.map((v, i) => {
+                        return (
+                            <Dot key={i} $index={i} $imgIndex={index} />
+                        )
+                    })}
+                </DotDiv>    
                 <ItemTextDiv>
                     <ItemTitle>{v.title}<br /></ItemTitle>
                     <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
