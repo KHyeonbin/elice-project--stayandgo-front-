@@ -164,7 +164,7 @@ const ModalFooter = styled.div`
     padding-bottom: 60px;
     margin-top: 10px;
     width: 100%;
-    height: 150px;
+    height: 15%;
     background-color: white;
 
     // 보은 반응형 요청
@@ -193,8 +193,8 @@ const FooterDelSpan = styled.span`
     cursor: pointer;
 `
 const FooterSearchBtn = styled.button`
-    width: 110px;
-    height: 50px;
+    width: 30%;
+    height: 60%;
 
     border: none;
     border-radius: 10px;
