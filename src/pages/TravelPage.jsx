@@ -215,8 +215,8 @@ const TravelPage = () => {
     <>
       <Header user={loginUser} />
       <motion.div 
-      initial={{ opacity: 0, transform: 'translateX(100%)' }}
-      animate={{ opacity: 1, transform: 'translateX(0)' }}
+      initial={{ opacity: 0, position: 'relative', left: '100%' }}
+      animate={{ opacity: 1, position: 'relative', left: '0' }}
       transition={{ duration: 0.3 }}>
         <SelectDiv>
           <Select styles={selectCustom} options={option} onChange={onChangeSelect} value={selectValue} />
