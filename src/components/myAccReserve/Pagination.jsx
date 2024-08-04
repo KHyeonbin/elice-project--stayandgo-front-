@@ -49,6 +49,14 @@ const PaginationLi = styled.li`
 `;
 
 const Pagination = ({ page, setPage }) => {
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   const getPaginationArray = useCallback(() => {
     const pageArray = [];
     let remainPage = page.page;
@@ -74,10 +82,7 @@ const Pagination = ({ page, setPage }) => {
       newPage.page = i;
       return newPage;
     });
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTop();
   };
 
   const pagePrevHandle = () => {
@@ -91,10 +96,7 @@ const Pagination = ({ page, setPage }) => {
       newPage.page = i;
       return newPage;
     });
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTop();
   };
 
   const pageNextHandle = () => {
@@ -108,10 +110,7 @@ const Pagination = ({ page, setPage }) => {
       newPage.page = i;
       return newPage;
     });
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTop();
   };
 
   return (
