@@ -81,6 +81,7 @@ const Pagination = ({ page, setPage }) => {
   };
 
   const pagePrevHandle = () => {
+    if (page.page === 1) return;
     let i = page.page - 5;
     if (i < 1) {
       i = 1;
@@ -97,6 +98,7 @@ const Pagination = ({ page, setPage }) => {
   };
 
   const pageNextHandle = () => {
+    if (page.page === page.totalPage) return;
     let i = page.page + 5;
     if (i > page.totalPage) {
       i = page.totalPage;
