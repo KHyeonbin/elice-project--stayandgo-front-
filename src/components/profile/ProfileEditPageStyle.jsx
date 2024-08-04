@@ -6,7 +6,6 @@ export const ProfileEditContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 80vh;
 `;
 
 export const ProfileEditSection = styled.section`
@@ -66,6 +65,7 @@ export const ProfileEditSaveButton = styled.button`
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
+  margin-top: 50px;
 `;
 
 
