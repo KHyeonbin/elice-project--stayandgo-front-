@@ -139,7 +139,8 @@ const MyAccommodations = () => {
             accommodation={accommodation}
             // 각 나의 숙소 아이템 클릭 시의 동작은 AccommodationItem 에서 정의
             onChangeHandleCheckBox={onChangeHandleCheckBox}
-            CheckboxOption={CheckboxOption}>
+            CheckboxOption={CheckboxOption}
+            isModal={isModal}>
             </AccommodationItem>
           ))}
         </CheckboxGroup>
