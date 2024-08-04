@@ -13,10 +13,16 @@ const AccommodationItem = ({ CheckboxOption, accommodation }) => {
   // 숙소 상세 정보를 받고 link + nanoid + 쿼리 스트링 포멧 state
   const [link, setLink] = useState("");
   const [query, setQuery] = useState("");
+  // URL 인코딩 전 title String 값 state
+  const [beforeTitle, setBeforeTitle] = useState(accommodation.title);
 
   // detail 페이지 연결은 쿼리 포멧팅 후 쿼리를 적용한 Link 컴포넌트로 연결 
   const formatObject = useCallback((obj, nanoid) => {
     setLink(`/room/my/details/${nanoid}`);
+    // URL 에서 일부 특수문자를 포함 시킬 때 URL 인코딩 과정을 추가해야 함.
+    obj.contents = encodeURIComponent(obj.contents);
+    obj.title = encodeURIComponent(obj.title);
+    obj.host_intro = encodeURIComponent(obj.host_intro);
     setQuery(`?${Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&')}`);
     return;
   },[])
@@ -37,7 +43,7 @@ const AccommodationItem = ({ CheckboxOption, accommodation }) => {
            {/* (윗 문장 e.stopPropagation(): 이벤트 전파 방지(Link는 동작안하고 체크박스만 동작하게 함) */}
         </Image>
         <DetailContainer>
-          <Title>{accommodation.title}</Title>
+          <Title>{beforeTitle}</Title>
           <Price>{Number(accommodation.price).toLocaleString()}원</Price>
         </DetailContainer>
       </ListItem>
