@@ -6,7 +6,6 @@ export const ProfileContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 80vh;
 `;
 
 export const ProfileHeader = styled.header`
@@ -73,8 +72,9 @@ export const ProfileLogout = styled.button`
   height: 56px;
   font-size: 14px;
   border: 1px solid #333333;
+  color: #333333;
   border-radius: 10px;
   background: none;
-  margin-top: auto;
   cursor: pointer;
+  margin-top: 30%;
 `;
