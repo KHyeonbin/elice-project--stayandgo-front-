@@ -311,8 +311,9 @@ const RoomMyDetails = () => {
 
         <RoomInfoDiv>
           <p>숙소 소개</p>
-          <div>
-            {query.get('contents')}
+          {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
+          <div style={{whiteSpace: "pre-wrap"}}>
+              {query.get('contents')}
           </div>
           <button
             type="button"
@@ -350,8 +351,9 @@ const RoomMyDetails = () => {
             </div>
           </HostInfoBox>
           <HostText>
-            <div>
-              {query.get('host_intro')}
+            {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
+            <div style={{whiteSpace: "pre-wrap"}}>
+                {query.get('host_intro')}
             </div>
             <button
               type="button"

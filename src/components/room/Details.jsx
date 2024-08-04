@@ -412,7 +412,8 @@ const RoomDetails = () => {
 
         <RoomInfoDiv>
           <p>숙소 소개</p>
-          <div>
+          {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
+          <div style={{whiteSpace: "pre-wrap"}}>
             {roomInfo.contents}
           </div>
           <button
@@ -451,7 +452,8 @@ const RoomDetails = () => {
             </div>
           </HostInfoBox>
           <HostText>
-            <div>
+            {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
+            <div style={{whiteSpace: "pre-wrap"}}>
               {roomInfo.host_intro}
             </div>
             <button

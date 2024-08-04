@@ -194,8 +194,10 @@ const InputTextArea = styled.textarea`
     border-radius: 20px;
     padding: 20px;
     font-size: 16px;
-    // 드래그로 크기 수정 못하게
-    resize: none;
+    /* 사용자가 크기 조절을 못하게 함 */
+    resize: none; 
+    /* 스크롤바 자동 조절 */
+    overflow: auto; 
     
     &:focus{
         outline-color: #f87878;
@@ -639,12 +641,7 @@ const PostUpload = () => {
         });
     };
 
-    // enter 클릭 시에는 폼이 제출되지 않음.
-    const onHandleEnter = (e) => {
-        if(e.key === "Enter"){
-            e.preventDefault();
-        }
-    }
+ 
 
     console.log(data, imageName)
 
@@ -655,7 +652,7 @@ const PostUpload = () => {
                 initial={{ opacity: 0, transform: 'translateX(100%)' }}
                 animate={{ opacity: 1, transform: 'translateX(0)' }}
                 transition={{ duration: 0.3 }}>
-                <ImageUploadForm onSubmit={onSubmitPost} onKeyDown={onHandleEnter}>
+                <ImageUploadForm onSubmit={onSubmitPost}>
                     <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
                         <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
                     </ImageUploadLabel>
