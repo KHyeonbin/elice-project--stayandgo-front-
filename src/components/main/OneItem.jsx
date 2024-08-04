@@ -135,10 +135,8 @@ const OneItem = ({v, startSearch}) => {
         return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
     }
     const formattedString = formatObject(startSearch);
-    console.log(formattedString)
 
     // 아이템 클릭 시 아이템 상세보기로 이동
-    console.log(images.length)
     return (
             <ItemDiv id={v.nanoid}>
                 <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>

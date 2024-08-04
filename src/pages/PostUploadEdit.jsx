@@ -760,11 +760,11 @@ const PostUploadEdit = () => {
                         <InputTitle>옵션</InputTitle>
                         <InputSubTitle>객실 갯수</InputSubTitle>
                         <Select styles={selectCustom} options={optionsRoom} onChange={onChangeSelectRoom} value={optionRoom} />
-                        <InputSubTitle>최대 인원(어른: 17세 이상)</InputSubTitle>
+                        <InputSubTitle>최대 인원(어른: 13세 이상)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsPerson} onChange={onChangeSelectPerson} value={optionPerson} />
-                        <InputSubTitle>최대 인원(어린이: 7~16세)</InputSubTitle>
+                        <InputSubTitle>최대 인원(어린이: 2~12세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsChild} onChange={onChangeSelectChild} value={optionChild} />
-                        <InputSubTitle>최대 인원(유아: ~ 6세)</InputSubTitle>
+                        <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
                         <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
                         <CategoryCheckbox value={data.category} onChange={onChangeCategory}>

@@ -84,7 +84,8 @@ const Items = ({page, setPage, startSearch, category}) => {
             }, 250);
         }        
     },[startSearch, category, page.page]);
-
+    console.log(page, posts);
+    
     return (
         <Container>
             {!isLoading
