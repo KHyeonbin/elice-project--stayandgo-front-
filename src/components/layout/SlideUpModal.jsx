@@ -49,6 +49,8 @@ const ModalCloseBtn = styled.button`
 const Text = styled.div`
   padding-top: 10px;
   font-size: 16px;
+  /* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */
+  white-space: pre-wrap;
 `
 
 const SlideUpModal = ({ title, text }) => {
