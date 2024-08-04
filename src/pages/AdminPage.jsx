@@ -7,7 +7,7 @@ import { logoutUser } from '../api/logoutUser';
 import { useNavigate } from 'react-router-dom';
 
 const AdminContainer = styled.div`
-  height: 70vh;
+  height: 60vh;
 `;
 
 const LogoutContainer = styled.div`
@@ -16,6 +16,7 @@ const LogoutContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  margin-bottom: 10px;
 `;
 
 const Logout = styled.button`
