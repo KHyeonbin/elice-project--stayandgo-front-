@@ -18,21 +18,23 @@ const Container = styled.div`
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 180px;
 `;
 const Title = styled.span`
   font-weight: bold;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
+  word-break: keep-all;
 `;
 const Name = styled.span`
   margin-top: 16px;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 const Date = styled.span`
   margin-top: 8px;
   font-size: 12px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 
 const TravelCard = ({

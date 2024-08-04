@@ -3,13 +3,13 @@ import { Checkbox } from 'antd';
 
 export const Container = styled.div`
   background-color: white;
-  border-radius: 15px;
+  border-radius: 15px 0 15px 15px;
   margin: 15px;
-  width: 300px;
+  width: 90%;
   height: 111px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
   position: relative;
 `;
@@ -22,12 +22,13 @@ export const Title = styled.span`
   margin-top: 16px;
   font-weight: bold;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
+  word-break: keep-all;
 `;
 export const Name = styled.span`
   margin-top: 16px;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 export const DateContainer = styled.div`
   width: 100%;
@@ -41,7 +42,7 @@ export const StartDate = styled.div`
   width: 50%;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
   border-right: 2px solid #dddddd;
 `;
 export const EndDate = styled.div`
@@ -51,24 +52,27 @@ export const EndDate = styled.div`
   width: 50%;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 export const DescriptionBold = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 export const Description = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 12px;
-  line-height: 14.52px;
+  line-height: 15px;
+`;
+export const CheckContainer = styled.div`
+  width: 24px;
 `;
 export const CheckboxOption = styled(Checkbox)`
   position: absolute;
   right: 5px;
-  top: 5px;
+  top: 50%;
 
   .ant-checkbox-inner {
     width: 24px;  

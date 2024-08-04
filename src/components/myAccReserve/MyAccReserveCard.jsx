@@ -49,9 +49,6 @@ const MyAccReserveCard = ({
   return (
     <>
       <Card.Container onClick={handleClick}>
-      {showCheckbox && (
-          <Card.CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
-        )}
         <ImageSlider
           imageUrls={imageUrls}
           currentIndex={currentImageIndex}
@@ -71,6 +68,11 @@ const MyAccReserveCard = ({
             </Card.EndDate>
           </Card.DateContainer>
         </Card.DetailContainer>
+        {showCheckbox && (
+          <Card.CheckContainer>
+            <Card.CheckboxOption onClick={handleCheckboxClick} checked={isChecked} />
+          </Card.CheckContainer>
+        )}
       </Card.Container>
       {isModalOpen && (
         <MyAccModal

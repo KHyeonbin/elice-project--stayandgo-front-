@@ -77,7 +77,7 @@ const Container = styled.div`
 `;
 const Title = styled.h1`
   font-size: 20px;
-  line-height: 24.2px;
+  line-height: 24px;
   margin: 25px 0 0 15px;
   width: 320px;
 `;

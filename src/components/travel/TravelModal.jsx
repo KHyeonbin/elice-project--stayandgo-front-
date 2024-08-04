@@ -46,14 +46,14 @@ const CloseIcon = styled.img`
 const Name = styled.span`
   margin: 20px;
   font-size: 20px;
-  line-height: 24.2px;
+  line-height: 24px;
 `;
 const Title = styled.span`
   margin: 10px 0;
   font-weight: bold;
   color: #333333;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
 `;
 const DateContainer = styled.div`
   width: 80%;
@@ -67,7 +67,7 @@ const StartDate = styled.div`
   width: 50%;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
   border-right: 2px solid #dddddd;
 `;
 const EndDate = styled.div`
@@ -77,25 +77,25 @@ const EndDate = styled.div`
   width: 50%;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 const DescriptionBold = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 const Description = styled.span`
   margin-top: 3px;
   color: #555555;
   font-size: 12px;
-  line-height: 14.52px;
+  line-height: 15px;
 `;
 const Price = styled.span`
   font-weight: bold;
   margin-top: 7px;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
 `;
 
 const TravelModal = ({

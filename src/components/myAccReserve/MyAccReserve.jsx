@@ -117,6 +117,7 @@ const MyAccommodationReserve = () => {
               title="지난 예약 목록"
               reserveData={pastReserveData}
               onDataUpdate={handleDataUpdate}
+              NoAccReserve={<NoAccReserve />}
               page={pastPage}
               setPage={setPastPage}
             />
