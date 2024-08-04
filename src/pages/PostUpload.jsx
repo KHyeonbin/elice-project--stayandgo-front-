@@ -311,10 +311,10 @@ const PostUpload = () => {
             const notImages = filesNameArray.filter(
                 v => {
                     const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg'].includes(extension);
+                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
             });
             if(notImages && notImages.length > 0){
-                alert("이미지 파일만(jpg, png, jpeg) 첨부할 수 있습니다.");
+                alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
                 return;
             }
             if(filesNameArray.length > 1){
@@ -348,10 +348,10 @@ const PostUpload = () => {
             const notImages = filesNameArray.filter(
                 v => {
                     const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg'].includes(extension);
+                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
             });
             if(notImages && notImages.length > 0){
-                alert("이미지 파일만(jpg, png, jpeg) 첨부할 수 있습니다.");
+                alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
                 return;
             }
             if(filesNameArray.length >= 5){
