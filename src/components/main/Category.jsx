@@ -14,22 +14,6 @@ const Container = styled.div`
     justify-content: flex-end;
     align-items: center;
 `
-const Direction = styled.div`
-    width: 5%;
-    right: 2%;
-    top: 20%;
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-
-    @keyframes colorChange {
-        0% { color: #333; }
-        50% { color: #E61E51; }
-        100% { color: #333; }
-    }
-    // 무한 반복
-    animation: colorChange 2s infinite;
-`
 const ItemDiv = styled.div`
     width: 90%;
     height: 100%;
@@ -116,9 +100,6 @@ const Category = ({setCategory, setPage}) => {
 
     return (
         <Container>
-            <Direction>
-            {">>"}
-            </Direction>
             <ItemDiv>
                 {sortedImages.map((v, i) => (
                     <Item key={i} onClick={() => onClickImage(i)} style={tag === tagArr[i] ? {borderBottom: "2px solid #333"} : {borderBottom: "none"}}>
