@@ -16,7 +16,7 @@ const SwiperDiv = styled.div`
   position: relative;
   background: #eee;
   height: 110vw;
-
+  max-height: 700px;
   & .swiper {
     height: 100%;
   }
