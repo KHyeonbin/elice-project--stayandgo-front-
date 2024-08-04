@@ -42,13 +42,13 @@ export const Name = styled.span`
   font-weight: bold;
   margin: 20px;
   font-size: 20px;
-  line-height: 24.2px;
+  line-height: 24px;
 `;
 export const Title = styled.span`
   margin: 10px 0;
   color: #333333;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
 `;
 export const TextContent = styled.div`
   display: flex;
@@ -68,13 +68,13 @@ export const DescriptionBold = styled.span`
   width: 55px;
   font-weight: bold;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
   text-align: start;
 `;
 export const Description = styled.span`
   margin-top: 5px;
   color: #555555;
   font-size: 15px;
-  line-height: 14.52px;
+  line-height: 15px;
   text-align: end;
 `;

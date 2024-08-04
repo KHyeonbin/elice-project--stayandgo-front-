@@ -35,13 +35,15 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
     try {
       const res = await travelDeleteFromCheck({ nanoid: checkValue[0], mymode: false });
       if (res.data && res.data.code === 200) {
-        alert('정상적으로 삭제되었습니다.');
+        alert('정상적으로 취소되었습니다.');
         setIsModal(false);
         await onDataUpdate(); // 데이터 새로 고침
       }
     } catch (e) {
       console.log(e.response?.data?.message);
+      setCheckValue([]);
     }
+    setIsModal(false);
   };
 
    /** 여행 삭제하기 모달창에서 취소 */

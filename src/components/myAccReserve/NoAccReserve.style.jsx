@@ -48,24 +48,26 @@ export const Title = styled.span`
   margin-bottom: 12px;
   font-weight: bold;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
+  word-break: keep-all;
+
 `;
 export const Description = styled.span`
   margin-bottom: 12px;
   font-size: 14px;
-  line-height: 16.94px;
+  line-height: 17px;
   word-break: keep-all; //단어 단위 줄바꿈
 `;
 export const SearchButton = styled.button`
   margin-top: 10px;
-  width: 250px;
+  width: 90%;
   height: 50px;
   border: none;
   border-radius: 10px;
   background-color: #d5d5d5;
   color: #222222;
   font-size: 16px;
-  line-height: 19.36px;
+  line-height: 20px;
   font-weight: bold;
   cursor: pointer;
 

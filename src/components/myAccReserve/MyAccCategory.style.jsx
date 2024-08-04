@@ -11,8 +11,8 @@ export const CategoryTitle = styled.h2`
 `;
 export const CategoryBox = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 `;
 export const FilterContainer = styled.div`
