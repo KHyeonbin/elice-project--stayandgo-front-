@@ -225,14 +225,17 @@ const SubmitButton = styled.button`
 
 const PostUpload = () => {
     const loginUser = useRecoilValue(loginState);
+    // 라벨에 넣을 배경 이미지 상태, URL 해제 가 진행되고 나서 loginUser 가 is_logined 인지 판별하도록 하는 state
+    const [loginLoad, setLoginLoad] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
-        if(!loginUser.is_logined){
+        // loginUser !== null 로 loginUser 가 로드 된 후에 is_logined 를 판별한다.
+        if(loginLoad && !loginUser.is_logined){
           alert('로그인이 필요한 페이지입니다.');
           navigate('/');
           return;
         }
-      },[])
+      },[loginLoad])
 
     // 등록 데이터 state
     const [data, setData] = useState({
@@ -257,10 +260,17 @@ const PostUpload = () => {
         sub_images: ""
     });
     // main_image 가 업로드 된 상태, 라벨에 넣을 배경 이미지 상태, URL 해제
+    // 라벨에 넣을 배경 이미지 상태, URL 해제 가 진행되고 나서 loginUser 가 is_logined 인지 판별하도록 하는 state
+    // 변화도 추가해준다.
     const [isUpload, setIsUpload] = useState(false);
     const [labelBackground, setLabelBackground] = useState('');
     useEffect(() => {
+        window.scrollTo({
+            top: 0
+        });
         return () => {
+            setLoginLoad(true);
+            
             if(labelBackground){
                 URL.revokeObjectURL(labelBackground);
             }
