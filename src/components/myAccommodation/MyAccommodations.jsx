@@ -51,10 +51,6 @@ const MyAccommodations = () => {
       console.error("숙소 데이터를 불러오는데 실패했습니다.", e);
     });
     setIsLoading(true);
-    // 강제 로딩 효과 부여로 settimeout 사용
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 250);
   };
 
   /** 나의 숙소 데이터 가져오기 */
@@ -62,6 +58,15 @@ const MyAccommodations = () => {
     loadingFunction();
   }, []);
 
+  // 나의 숙소 data 가 load 될 때 로딩 stop
+  useEffect(() => {
+    if(isLoading){
+        // 실제 로딩은 매우 빨라서 loading 이 보이지 않아 최소 시간 0.15 초 정도는 로딩화면이 보이게 함.
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 150);
+    }
+  },[accommodations]);
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
   const onChangeHandleCheckBox = (e) => {
