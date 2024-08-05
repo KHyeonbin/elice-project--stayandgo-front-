@@ -313,6 +313,14 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
             });
         }
     },[search])
+
+    // 검색 컴포넌트에 최종 검색어 출력
+    useEffect(() => {
+        if(startSearch.adult > 0){
+            setStartSearchText(`${startSearch.city} • ${startSearch.startDate} ~ ${startSearch.endDate} •`);
+            setStartSearchPerson(`어른: ${startSearch.adult} 명, 어린이: ${startSearch.child} 명, 유아: ${startSearch.baby} 명`);
+        }
+    },[startSearch])
     console.log(startSearch)
 
     // 클릭 시 모달 활성화
@@ -356,8 +364,6 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
             setIsModal(false);
             document.body.style.overflowY = "auto";
             setStartSearch(search);
-            setStartSearchText(`${search.city} • ${search.startDate} ~ ${search.endDate} •`);
-            setStartSearchPerson(`어른: ${search.adult} 명, 어린이: ${search.child} 명, 유아: ${search.baby} 명`);
             setPage((current) => {
                 const newPage = {...current};
                 newPage.page = 1;
