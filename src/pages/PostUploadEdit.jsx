@@ -544,7 +544,13 @@ const PostUploadEdit = () => {
                     return newData;
                   });
                 }
-              }).open();
+              }).open(
+                // 팝업 위치를 모니터 기준 중간 정도로 지정한다.(https://postcode.map.daum.net/guide 참고함)
+                {
+                    left: (window.screen.width / 2),
+                    top: (window.screen.height / 2)
+                }
+              );
             });
           }
         }
