@@ -37,6 +37,7 @@ const RequestBtn = styled.button`
     color: #bbb;
     border-color: #ddd;
   }
+  cursor: pointer;
 `;
 
 const LinkUl = styled.ul`
@@ -63,6 +64,7 @@ const SubmitBtn = styled.button`
     border-color: #ccc;
     background: #ccc;
   }
+  cursor: pointer;
 `;
 
 const JoinBox = styled.div`
@@ -86,6 +88,9 @@ const Findpassword = () => {
     try {
       const response = await axios.post('/users/verify/findpw', {email});
       e.target.disabled = true;
+      emailRequestBtn.current.style.color = "#333";
+      emailRequestBtn.current.style.border = "1px solid #333";
+      emailRequestBtn.current.style.cursor = "default";
       alert(response.data.message);
     } catch(error) {
       console.log(error);
@@ -98,12 +103,9 @@ const Findpassword = () => {
     e.preventDefault();
     try {
       const res = await axios.post('/users/verify/confirm', {email, secret: code});
-      console.log(res);
       if(res.data.code === 200){
         navigate("/changePassword", {state: {email} });
-      } else {
-        alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
-      }
+      } 
     } catch(error) {
       console.log(error);
       alert(error.response.data ? error.response.data.message : error.response);
@@ -118,13 +120,12 @@ const Findpassword = () => {
           type="email"
           placeholder="이메일"
           value={email}
-          ref={emailRequestBtn}
           required
           onChange={(e) => {
             setEmail(e.target.value);
           }}
         />
-        <RequestBtn onClick={onEmailRequestHandler}>인증요청</RequestBtn>
+        <RequestBtn onClick={onEmailRequestHandler} ref={emailRequestBtn}>인증요청</RequestBtn>
       </FlexDiv>
       <FlexDiv>
         <LoginInput

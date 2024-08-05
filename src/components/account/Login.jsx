@@ -40,6 +40,7 @@ const LoginBtn = styled.button`
   height: 50px;
   border: 0;
   border-radius: 15px;
+  cursor: pointer;
 `;
 
 const JoinBox = styled.div`

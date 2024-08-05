@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import homeImage from '../../assets/images/home.png';
 
 const Container = styled.div`
   width: 100%;
@@ -26,21 +27,18 @@ const PrevPageBtn = styled.button`
   cursor: pointer;
 `;
 
-const RightArea = styled(LeftArea)``;
+const RightArea = styled.div`
+  margin-right: 20px;
+`;
 const LinkDiv = styled.div`
-  width: 80px;
-  height: 30px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 
-  background-color: white;
-  transition: background-color 0.5s;
-
-  &:hover {
-    background-color: #ffeef3;
-  }
+  background-image: url(${homeImage});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 const LinkText = styled(Link)`
@@ -51,6 +49,10 @@ const LinkText = styled(Link)`
 
 const SubHeader = ({ isLogin }) => {
   const navigate = useNavigate();
+
+  const onClickHome = () => {
+    window.location.href = "/";
+  }
 
   return (
     <Container>
@@ -67,6 +69,9 @@ const SubHeader = ({ isLogin }) => {
           </svg>
         </PrevPageBtn>
       </LeftArea>
+      <RightArea>
+        <LinkDiv onClick={onClickHome} />
+      </RightArea>
     </Container>
   );
 };

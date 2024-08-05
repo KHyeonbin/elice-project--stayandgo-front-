@@ -36,6 +36,8 @@ const SubmitBtn = styled.button`
   border: 0;
   border-radius: 15px;
   margin-top: 15px;
+
+  cursor: pointer;
 `;
 
 const ChangePassword = () => {
@@ -79,6 +81,10 @@ const ChangePassword = () => {
     if (passwordCheckError || passwordError || passwordError2) {
       alert("비밀번호를 확인해주세요.");
       return false;
+    }
+    if (userInfo.password !== userInfo.passwordCheck) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
     }
 
     try {

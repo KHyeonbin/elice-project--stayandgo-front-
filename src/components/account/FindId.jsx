@@ -39,6 +39,7 @@ const ShowBtn = styled.button`
   height: 50px;
   border: 0;
   border-radius: 15px;
+  cursor: pointer;
 `;
 
 const UserInfoDiv = styled.div`
@@ -56,7 +57,7 @@ const JoinBox = styled.div`
   }
 `;
 
-const Findpassword = () => {
+const FindId = () => {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [userId, setUserId] = useState("");
@@ -64,12 +65,10 @@ const Findpassword = () => {
     e.preventDefault();
     findIDUser(name, phoneNumber)
     .then(res => {
-      if(res.data.code === 200){
+      if(res.data && res.data.code === 200){
         setUserId(res.data.data);
-      } else {
-        alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생하였습니다.");
       } 
-    })
+    });
   };
   
   const phoneNumberChangeHandler = (e) => {
@@ -123,4 +122,4 @@ const Findpassword = () => {
   );
 };
 
-export default Findpassword;
+export default FindId;

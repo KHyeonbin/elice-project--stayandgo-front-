@@ -48,7 +48,7 @@ class GetTravelLoad {
         }
     }
 
-    // 지난 여행 리스트 정보 불러오기
+    // 다가오는 여행 리스트 정보 불러오기
     async getReserveUpcomingRead({nowpage, mymode}){
         try{
             const res = await axios.post(`/reserve/getreserveupcoming/page/read`,{

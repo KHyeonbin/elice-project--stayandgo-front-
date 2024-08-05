@@ -8,8 +8,8 @@ export const findIDUser = async (name, phone) => {
         });
         return res;
     } catch (e) {
+        alert(e.response?.data?.message);
         console.log(e);
-        // alert 처리
         return;
     }
 };

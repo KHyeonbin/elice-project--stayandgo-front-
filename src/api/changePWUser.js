@@ -8,8 +8,8 @@ export const changePWUser = async (email, password) => {
       });
         return res;
     } catch (e) {
+        alert(e.response?.data?.message);
         console.log(e);
-        // alert 처리
         return;
     }
 };

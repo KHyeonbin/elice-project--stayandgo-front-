@@ -19,6 +19,7 @@ const RequestBtn = styled.button`
     color: #bbb;
     border-color: #ddd;
   }
+  cursor: pointer;
 `;
 
 const JoinInput = styled.input`
@@ -44,6 +45,7 @@ const JoinBtn = styled.button`
   border: 0;
   border-radius: 15px;
   margin-top: 15px;
+  cursor: pointer;
 `;
 
 const MessageDiv = styled.div`
@@ -68,6 +70,7 @@ const Join = () => {
   const navigate = useNavigate();
   const emailCodeInput = useRef();
   const emailRequestBtn = useRef();
+  const emailOkBtn = useRef();
 
   // 인풋 입력 시 상태 변경
   const onChangeHandler = (e) => {
@@ -129,6 +132,11 @@ const Join = () => {
     e.preventDefault();
 
     try {
+      if(!userInfo.nickName || userInfo.nickName.length < 2){
+        alert("닉네임을 2 글자 이상 입력해주세요.");
+        return;
+      }
+
       if (!!passwordCheckError || !!passwordError2 || !!passwordError) {
         alert("비밀번호를 확인해주세요.");
         return false;
@@ -143,7 +151,7 @@ const Join = () => {
 
       navigate("/joinEnd");
     } catch(error) {
-      alert(error.response.data.message);
+      alert(error.response?.data?.message);
     }
 
   };
@@ -157,7 +165,9 @@ const Join = () => {
       });
       e.target.disabled = true;
       emailCodeInput.current.readOnly = false;
-      emailRequestBtn.current.disabled = false;
+      emailRequestBtn.current.style.color = "#333";
+      emailRequestBtn.current.style.border = "1px solid #333";
+      emailRequestBtn.current.style.cursor = "default";
       alert("이메일이 발송되었습니다.");
       // 이메일 인증 요청 시 버튼 비활성화
     } catch(error) {
@@ -181,11 +191,12 @@ const Join = () => {
       // 이메일 인증 요청 시 버튼 비활성화
       e.target.disabled = true;
       emailCodeInput.current.readOnly = true;
+      emailOkBtn.current.style.cursor = "default";
       alert(response.data.message);
     } catch(error) {
       //emailRequestBtn.current.disabled = false;
       e.target.disabled = false;
-      alert(error.response); // 확인 !!
+      alert(error.response?.data?.message); // 확인 !!
     }
 
   };
@@ -223,7 +234,7 @@ const Join = () => {
           ref={emailCodeInput}
           required
         />
-        <RequestBtn type="button" onClick={onEmailCheckHandler}>
+        <RequestBtn type="button" onClick={onEmailCheckHandler} ref={emailOkBtn}>
           인증확인
         </RequestBtn>
       </FlexDiv>

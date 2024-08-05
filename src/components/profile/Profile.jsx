@@ -80,6 +80,10 @@ const Profile = () => {
     try {
       // 토큰 먼저 비워주고 삭제해야 함
       await logoutUser();
+      // 여행, 등록숙소 페이지에서 새로고침 시 로그인 상태 확인용 localstorage data 추가
+      // : front 에서 강제로 localstorage 를 수정하더라도 그 때는 전역 상태 loginstate 에 저장된 값에 따라 
+      // 데이터를 출력하기 때문에 빈 값이 나오도록 함.
+      localStorage.setItem('is_logined', "false");
       await deleteUser(user.email); 
       window.location.href = '/';
     } catch (error) {
