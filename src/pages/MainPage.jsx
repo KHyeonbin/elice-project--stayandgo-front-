@@ -30,7 +30,7 @@ const MainPage = ({search, setSearch, startSearch, setStartSearch}) => {
     return (
         <>
             <Header user={loginUser} isModal={isModal}/>
-            <Search setPage={setPage} search={search} setSearch={setSearch} setStartSearch={setStartSearch} isModal={isModal} setIsModal={setIsModal}/>
+            <Search setPage={setPage} search={search} setSearch={setSearch} startSearch={startSearch} setStartSearch={setStartSearch} isModal={isModal} setIsModal={setIsModal}/>
             <Category setPage={setPage} setCategory={setCategory} />
             <Items page={page} setPage={setPage} startSearch={startSearch} category={category}/>
             <Footer user={loginUser}/>

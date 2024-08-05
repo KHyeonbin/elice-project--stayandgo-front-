@@ -50,7 +50,11 @@ const SearchTitle = styled.span`
     font-size: 13px;
     font-weight: 500;
 `
-const SearchSub = styled.span`
+const SearchSub = styled.span.attrs(props => ({
+    style: {
+        fontSize: props.$adult > 0 ? "13px" : "10px"
+    }
+}))`
     font-size: 10px;
     font-weight: 300;
     color: #818181;
@@ -261,7 +265,7 @@ const selectCustom = {
 };
 
 
-const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch}) => {
+const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, setStartSearch}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
     const defaultValue = {
         city: "전체",
@@ -282,6 +286,11 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
     // 시작 날짜, 끝 날짜 state
     const [startDate, setStartDate] = useState(getNextDate());
     const [endDate, setEndDate] = useState(getNextNextDate());
+
+    // 최종 검색한 검색 내용 출력 상태
+    const [startSearchText, setStartSearchText] = useState("어디든지 • 언제든 • 게스트 추가");
+    const [startSearchTextPerson, setStartSearchPerson] = useState("");
+
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
         setSearch((current) => {
@@ -304,7 +313,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
             });
         }
     },[search])
-    
+    console.log(startSearch)
 
     // 클릭 시 모달 활성화
     const onClickModal = () => {
@@ -347,6 +356,8 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
             setIsModal(false);
             document.body.style.overflowY = "auto";
             setStartSearch(search);
+            setStartSearchText(`${search.city} • ${search.startDate} ~ ${search.endDate} •`);
+            setStartSearchPerson(`어른: ${search.adult} 명, 어린이: ${search.child} 명, 유아: ${search.baby} 명`);
             setPage((current) => {
                 const newPage = {...current};
                 newPage.page = 1;
@@ -411,7 +422,11 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, setStartSearch
                     <SearchImg src={searchImg}/>
                     <SearchDiv>
                         <SearchTitle>어디로 여행가세요?</SearchTitle>
-                        <SearchSub>어디든지 • 언제든 • 게스트 추가</SearchSub>
+                        <SearchSub $adult={startSearch.adult}>
+                            {startSearchText}
+                            <br />
+                            {startSearchTextPerson}
+                        </SearchSub>
                     </SearchDiv>
                 </SearchContainer>
             </Container>
