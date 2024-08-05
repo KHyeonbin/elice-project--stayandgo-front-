@@ -321,7 +321,6 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
             setStartSearchPerson(`어른: ${startSearch.adult} 명, 어린이: ${startSearch.child} 명, 유아: ${startSearch.baby} 명`);
         }
     },[startSearch])
-    console.log(startSearch)
 
     // 클릭 시 모달 활성화
     const onClickModal = () => {
