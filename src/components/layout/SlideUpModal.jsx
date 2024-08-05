@@ -24,11 +24,12 @@ const ModalContainer = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   scrollbar-width: none;
   background-color: #fff;
   transition: top 0.3s ease-in-out;
-  padding: 0 15px;
+  padding: 0 15px 30px;
+  overflow-y: auto;
   &.open {
     top: 0;
   }
@@ -58,12 +59,18 @@ const SlideUpModal = ({ title, text }) => {
   const slideModal = useRecoilValue(SlideModal);
   const [isSlideUp, setIsSlideUp] = useState(false);
   const timer = useRef();
+  const slideModalEl = useRef();
 
   // 모달 슬라이드 업 애니메이션 0.1초 후 실행
   useEffect(() => {
     if (slideModal) {
       timer.current = setTimeout(() => setIsSlideUp(true), 100);
-      window.scrollTo({
+
+      // 모달 떠 있는 동안 바디 스크롤 막기
+      document.body.style.height = '100%';
+      document.body.style.overflow = 'hidden';
+      document.body.style['touch-action'] = 'none';
+      slideModalEl.current.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
@@ -73,14 +80,19 @@ const SlideUpModal = ({ title, text }) => {
   }, [slideModal]);
 
   const onCloseModal = () => {
-    setIsSlideUp(false);
+    setIsSlideUp(false);    
     setTimeout(() => {
       setSlideModal(false);
     }, 200);
+
+      // 바디 스크롤
+      document.body.style.height = 'auto';
+      document.body.style.overflow = 'initial'; 
+      document.body.style['touch-action'] = 'initial';
   };
 
   return (
-    <ModalOverlay className={isSlideUp ? "open" : null}>
+    <ModalOverlay className={isSlideUp ? "open" : null} ref={slideModalEl}>
       <ModalContainer className={isSlideUp ? "open" : null}>
         <ModalHeader>
           <ModalCloseBtn onClick={onCloseModal}>
