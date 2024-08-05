@@ -14,7 +14,7 @@ const About = () => {
       <Ab.Title>3단계로 간편하게 떠나는 여행</Ab.Title>
       <Ab.Item>
         <Ab.VideoWrapper>
-          <Ab.Video autoPlay muted loop>
+          <Ab.Video autoPlay muted loop playsInline>
             <source src="https://stream.media.muscache.com/2LWTbHQOw00D7p4pMSgGT014nn7eIPYOUymel7oWuos02w.mp4?v_q=high" />
           </Ab.Video>
         </Ab.VideoWrapper>
@@ -29,7 +29,7 @@ const About = () => {
       </Ab.Item>
       <Ab.Item reverse>
         <Ab.VideoWrapper>
-          <Ab.Video autoPlay muted loop>
+          <Ab.Video autoPlay muted loop playsInline>
             <source src="https://stream.media.muscache.com/ebfLKmZB5GcTjBWPXxabO3QsCA01yJ00Lw5fNGub4ehpE.mp4?v_q=high" />
           </Ab.Video>
         </Ab.VideoWrapper>
@@ -43,7 +43,7 @@ const About = () => {
       </Ab.Item>
       <Ab.Item>
         <Ab.VideoWrapper>
-          <Ab.Video autoPlay muted loop>
+          <Ab.Video autoPlay muted loop playsInline>
             <source src="https://stream.media.muscache.com/00CVIvJJU00Php2vhKmGuUEfNtXCW1Eik5lxR00UCCC01Lc.mp4?v_q=high" />
           </Ab.Video>
         </Ab.VideoWrapper>
