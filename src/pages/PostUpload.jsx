@@ -705,7 +705,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
-                        <InputSubTitle>성인: 1인 1박 가격<br />어린이: 성인의 50% 가격<br/>유아:   성인의 20% 가격으로 반영</InputSubTitle>
+                        <InputSubTitle>1박 가격</InputSubTitle>
                         <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />

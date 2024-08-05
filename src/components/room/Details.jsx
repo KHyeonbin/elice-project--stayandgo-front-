@@ -311,11 +311,8 @@ const RoomDetails = () => {
     totalDate.current = Number(endDate - startDate) / (1000 * 60 * 60 * 24);
 
     if (roomInfo) {
-      totalPrice.current = Math.floor((Number(roomInfo.price) * totalDate.current)/100) * 100 * Number(query.get('adult'))
-        + Math.floor((Number(roomInfo.price) * 0.5 * totalDate.current)/100) * 100 * Number(query.get('child'))
-        + Math.floor((Number(roomInfo.price) * 0.2 * totalDate.current)/100) * 100 * Number(query.get('baby'));
-      console.log(totalPrice.current)
-        setFooterPrice(totalPrice.current);
+      totalPrice.current = Math.floor((Number(roomInfo.price) * totalDate.current)/100) * 100;
+      setFooterPrice(totalPrice.current);
     }
     
   }, [roomInfo, query]);
