@@ -10,6 +10,7 @@ import {
 } from "./MyAccommodationsStyle";
 import loading from "../../assets/icons/loading.png";
 import { useNavigate } from "react-router-dom";
+import NoAccomodation from "./NoAccomodation";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
 import { mypostDelete } from "../../api/myPostDelete";
@@ -44,8 +45,7 @@ const MyAccommodations = () => {
       console.error("숙소 데이터를 불러오는데 실패했습니다.", e);
     });
     if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
-      alert('로그인하지 않은 사용자입니다.');
-      window.location.href = '/';
+      navigate('/');
       return;
     }
     setIsLoading(true);
@@ -124,6 +124,8 @@ const MyAccommodations = () => {
   };
 
   return (
+    <>
+    {accommodations.length > 0 ? (
     <Container>
     {!isModal &&
       <>
@@ -158,6 +160,10 @@ const MyAccommodations = () => {
       />
     }      
     </Container>
+    ) : (
+      <NoAccomodation />
+    )}
+    </>
   );
 }
 export default MyAccommodations;
