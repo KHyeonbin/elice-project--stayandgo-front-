@@ -166,11 +166,6 @@ const TravelPage = () => {
     }
     setIsIngLoading(true);
     setIsPastLoading(true);
-    // 강제 loading 효과 부여로 settimeout 사용
-    setTimeout(() => {
-      setIsIngLoading(false);
-      setIsPastLoading(false);
-    }, 350);
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
@@ -184,12 +179,18 @@ const TravelPage = () => {
         console.log(e);
       });
       setIsIngLoading(true);
-      // 강제 loading 효과 부여로 settimeout 사용
-      setTimeout(() => {
-        setIsIngLoading(false);
-      }, 250);
     }
   },[upcomingPage.page]);
+
+  // 현재 여행 data 가 load 될 때 로딩 stop
+  useEffect(() => {
+    if(isingLoading){
+        // 실제 로딩은 매우 빨라서 loading 이 보이지 않아 최소 시간 0.15 초 정도는 로딩화면이 보이게 함.
+        setTimeout(() => {
+            setIsIngLoading(false);
+        }, 150);
+    }
+  },[upcomingTravelData]);
 
   // 지난 여행 페이지 컨트롤
   useEffect(() => {
@@ -202,12 +203,18 @@ const TravelPage = () => {
         console.log(e);
       });
       setIsPastLoading(true);
-      // 강제 loading 효과 부여로 settimeout 사용
-      setTimeout(() => {
-        setIsPastLoading(false);
-      }, 250);
     }
   },[pastPage.page]);
+
+  // 지난 여행 data 가 load 될 때 로딩 stop
+  useEffect(() => {
+    if(isPastLoading){
+        // 실제 로딩은 매우 빨라서 loading 이 보이지 않아 최소 시간 0.15 초 정도는 로딩화면이 보이게 함.
+        setTimeout(() => {
+            setIsPastLoading(false);
+        }, 150);
+    }
+  },[pastTravelData]);
 
   // 지난 여행 또는 다가오는 여행 선택지
   const onChangeSelect = (e) => {

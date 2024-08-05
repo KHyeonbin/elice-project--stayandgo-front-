@@ -70,22 +70,27 @@ const Items = ({page, setPage, startSearch, category}) => {
                 setPosts(res);
             });
             setIsLoading(true);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 250);
         } else if(page && page.page > 1) {
             mainPostLoad.getPostsRead({nowpage: page.page, search: startSearch, category, mymode: false})
             .then(res => {
                 setPosts(res);
             });
             setIsLoading(true);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 250);
         }        
     },[startSearch, category, page.page]);
+
+    // posts 가 load 될 때 로딩 stop
+    useEffect(() => {
+        if(isLoading){
+            // 실제 로딩은 매우 빨라서 loading 이 보이지 않아 최소 시간 0.15 초 정도는 로딩화면이 보이게 함.
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 150);
+        }
+    },[posts]);
+
     console.log(page, posts);
-    
+
     return (
         <Container>
             {!isLoading
