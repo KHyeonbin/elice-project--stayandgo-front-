@@ -22,6 +22,12 @@ body {
   background-color: #eee;
   color: #333;
   font-size: 14px;
+
+}
+
+/* 모바일 자동 확대 설정 제한 (16px 이상일 때 ios, 안드로이드 자동 확대 되지 않음) */
+input, textarea {
+  font-size: 16px;
 }
 
 a {

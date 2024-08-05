@@ -37,7 +37,8 @@ export const selectCustom = {
       backgroundColor,
       color,
       padding: 20,
-      border: "none"
+      border: "none",
+      fontSize: "16px"
     };
   },
   control: (provided) => ({
@@ -45,13 +46,16 @@ export const selectCustom = {
     border: "none",
     boxShadow: 'none',
     width: "220px",
+    fontSize: "16px"
   }),
   menu: (provided) => ({
     ...provided,
     border: "none",
+    fontSize: "16px"
   }),
   singleValue: (provided) => ({
     ...provided,
     color: '#333',
+    fontSize: "16px"
   }),
 };

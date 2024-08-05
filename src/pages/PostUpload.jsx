@@ -88,7 +88,7 @@ const ShortInputText = styled.input`
     border: 1px solid #EBEBEB;
     border-radius: 20px;
     padding: 0 20px 0 20px;
-    font-size: 14px;
+    font-size: 16px;
     // 텍스트가 input 길이 초과 시 숨기기 / 줄바꿈을 사용 안 함 / ... 표시
     overflow: hidden;
     white-space: nowrap;
@@ -136,7 +136,8 @@ const selectCustom = {
       backgroundColor,
       color,
       padding: 20,
-      borderRadius: "5px"
+      borderRadius: "5px",
+      fontSize: "16px"
     }},
     control: (provided) => ({
       ...provided,
@@ -144,16 +145,18 @@ const selectCustom = {
       borderRadius: "10px",
       boxShadow: 'none',
       width: "95%",
-      fontSize: "14px"
+      fontSize: "16px"
     }),
     menu: (provided) => ({
       ...provided,
       borderRadius: "10px",
-      width: "90%"
+      width: "90%",
+      fontSize: "16px"
     }),
     singleValue: (provided) => ({
       ...provided,
       color: '#333',
+      fontSize: "16px"
     }),
 };
 
