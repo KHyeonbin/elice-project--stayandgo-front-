@@ -109,7 +109,7 @@ const CloseImg = styled.img`
 const ModalContent = styled.div`
     width: 100%;
     height: 7%;
-    border-radius: 30px;
+    border-radius: 20px;
     background-color: white;
     margin-top: 10px;
 
@@ -169,7 +169,7 @@ const ModalFooter = styled.div`
 
     // 보은 반응형 요청
     max-width: 700px;
-    border-radius: 30px 30px 0 0;
+    border-radius: 10px 10px 0 0;
 
     display: flex;
     justify-content: space-around;
@@ -194,7 +194,7 @@ const FooterDelSpan = styled.span`
 `
 const FooterSearchBtn = styled.button`
     width: 30%;
-    height: 60%;
+    height: 45px;
 
     border: none;
     border-radius: 10px;
@@ -208,6 +208,10 @@ const FooterSearchBtn = styled.button`
 
     &:hover{
         background-color: #F0586F;
+    }
+
+    @media (max-height: 800px) {
+        height: 30px;
     }
 `
 const WhiteSearchImg = styled(SearchImg)`
