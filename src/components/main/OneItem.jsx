@@ -153,7 +153,7 @@ const OneItem = ({v, startSearch}) => {
                 </DotDiv>    
                 <ItemTextDiv>
                     <ItemTitle>{v.title}<br /></ItemTitle>
-                    <ItemNormalText>호스트: {v.author.photo && v.author.nickname+v.author.photo || v.author.nickname}<br /></ItemNormalText>
+                    <ItemNormalText>호스트: {v.authorInfo.photo && v.authorInfo.nickname+v.authorInfo.photo || v.authorInfo.nickname}<br /></ItemNormalText>
                     <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
                 </ItemTextDiv>
             </ItemDiv>
