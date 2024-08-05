@@ -9,6 +9,7 @@ const QnAButtonContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding-bottom: 20px;
 `;
 
 const QnAButton = styled.button`
@@ -32,9 +33,10 @@ const QnAButton = styled.button`
 const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 50vh;
+    height: 60vh;
     overflow-y: auto;
-    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
 `;
 
 const ChatMessage = styled.div`
@@ -55,6 +57,7 @@ const ChatBotName = styled.div`
     top: -25px;
     left: 5px;
     color: #f87878;
+    font-size: 15px;
 `;
 
 const FollowUpContainer = styled.div`
@@ -90,8 +93,12 @@ const QnAData = [
     }
 ];
 
+const initialMessages = [
+    { text: "안녕하세요 ☺️ 'stay_and_go' 이용 관련해서 궁금하신 내용의 버튼을 클릭해 주세요.", isUser: false, isFirstMessage: true }
+];
+
 const ChatBot = () => {
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(initialMessages);
     const chatEndRef = useRef(null); // 마지막 메세지를 참조하기 위해 useRef 사용
 
     /** 사용자가 질문 버튼 클릭 시 */
@@ -102,7 +109,7 @@ const ChatBot = () => {
 
     /** 처음으로 돌아가기 버튼 클릭 시 */
     const onClickHandleReset = () => {
-        setMessages([]);
+        setMessages(initialMessages);
     }
 
     /** 메세지가 추가될 때마다 실행 */
@@ -127,8 +134,8 @@ const ChatBot = () => {
             </QnAButtonContainer>
             <ChatContainer>
                 {messages.map((msg, index) => (
-                    <ChatMessage key={index} $isUser={msg.isUser}>
-                        {!msg.isUser && <ChatBotName>stay_and_go ✈️</ChatBotName>}
+                    <ChatMessage key={index} $isUser={msg.isUser} $isFirstMessage={msg.isFirstMessage}>
+                        {!msg.isUser && <ChatBotName>{msg.isFirstMessage ? "🙇🏻‍♂️" : "stay_and_go ✈️"}</ChatBotName>}
                         {msg.text}
                         {!msg.isUser && msg.followUp && msg.followUp.length > 0 && (
                             <FollowUpContainer>
@@ -144,7 +151,7 @@ const ChatBot = () => {
                         )}
                     </ChatMessage>
                 ))}
-                {messages.length > 0 && (
+                {messages.length > 1 && (
                     <QnAButtonContainer>
                         <QnAButton onClick={onClickHandleReset}>처음으로 돌아가기</QnAButton>
                     </QnAButtonContainer>
