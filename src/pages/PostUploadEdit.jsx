@@ -794,7 +794,7 @@ const PostUploadEdit = () => {
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
                         <InputSubTitle>1박 가격</InputSubTitle>
-                        <ShortInputText type="number" value={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
+                        <ShortInputText type="number" defaultValue={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
