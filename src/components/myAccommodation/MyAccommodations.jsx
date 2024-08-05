@@ -10,6 +10,7 @@ import {
 } from "./MyAccommodationsStyle";
 import loading from "../../assets/icons/loading.png";
 import { useNavigate } from "react-router-dom";
+import NoAccomodation from "./NoAccomodation";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
 import { mypostDelete } from "../../api/myPostDelete";
@@ -125,6 +126,8 @@ const MyAccommodations = () => {
   };
 
   return (
+    <>
+    {accommodations.length > 0 ? (
     <Container>
     {!isModal &&
       <>
@@ -159,6 +162,10 @@ const MyAccommodations = () => {
       />
     }      
     </Container>
+    ) : (
+      <NoAccomodation />
+    )}
+    </>
   );
 }
 export default MyAccommodations;
