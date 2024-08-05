@@ -43,16 +43,27 @@ const ItemBackgroundDiv = styled.div.attrs(props => ({
 
     position: relative;
 
-    @keyframes changeCaraselAni {
-        0% {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-        100% {
-            transform: translateX(0%);
-            opacity: 1;
-        }
+    @keyframes changeCarouselAniRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
     }
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes changeCarouselAniLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
 `
 const ItemTextDiv = styled.div`
     width: 90%;
@@ -112,7 +123,7 @@ const OneItem = ({v, startSearch}) => {
         } else {
             setIndex(index - 1);
         }
-        backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        backgroundRef.current.style.animation = "changeCarouselAniLeft  0.3s ease-out";
         // 애니메이션 효과에서 settimeout 사용
         setTimeout(() => {
             backgroundRef.current.style.animation = "none";
@@ -124,7 +135,7 @@ const OneItem = ({v, startSearch}) => {
         } else {
             setIndex(index + 1);
         }
-        backgroundRef.current.style.animation = "changeCaraselAni 0.3s ease-out";
+        backgroundRef.current.style.animation = "changeCarouselAniRight 0.3s ease-out";
         // 애니메이션 효과에서 settimeout 사용
         setTimeout(() => {
             backgroundRef.current.style.animation = "none";
@@ -154,7 +165,7 @@ const OneItem = ({v, startSearch}) => {
                 <ItemTextDiv>
                     <ItemTitle>{v.title}<br /></ItemTitle>
                     <ItemNormalText>호스트: {v.authorInfo.photo && v.authorInfo.nickname+v.authorInfo.photo || v.authorInfo.nickname}<br /></ItemNormalText>
-                    <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /인</ItemNormalText>
+                    <ItemPriceText>{"₩" + Number(v.price).toLocaleString('ko-KR')}</ItemPriceText><ItemNormalText> /박</ItemNormalText>
                 </ItemTextDiv>
             </ItemDiv>
     )
