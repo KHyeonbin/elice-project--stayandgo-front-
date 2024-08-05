@@ -46,8 +46,21 @@ const KakaoMap = ({ address, title }) => {
 
               // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
               map.setCenter(coords);
+
+
+              const handleResize = () => {
+                const markerPosition = marker.getPosition(); 
+                map.relayout();
+                map.setCenter(markerPosition);
+              }
+              window.addEventListener("resize", handleResize);
+              return () => {
+                  // cleanup
+                  window.removeEventListener("resize", handleResize);
+              };
             }
           });
+
         });
       } else {
         console.error("Kakao Maps script failed to load.");
