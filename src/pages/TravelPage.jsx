@@ -130,6 +130,12 @@ const TravelPage = () => {
   // 첫 화면 진입 및 page 와 datalist read
   useEffect(() => {
     // page
+    if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
+      alert('로그인하지 않은 사용자입니다.');
+      window.location.href = '/';
+      return;
+    }
+
     getTravelLoad.getReservePastPage({mymode: true})
     .then(res => {
       setPastPage(res || defaultPage);
@@ -159,11 +165,7 @@ const TravelPage = () => {
     .catch(e => {
       console.log(e);
     });
-    if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
-      alert('로그인하지 않은 사용자입니다.');
-      window.location.href = '/';
-      return;
-    }
+    
     setIsIngLoading(true);
     setIsPastLoading(true);
   },[selectValue]);

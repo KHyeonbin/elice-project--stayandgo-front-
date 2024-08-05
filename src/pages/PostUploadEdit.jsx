@@ -286,7 +286,7 @@ const PostUploadEdit = () => {
 
     useEffect(() => {
         if(!loginUser.is_logined){
-          alert('로그인이 필요한 페이지입니다.');
+          alert('수정 중에 새로고침됐거나, 로그인하지 않은 사용자입니다.');
           navigate('/');
           return;
         }
