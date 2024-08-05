@@ -1,8 +1,8 @@
 //나의숙소 예약관리 예약카드 중 지난예약과 다가오는예약 구분하는 컴포넌트
 import React, { useState } from "react";
 import ReserveCard from "./MyAccReserveCard";
-import Pagination from "./Pagination";
-import ProfileModal from "../profile/ProfileModal";
+import Pagination from "../layout/Pagination";
+import MyAccReserveModal from "./MyAccReserveModal";
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
 import * as Cate from "./MyAccCategory.style";
 
@@ -86,7 +86,7 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
           </Cate.CategoryBox>
           <Pagination page={page} setPage={setPage} />
           {isModal && (
-            <ProfileModal
+            <MyAccReserveModal
               message="정말 취소하시겠습니까?"
               onConfirm={onClickHandleConfirmDelete}
               onCancel={onClickHandleCancelDelete}

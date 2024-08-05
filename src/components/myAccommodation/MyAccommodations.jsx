@@ -14,7 +14,7 @@ import NoAccomodation from "./NoAccomodation";
 import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이템 컴포넌트 가져오기
 import mainPostLoad from "../../api/mainPostLoad";
 import { mypostDelete } from "../../api/myPostDelete";
-import ProfileModal from "../profile/ProfileModal";
+import MyAccommodationModal from "./MyAccommodationModal";
 
 const MyAccommodations = () => {
   // modal 호출 state
@@ -160,7 +160,7 @@ const MyAccommodations = () => {
         }
       </>
     ||
-      <ProfileModal
+      <MyAccommodationModal
       message="정말 삭제하시겠습니까?"
       onConfirm={onClickHandleConfirmDelete}
       onCancel={onClickHandleCancelDelete}

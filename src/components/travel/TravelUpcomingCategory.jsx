@@ -3,8 +3,8 @@ import styled from "styled-components";
 import TravelCard from "./TravelCard";
 import {Checkbox} from 'antd';
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
-import ProfileModal from "../profile/ProfileModal";
-import Pagination from "../myAccReserve/Pagination";
+import TravelConfirmModal from "./TravelConfirmModal";
+import Pagination from "../layout/Pagination";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -156,7 +156,7 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
       )}
     </>
     ||
-    <ProfileModal
+    <TravelConfirmModal
         message="정말 취소하시겠습니까?"
         onConfirm={onClickHandleConfirmDelete}
         onCancel={onClickHandleCancelDelete}

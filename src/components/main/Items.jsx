@@ -4,7 +4,7 @@ import mainPostLoad from "../../api/mainPostLoad";
 import main_no_data from '../../assets/images/main_no_data.png';
 import OneItem from "./OneItem";
 import loading from '../../assets/icons/loading.png';
-import Pagination from "../myAccReserve/Pagination";
+import Pagination from "../layout/Pagination";
 
 const Container = styled.div`
     width: 100%;

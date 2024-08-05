@@ -1,7 +1,7 @@
 import React, {useCallback} from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";
-import Pagination from "../myAccReserve/Pagination";
+import Pagination from "../layout/Pagination";
 
 const CategoryBox = styled.div`
   display: flex;
