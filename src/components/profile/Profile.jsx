@@ -78,6 +78,8 @@ const Profile = () => {
   /** 회원 탈퇴 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
+      // 토큰 먼저 비워주고 삭제해야 함
+      await logoutUser();
       await deleteUser(user.email); 
       window.location.href = '/';
     } catch (error) {
