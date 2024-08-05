@@ -33,7 +33,7 @@ const RightArea = styled(LeftArea)`
     width: 200px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
     margin-right: 10px;
     margin-top: 20px;
