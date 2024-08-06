@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -348,6 +348,18 @@ const RoomDetails = () => {
   // kakao SDK 스크립트 로드 상태 확인
   const status = useScript("https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js");
 
+  // kakao sdk 초기화하기
+	// status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
+	useEffect(() => {
+		if (status === "ready" && window.Kakao) {
+			// 중복 initialization 방지
+			if (!window.Kakao.isInitialized()) {
+				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
+        console.log('init');
+				window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
+			}
+		}
+	}, [status]);	
 
   // mainCatetory 디렉토리 이미지 가져오기
   const importImages = (v) => {
@@ -379,24 +391,12 @@ const RoomDetails = () => {
     console.log(window.location.href);
   };
 
-	// kakao sdk 초기화하기
-	// status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
-	useEffect(() => {
-		if (status === "ready" && window.Kakao) {
-			// 중복 initialization 방지
-			if (!window.Kakao.isInitialized()) {
-				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-        console.log('init');
-				//window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
-			}
-		}
-	}, [status]);	
+
 
   // 주소 카카오톡에 공유
   const handleKakaoButton = () => {
     // 크롬 브라우저 > 개발자모드 > 모바일 설정 지원하지 않음
     if (window.Kakao && window.Kakao.Share) {
-      window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
       window.Kakao.Share.createDefaultButton({
         container: '#kakaoShareBtn',
         objectType: 'feed',
@@ -416,9 +416,9 @@ const RoomDetails = () => {
             link: {
               mobileWebUrl: window.location.href,
               webUrl: window.location.href,
-            },
-          },
-        ],            
+            }
+          }
+        ],
         // 카카오톡 미설치 시 카카오톡 설치 경로이동
         installTalk: true,
       });
@@ -672,6 +672,7 @@ const RoomDetails = () => {
       </Container>
 
       <OrderBtnDiv>
+        {/* 아이템을 직접 눌러서 온건지 링크로 들어온 건지에 따라 보여줌 */}
         {is_notLink && !userState.is_logined && (
           <>
           <PriceDiv>

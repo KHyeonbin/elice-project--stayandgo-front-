@@ -152,6 +152,7 @@ const OneItem = ({v, startSearch}) => {
             <ItemDiv id={v.nanoid}>
                 <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                 <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
+                {/* Link 컴포넌트에 state 를 같이 보내기 !!! (useLocation 으로 확인) */}
                 <Link to={`/room/details/${v.nanoid}?${formattedString}`} state={{is_notLink: true}}>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
                 </Link>
