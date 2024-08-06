@@ -2,6 +2,7 @@ import SubLayout from "../components/layout/SubLayout";
 import ChangePassword from "../components/account/ChangePassword";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
+import React from "react";
 
 const ChangePasswordPage = () => {
   return (

@@ -1,9 +1,9 @@
-import axios from "axios";
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { PasswordRegex } from "../account/Regex";
-import { changePWUser } from "../../api/changePWUser";
+import { PasswordRegex } from "./Regex";
+import { changePWUser } from "../../api/changePWUser.js";
+import { Errors, UserInfo } from "../../model/user/user";
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -40,14 +40,14 @@ const SubmitBtn = styled.button`
   cursor: pointer;
 `;
 
-const ChangePassword = () => {
-  const [userInfo, setUserInfo] = useState({
+const ChangePassword: React.FC = () => {
+  const [userInfo, setUserInfo] = useState<UserInfo>({
     email: "",
     password: "",
     passwordCheck: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Errors>({
     passwordCheckError: "",
     passwordError: "",
     passwordError2: "",
@@ -56,7 +56,7 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const validatePassword = (password) => {
+  const validatePassword = (password: string): string => {
     if (password.length > 0 && password.length < 10) {
       return "10자 이상 입력해주세요.";
     }
@@ -73,7 +73,7 @@ const ChangePassword = () => {
   };
 
 
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { passwordCheckError, passwordError, passwordError2 } = errors;
@@ -88,22 +88,20 @@ const ChangePassword = () => {
     }
 
     try {
-        changePWUser(location.state.email, userInfo.password)
-        .then(res => {
-          if(res.data.code === 200){
-            alert("비밀번호가 변경되었습니다.");
-            navigate("/login");
-          } else {
-            alert(res.data.message ? res.data.message : "알 수 없는 오류가 발생")
-          }
-        })
+      const res = await changePWUser(location.state.email, userInfo.password);
+      if (res && res.data && res.data.code === 200) {
+        alert("비밀번호가 변경되었습니다.");
+        navigate("/login");
+      } else {
+        alert(res?.data?.message ? res.data.message : "알 수 없는 오류가 발생");
+      }
     } catch (error) {
       alert("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   // 인풋 입력 시 상태 변경
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setUserInfo((prevUserInfo) => ({

@@ -36,7 +36,7 @@ const Logout = styled.button`
   }
 `;
 
-const AdminPage = () => {
+const AdminPage: React.FC = () => {
   const navigate = useNavigate();
 
   /** 로그아웃 버튼 클릭 시 홈으로 이동 */

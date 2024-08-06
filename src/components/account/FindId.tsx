@@ -1,7 +1,6 @@
-import axios from "axios";
+import React, {ChangeEvent, FormEvent, useState} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { findIDUser } from "../../api/findIDUser";
 
 const LoginInput = styled.input`
@@ -57,21 +56,25 @@ const JoinBox = styled.div`
   }
 `;
 
-const FindId = () => {
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [userId, setUserId] = useState("");
-  const onSubmitHandle = async (e) => {
+const FindId: React.FC = () => {
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+
+  const onSubmitHandle = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     findIDUser(name, phoneNumber)
     .then(res => {
-      if(res.data && res.data.code === 200){
+      if(res?.data && res.data.code === 200){
         setUserId(res.data.data);
-      } 
+      } else {
+        throw new Error(res?.data.message || "알 수 없는 오류가 발생했습니다.");
+      }
     });
   };
   
-  const phoneNumberChangeHandler = (e) => {
+  const phoneNumberChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
     inputValue = inputValue.replace(/\D/g, ""); // 문자 입력 제거
     inputValue = inputValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"); // 000-0000-0000 형태로 리턴

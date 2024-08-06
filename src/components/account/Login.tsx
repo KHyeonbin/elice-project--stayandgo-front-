@@ -1,7 +1,7 @@
 import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { TokenAttom } from "../../atoms/TokenAtom";
 
@@ -53,13 +53,13 @@ const JoinBox = styled.div`
   }
 `;
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const setAccessToken = useSetRecoilState(TokenAttom);
   const navigate = useNavigate();
 
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {

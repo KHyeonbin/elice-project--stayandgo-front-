@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import React from "react";
 
 const ImgBox = styled.div`
   height: 20vh;
@@ -26,7 +27,7 @@ const GoLogin = styled.div`
   }
 `;
 
-const JoinEnd = () => {
+const JoinEnd: React.FC = () => {
   return (
     <>
       <ImgBox>

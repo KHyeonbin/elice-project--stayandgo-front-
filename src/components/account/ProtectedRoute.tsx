@@ -3,7 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { isLoginSelector } from "../../atoms/TokenAtom";
 import { useRecoilValue } from "recoil";
 
-const ProtectedRoute = () => {
+const ProtectedRoute: React.FC = () => {
   const isLogin = useRecoilValue(isLoginSelector);
   if (isLogin) {
     return <Outlet />;

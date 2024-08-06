@@ -31,7 +31,7 @@ const AdminIntroPage = () => {
     return (
         <>
             <SubHeader />
-            <SubLayout pageTitle="관리자 페이지" />
+            <SubLayout pageTitle="관리자 페이지" children={undefined} />
             <Container>
                 <Link to={'users/'}>
                     <UserBtn>회원 리스트</UserBtn>
