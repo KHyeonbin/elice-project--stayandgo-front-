@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -341,6 +341,9 @@ const RoomDetails = () => {
   const [isOpenShareModal, setIsOpenShareModal] = useState(false);
   let totalPrice = useRef(0);
   let totalDate = useRef(0);
+  const location = useLocation();
+  // link를 타고 들어온 건지, 공유하기 링크를 타고 들어온건지 판단 state
+  const [is_notLink, setIs_notLink] = useState(false);
 
   // kakao SDK 스크립트 로드 상태 확인
   const status = useScript("https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js");
@@ -371,9 +374,9 @@ const RoomDetails = () => {
 
   // 주소 클립보드에 복사
   const onCopyUrl = () => {
-    navigator.clipboard.writeText(window.location.pathname);
+    navigator.clipboard.writeText(window.location.href);
     alert('주소를 클립보드에 복사하였습니다.')
-    console.log(window.location.pathname);
+    console.log(window.location.href);
   };
 
 	// kakao sdk 초기화하기
@@ -384,7 +387,7 @@ const RoomDetails = () => {
 			if (!window.Kakao.isInitialized()) {
 				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
         console.log('init');
-				window.Kakao.init("b27bdfb85b1124cb1f51e1859cd1da16");
+				//window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
 			}
 		}
 	}, [status]);	
@@ -393,6 +396,7 @@ const RoomDetails = () => {
   const handleKakaoButton = () => {
     // 크롬 브라우저 > 개발자모드 > 모바일 설정 지원하지 않음
     if (window.Kakao && window.Kakao.Share) {
+      window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
       window.Kakao.Share.createDefaultButton({
         container: '#kakaoShareBtn',
         objectType: 'feed',
@@ -436,7 +440,9 @@ const RoomDetails = () => {
         console.error(error);
       }
     })();
-
+    // location 객체를 useEffect를 통해 받고 해당 컴포넌트에 사용할 state에 set
+    setIs_notLink(location.state ? location.state.is_notLink : false);
+    console.log(location.state);
   }, [id]);
 
 
@@ -666,7 +672,7 @@ const RoomDetails = () => {
       </Container>
 
       <OrderBtnDiv>
-        {!userState.is_logined && (
+        {is_notLink && !userState.is_logined && (
           <>
           <PriceDiv>
             <b>로그인이 필요합니다.</b>
@@ -674,7 +680,7 @@ const RoomDetails = () => {
           <ReservationBtn onClick={()=>navigate('/login')}>로그인하기</ReservationBtn>
           </>
         )}
-        {userState.is_logined && (
+        {is_notLink && userState.is_logined && (
           <>
           <PriceDiv>
             <b>{footerPrice.toLocaleString()}원</b> / {totalDate.current}박
