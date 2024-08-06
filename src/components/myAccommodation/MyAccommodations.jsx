@@ -137,7 +137,7 @@ const MyAccommodations = () => {
     {!isModal &&
       <>
       <Header>
-        <Button onClick={onClickHandleDelete}>삭제</Button>
+        <Button onClick={onClickHandleDelete}>삭제 {localStorage.getItem('is_logined')}</Button>
         <Button onClick={onClickHandleEdit}>수정</Button>
       </Header>
       {!isLoading &&
