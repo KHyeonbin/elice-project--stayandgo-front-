@@ -40,7 +40,7 @@ const MyAccommodations = () => {
     // 로그인 한 사용자만 로그인 사용자가 올린 숙소를 확인할 수 있으므로 로그인 판단 함수를 mainPostLoad api 호출 함수보다 먼저 오도록 위치 변경
     if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
       alert('로그인하지 않은 사용자입니다.');
-      window.location.href = '/';
+      navigate('/');
       return;
     }
     mainPostLoad.getPostsRead({nowpage: 1, search, category: "전체", mymode: true})

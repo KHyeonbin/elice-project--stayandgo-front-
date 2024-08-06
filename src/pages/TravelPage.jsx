@@ -11,6 +11,7 @@ import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -104,7 +105,7 @@ const Loading_img = styled.img`
 const TravelPage = () => {
   // 로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
-
+  const navigate = useNavigate();
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
   const defaultPage = {
     page: 1,
@@ -132,7 +133,7 @@ const TravelPage = () => {
     // page
     if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
       alert('로그인하지 않은 사용자입니다.');
-      window.location.href = '/';
+      navigate('/');
       return;
     }
 
