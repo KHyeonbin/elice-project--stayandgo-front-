@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
-function useScript(src) {
+function useScript(src : string) {
     // Keep track of script status ("idle", "loading", "ready", "error")
-    const [status, setStatus] = useState(src ? "loading" : "idle");
+    const [status, setStatus] = useState<string | null>(src ? "loading" : "idle");
 
     useEffect(() => {
         if (!src) {
@@ -10,7 +10,7 @@ function useScript(src) {
             return;
         }
 
-        let script = document.querySelector(`script[src="${src}"]`);
+        let script : HTMLScriptElement | null = document.querySelector(`script[src="${src}"]`);
 
         if (!script) {
             // Create script
@@ -23,20 +23,23 @@ function useScript(src) {
 
             document.body.appendChild(script);
 
-            const setAttributeFromEvent = (event) => {
-                script.setAttribute(
-                    "data-status",
-                    event.type === "load" ? "ready" : "error"
-                );
+            const setAttributeFromEvent = (event: Event) => {
+                if(script){
+                    script.setAttribute(
+                        "data-status",
+                        event.type === "load" ? "ready" : "error"
+                    );
+                }
             };
 
             script.addEventListener("load", setAttributeFromEvent);
             script.addEventListener("error", setAttributeFromEvent);
         } else {
-            setStatus(script.getAttribute("data-status"));
+            const status: string | null = script.getAttribute("data-status");
+            setStatus(status);
         }
 
-        const setStateFromEvent = (event) => {
+        const setStateFromEvent = (event: Event) => {
             setStatus(event.type === "load" ? "ready" : "error");
         };
 

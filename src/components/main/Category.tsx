@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { tagArr } from "../../util/data/arrayStaticData";
+import { CategoryProps, ContextImageData, PageType, WebpackRequireContext } from "../../model/main(with detail, upload)/mainTypes";
 
 const Container = styled.div`
     width: 100%;
@@ -64,9 +65,9 @@ const ItemImg = styled.img`
 `
 
 
-const Category = ({setCategory, setPage}) => {
+const Category : React.FC <CategoryProps> = ({setCategory, setPage}) => {
     // 태그 배열 및 상태 정의
-    const [tag, setTag] = useState(tagArr[0]);
+    const [tag, setTag] = useState<string>(tagArr[0]);
 
     // 태그(카테고리) 변경될 때 setCategory 작업으로 category 상태 변경
     useEffect(() => {
@@ -74,13 +75,16 @@ const Category = ({setCategory, setPage}) => {
     },[tag])
 
     // mainCatetory 디렉토리 이미지 가져오기
-    const importAllImages = (v) => {
-        return v.keys().map((key) => ({
-            src: v(key),
-            name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-          }));
+    const importAllImages = (v: WebpackRequireContext) : ContextImageData[] => {
+        return v.keys().map((key) => {
+            const match = key.match(/[^/]+$/);
+            return {
+                src: v(key),
+                name: match ? match[0] : 'unknown', // 파일 이름만 추출
+            }
+        });
     };
-    const images = importAllImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+    const images = importAllImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/) as WebpackRequireContext);
 
     // 파일 이름 순으로 정렬
     const sortedImages = images.sort((a, b) => {
@@ -89,9 +93,9 @@ const Category = ({setCategory, setPage}) => {
         return aNumber - bNumber;
     });
     // 아이템 클릭 시 태그 상태 변화
-    const onClickImage = (index) => {
+    const onClickImage = (index: number) => {
         setTag(tagArr[index]);
-        setPage((current) => {
+        setPage((current) : PageType => {
             const newPage = {...current};
             newPage.page = 1;
             return newPage;

@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { loginUserCheck } from "./api/loginUserCheck";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import loginState from "./atoms/loginState";
 import { getDateFormat } from './util/getDateFormat';
 import AnimatedRoutes from "./components/AnimatedRoutes";
+import { LoginStateType, SearchType } from "./model/main(with detail, upload)/mainTypes";
 
-const App = () => {
-  const loginUser = useRecoilValue(loginState);
-  const setLoginUser = useSetRecoilState(loginState);
+const App : React.FC = () => {
+  const loginUser = useRecoilValue<LoginStateType>(loginState);
+  const setLoginUser = useSetRecoilState<LoginStateType>(loginState);
 
-  const [search, setSearch] = useState({
+  const [search, setSearch] = useState<SearchType>({
     city: "전체",
     startDate: getDateFormat(new Date()),
     endDate: getDateFormat(new Date()),
@@ -20,7 +20,7 @@ const App = () => {
     baby: 0,
   });
 
-  const [startSearch, setStartSearch] = useState({
+  const [startSearch, setStartSearch] = useState<SearchType>({
       city: "전체",
       startDate: getDateFormat(new Date()),
       endDate: getDateFormat(new Date()),
@@ -33,8 +33,8 @@ const App = () => {
     loginUserCheck()
     .then(res => {
         if(res && res.code === 200){
-            setLoginUser((current) => {
-                const newUser = {...current};
+            setLoginUser((current) : LoginStateType => {
+                const newUser : LoginStateType = {...current};
                 newUser.email = res.data.email;
                 newUser.is_admin = res.data.is_admin;
                 newUser.is_logined = true;
@@ -46,8 +46,8 @@ const App = () => {
             });
             console.log(res.message);
         } else if(res && res.code === 411){
-            setLoginUser((current) => {
-              const newUser = {...current};
+            setLoginUser((current) : LoginStateType => {
+              const newUser : LoginStateType = {...current};
               newUser.name= '';
               newUser.nickname= '';
               newUser.email= '';

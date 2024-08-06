@@ -47,7 +47,7 @@ const LinkText = styled(Link)`
   color: #333;
 `;
 
-const SubHeader = ({ isLogin }) => {
+const SubHeader = () => {
   const navigate = useNavigate();
 
   const onClickHome = () => {

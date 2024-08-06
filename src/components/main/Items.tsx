@@ -5,6 +5,7 @@ import main_no_data from '../../assets/images/main_no_data.png';
 import OneItem from "./OneItem";
 import loading from '../../assets/icons/loading.png';
 import Pagination from "../layout/Pagination";
+import { ItemsProps, NoItemProps, PageType, PostType } from "../../model/main(with detail, upload)/mainTypes";
 
 const Container = styled.div`
     width: 100%;
@@ -22,7 +23,7 @@ const NoItemContainer = styled.div`
     flex-direction: column;
     align-items: center;
 `
-const NoItem = styled.div.attrs(props => ({
+const NoItem = styled.div.attrs<NoItemProps>(props => ({
     style: {
         backgroundImage: `url(${props.$main_no_data})`
     }
@@ -50,11 +51,11 @@ const Loading_img = styled.img`
     }
 `
 
-const Items = ({page, setPage, startSearch, category}) => {
+const Items : React.FC <ItemsProps> = ({page, setPage, startSearch, category}) => {
     // 숙소 아이템 목록 상태
-    const [posts, setPosts] = useState(null);
+    const [posts, setPosts] = useState<PostType[] | null>(null);
     // is loading
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     // 메인 첫 페이지 진입 시 search x, category x 인 전체 데이터를 가져옴
     // 1. 일단 페이지 정보를 먼저 세팅 (페이지 정보는 case1. 검색 버튼으로 검색 시작, case2. category 변동 에만 추가로 필요함)

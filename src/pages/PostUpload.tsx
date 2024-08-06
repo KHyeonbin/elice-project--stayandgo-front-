@@ -3,16 +3,17 @@ import SubHeader from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import styled from "styled-components";
 import addImg from '../assets/icons/addImg.png';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import {Checkbox} from 'antd';
-import { myPostEdit } from "../api/myPostEdit";
-import AccommodationModal from "../components/myAccommodation/AccommodationModal";
+import { myPostUpload } from "../api/myPostUpload";
+import ReservationModal from "../components/reservation/ReservationModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
-import { useLocation, useNavigate } from "react-router-dom";
-import { detailPost } from "../api/detailPost";
+import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ContextImageData, imageNameType, ImageUploadLabelProps, ImageUploadSpanProps, LoginStateType, optionType, UploadPostType, WebpackRequireContext } from "../model/main(with detail, upload)/mainTypes";
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const Container = styled.div`
     width: 100%;
@@ -29,7 +30,7 @@ const ImageUploadForm = styled.form`
 `
 // input element 를 숨기고 label 로 대신 기능을 받음 (id <=> for)
 // 파일 선택, 선택된 파일 없음 숨기기 위함
-const ImageUploadLabel = styled.label.attrs(props => ({
+const ImageUploadLabel = styled.label.attrs<ImageUploadLabelProps>(props => ({
     style: {
         backgroundImage: props.$isUpload === true ? `url(${props.$newImg})` : `url(${addImg})`,
         backgroundSize: props.$isUpload === true ? "cover" : "auto",
@@ -48,7 +49,7 @@ const ImageUploadLabel = styled.label.attrs(props => ({
 
     position: relative;
 `
-const MainImageSpan = styled.span.attrs(props => ({
+const MainImageSpan = styled.span.attrs<ImageUploadSpanProps>(props => ({
     style: {
         display: props.$isUpload === true ? "none" : "block"
     }
@@ -121,7 +122,7 @@ const InputSubTitle = styled.span`
 `
 
 // react-select css
-const selectCustom = {
+const selectCustom: StylesConfig = {
     option: (provided, state) => {
         let backgroundColor = 'white';
         let color = '#333';
@@ -224,28 +225,54 @@ const SubmitButton = styled.button`
     }
 `
 
-const PostUploadEdit = () => {
-    const loginUser = useRecoilValue(loginState);
+const PostUpload : React.FC = () => {
+    const loginUser = useRecoilValue<LoginStateType>(loginState);
+    // 라벨에 넣을 배경 이미지 상태, URL 해제 가 진행되고 나서 loginUser 가 is_logined 인지 판별하도록 하는 state
+    const [loginLoad, setLoginLoad] = useState<boolean>(false);
     const navigate = useNavigate();
-    const location = useLocation();
-    const nanoid = location.state.v;
-    // 수정 전 상태 정의
+    useEffect(() => {
+        // loginUser !== null 로 loginUser 가 로드 된 후에 is_logined 를 판별한다.
+        if(loginLoad && !loginUser.is_logined){
+          alert('로그인이 필요한 페이지입니다.');
+          navigate('/');
+          return;
+        }
+      },[loginLoad])
+
     // 등록 데이터 state
-    const [data, setData] = useState({
-        main_image: "",
-        sub_images: []
+    const [data, setData] = useState<UploadPostType>({
+        main_image: new FileList(),
+        sub_images: new FileList(), // [string]
+        title: "",
+        room_num: 1, // number
+        max_adult: 1, // number
+        max_child: 0, // number
+        max_baby: 0, // number
+        price: 1000, // number
+        main_location: "서울",
+        sub_location: "",
+        contents: "",
+        category: [], // [string]
+        host_intro: ""
     }); 
     
     // 첨부된 images 이름 state
-    const [imageName, setImageName] = useState({
+    const [imageName, setImageName] = useState<imageNameType>({
         main_image: "",
-        sub_images: ""
+        sub_images: [""]
     });
     // main_image 가 업로드 된 상태, 라벨에 넣을 배경 이미지 상태, URL 해제
-    const [isUpload, setIsUpload] = useState(false);
-    const [labelBackground, setLabelBackground] = useState('');
+    // 라벨에 넣을 배경 이미지 상태, URL 해제 가 진행되고 나서 loginUser 가 is_logined 인지 판별하도록 하는 state
+    // 변화도 추가해준다.
+    const [isUpload, setIsUpload] = useState<boolean>(false);
+    const [labelBackground, setLabelBackground] = useState<string>('');
     useEffect(() => {
+        window.scrollTo({
+            top: 0
+        });
         return () => {
+            setLoginLoad(true);
+            
             if(labelBackground){
                 URL.revokeObjectURL(labelBackground);
             }
@@ -255,101 +282,38 @@ const PostUploadEdit = () => {
     
     // 방 갯수 state
     // 방 갯수 옵션 상태 정의
-    const optionsRoom = optionsRoomArr.map((v) => {
+    const optionsRoom = optionsRoomArr.map((v) : optionType => {
         return {value: v, label: v};
     });
-    const [optionRoom, setOptionRoom] = useState(optionsRoom[0]);
+    const [optionRoom, setOptionRoom] = useState<optionType>(optionsRoom[0]);
 
     // 어른/어린이/아기 state
     // 인원 수 옵션 상태 정의
-    const optionsPerson = personArr.map((v) => {
+    const optionsPerson = personArr.map((v) : optionType => {
         return {value: v, label: v};
     });
-    const optionsChild = childArr.map((v) => {
+    const optionsChild = childArr.map((v) : optionType => {
         return {value: v, label: v};
     });
-    const optionsBaby = childArr.map((v) => {
+    const optionsBaby = childArr.map((v) : optionType => {
         return {value: v, label: v};
     });
-    const [optionPerson, setOptionPerson] = useState(optionsPerson[0]);
-    const [optionChild, setOptionChild] = useState(optionsChild[0]);
-    const [optionBaby, setOptionBaby] = useState(optionsBaby[0]);
+    const [optionPerson, setOptionPerson] = useState<optionType>(optionsPerson[0]);
+    const [optionChild, setOptionChild] = useState<optionType>(optionsChild[0]);
+    const [optionBaby, setOptionBaby] = useState<optionType>(optionsBaby[0]);
 
     // 주요 행정구역 옵션 상태 정의
-    const optionsMainLocation = mainLocationArr.map((v) => {
+    const optionsMainLocation = mainLocationArr.map((v) : optionType => {
         return {value: v, label: v};
     });
-    const [optionMainLocation, setoptionMainLocation] = useState(optionsMainLocation[0]);
+    const [optionMainLocation, setoptionMainLocation] = useState<optionType>(optionsMainLocation[0]);
 
     // model 팝업 띄우기 위한 상태
-    const [showFinishModal, setshowFinishModal] = useState(false);
-
-    useEffect(() => {
-        if(!loginUser.is_logined){
-          alert('수정 중에 새로고침됐거나, 로그인하지 않은 사용자입니다.');
-          navigate('/');
-          return;
-        }
-
-        detailPost({nanoid})
-        .then(res => {
-          if(res.data && res.data.code === 200){
-              const saveData = res.data.data;
-              setData((current) => {
-                  const newData = {...current};
-                  newData.title = saveData.title;
-                  newData.room_num = saveData.room_num;
-                  if(saveData.room_num === 9){
-                    setOptionRoom({value: `${saveData.room_num}개 이상`, label: `${saveData.room_num}개 이상`});
-                  } else {
-                    setOptionRoom({value: `${saveData.room_num}개`, label: `${saveData.room_num}개`});
-                  }
-                  newData.max_adult = saveData.max_adult;
-                  if(saveData.max_adult === 20){
-                    setOptionPerson({value: `${saveData.max_adult}명 이상`, label: `${saveData.max_adult}명 이상`});
-                  } else {
-                    setOptionPerson({value: `${saveData.max_adult}명`, label: `${saveData.max_adult}명`});
-                  }
-                  newData.max_child = saveData.max_child;
-                  if(saveData.max_child === 5){
-                    setOptionChild({value: `${saveData.max_child}명(최대)`, label: `${saveData.max_child}명(최대)`});
-                  } else {
-                    setOptionChild({value: `${saveData.max_child}명`, label: `${saveData.max_child}명`});
-                  }
-                  newData.max_baby = saveData.max_baby;
-                  if(saveData.max_baby === 5){
-                    setOptionBaby({value: `${saveData.max_adult}명(최대)`, label: `${saveData.max_adult}명(최대)`});
-                  } else {
-                    setOptionBaby({value: `${saveData.max_adult}명`, label: `${saveData.max_adult}명`});
-                  }
-                  newData.price = saveData.price;
-                  newData.main_location = saveData.main_location;
-                  setoptionMainLocation({value: saveData.main_location, label: saveData.main_location});
-                  newData.sub_location = saveData.sub_location;
-                  newData.contents = saveData.contents;
-                  newData.category = saveData.category;
-                  newData.host_intro = saveData.host_intro;
-                  return newData;
-              });
-              return;
-          } else {
-              alert(res.data.message);
-              navigate('/');
-              return;
-          }
-        })
-        .catch(e => {
-          console.log(e);
-          navigate('/');
-          return;
-        });
-      },[])
-      console.log(data)
-
+    const [showFinishModal, setshowFinishModal] = useState<boolean>(false);
 
     // 숙소 이름 data 반영
-    const onChangeTitle = (e) => {
-        setData((current) => {
+    const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
             newData.title = e.target.value;
             return newData;
@@ -357,14 +321,16 @@ const PostUploadEdit = () => {
     };
 
     // 메인이미지 file input 변경 시 적용
-    const onChangeFiles = (e) => {
+    const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         // 모든 파일이 이미지 파일이 아닐 때 오류 반환 및 종료
         if(e.target.files && e.target.files.length > 0){
             const filesNameArray = Array.from(e.target.files);
             const notImages = filesNameArray.filter(
-                v => {
-                    const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                v  => {
+                    if(v && v.name){
+                        const extension = v.name.split('.').pop()?.toLowerCase() ?? '';
+                        return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    }
             });
             if(notImages && notImages.length > 0){
                 alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
@@ -375,7 +341,7 @@ const PostUploadEdit = () => {
                 return;
             }
     
-            setImageName((current) => {
+            setImageName((current) : imageNameType => {
                 const newName = {...current};
                 newName.main_image = filesNameArray[0].name;
                 return newName;
@@ -386,22 +352,24 @@ const PostUploadEdit = () => {
             const labelUrl = URL.createObjectURL(e.target.files[0]);
             setLabelBackground(labelUrl);
             
-            setData((current) => {
+            setData((current) : UploadPostType => {
                 const newData = {...current};
-                newData.main_image = e.target.files;
+                newData.main_image = e.target.files as FileList;
                 return newData;
             });
         }
         return;
     };
     // 서브이미지 변경 시 적용
-    const onChangeSubFiles = (e) => {
+    const onChangeSubFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files && e.target.files.length > 0){
             const filesNameArray = Array.from(e.target.files);
             const notImages = filesNameArray.filter(
                 v => {
-                    const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    if(v && v.name){
+                        const extension = v.name.split('.').pop()?.toLowerCase() ?? '';
+                        return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    }
             });
             if(notImages && notImages.length > 0){
                 alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
@@ -412,16 +380,16 @@ const PostUploadEdit = () => {
                 return;
             }
     
-            setImageName((current) => {
+            setImageName((current) : imageNameType => {
                 const newName = {...current};
                 const subImagesNames = filesNameArray.map(v => v.name);
                 newName.sub_images = subImagesNames;
                 return newName;
             });
             
-            setData((current) => {
+            setData((current) : UploadPostType => {
                 const newData = {...current};
-                newData.sub_images = e.target.files;
+                newData.sub_images = e.target.files as FileList;
                 return newData;
             });
         }
@@ -430,66 +398,69 @@ const PostUploadEdit = () => {
     
 
     // 방 갯수 상태 및 data 상태 변경
-    const onChangeSelectRoom = (e) => {
-        setOptionRoom(e);
-        setData((current) => {
+    const onChangeSelectRoom = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionRoom({value: e.target.value, label: e.target.value});
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.room_num = Number(e.value[0]);
+            newData.room_num = Number(e.target.value[0]);
             return newData;
         });
     };
 
     // 어른 옵션 상태 및 data 상태 변경
-    const onChangeSelectPerson = (e) => {
-        setOptionPerson(e);
+    const onChangeSelectPerson = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionPerson({value: e.target.value, label: e.target.value});
 
-        setData((current) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.max_adult = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_adult = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     };
     // 어린이 옵션 상태 및 data 상태 변경
-    const onChangeSelectChild = (e) => {
-        setOptionChild(e);
+    const onChangeSelectChild = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionChild({value: e.target.value, label: e.target.value});
 
-        setData((current) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.max_child = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_child = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     };
     // 유아 옵션 상태 및 data 상태 변경
-    const onChangeSelectBaby = (e) => {
-        setOptionBaby(e);
+    const onChangeSelectBaby = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionBaby({value: e.target.value, label: e.target.value});
 
-        setData((current) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.max_baby = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_baby = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     }
     
     // 카테고리 상태 값 및 data 상태 변경
-    const onChangeCategory = (e) => {
-        if(e.length > 3){
+    const onChangeCategory = (e: CheckboxChangeEvent) : void => {
+        if(e.target.value.length > 3){
             alert("카테고리는 최대 3개까지 지정 가능합니다!");
             return;
         }
-        setData((current) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.category = e;
+            newData.category = e.target.value;
             return newData;
         });
     };
     // mainCatetory 디렉토리 이미지 가져오기
-    const importAllImages = (v) => {
-        return v.keys().map((key) => ({
-            src: v(key),
-            name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-          }));
+    const importAllImages = (v: WebpackRequireContext) : ContextImageData[] => {
+        return v.keys().map((key) => {
+            const match = key.match(/[^/]+$/);
+            return {
+                src: v(key),
+                name: match ? match[0] : 'unknown', // 파일 이름만 추출
+            }
+        });
     };
-    const images = importAllImages(require.context('../assets/icons/mainCategory', false, /\.(png|jpe?g)$/));
+    const images = importAllImages(require.context('../assets/icons/mainCategory', false, /\.(png|jpe?g)$/) as WebpackRequireContext);
     // 파일 이름 순으로 정렬
     const sortedImages = images.sort((a, b) => {
         const aNumber = parseInt(a.name.split('_')[0], 10);
@@ -503,8 +474,8 @@ const PostUploadEdit = () => {
     const optionWithIcon = optionValues.map((v, i) => ({label: v, value: v, icon: optionIcons[i].src}));
 
     // 숙소 소개 data 상태 반영
-    const onChangeContents = (e) => {
-        setData((current) => {
+    const onChangeContents = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
             newData.contents = e.target.value;
             return newData;
@@ -512,12 +483,12 @@ const PostUploadEdit = () => {
     };
 
     // 숙소 주요 위치 option 및 data 상태 반영
-    const onChangeMainLocation = (e) => {
-        setoptionMainLocation(e);
+    const onChangeMainLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setoptionMainLocation({value: e.target.value, label: e.target.value});
         
-        setData((current) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
-            newData.main_location = e.value;
+            newData.main_location = e.target.value;
             return newData;
         });
     }
@@ -531,21 +502,20 @@ const PostUploadEdit = () => {
         script.async = true;
         document.body.appendChild(script);
     
-        // 스크립트 로드 후 실행 함수
+        // 스크립트 로드 후 실행 함수 
         script.onload = () => {
           if (window.daum) {
             window.daum.postcode.load(() => {
               new window.daum.Postcode({
                 oncomplete: function(data) {
                   // 주소를 선택했을 때 호출 함수
-                  setData((current) => {
+                  setData((current) : UploadPostType => {
                     const newData = {...current};
                     newData.sub_location = data.address;
                     return newData;
                   });
                 }
-              }).open(
-                // 팝업 위치를 모니터 기준 중간 정도로 지정한다.(https://postcode.map.daum.net/guide 참고함)
+              }).open( // 팝업 위치를 모니터 기준 중간 정도로 지정한다.(https://postcode.map.daum.net/guide 참고함)
                 {
                     left: (window.screen.width / 2),
                     top: (window.screen.height / 2)
@@ -563,7 +533,7 @@ const PostUploadEdit = () => {
     // 1. 입력한 문자에서 숫자만 추출
     // 2. 끝 자리 자동으로 1000 단위로 강제 변경
     // 3. 수정된 string은 숫자로 변경 후 data 반영
-    const onChangePrice = (e) => {
+    const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
         // 1. 입력한 문자에서 숫자만 추출
         const inputPrice = e.target.value.replace(/[^0-9]/g, '').toString();
         if(inputPrice.length >= 4){
@@ -579,7 +549,7 @@ const PostUploadEdit = () => {
             }
 
             // 3. 수정된 string은 숫자로 변경 후 data 반영
-            setData((current) => {
+            setData((current) : UploadPostType => {
                 const newData = {...current};
                 newData.price = Number(returnDataPrice);
                 return newData;
@@ -589,13 +559,13 @@ const PostUploadEdit = () => {
         }
     };
     // input 필드 벗어날 때 input value 교체
-    const onBlurPrice = (e) => {
-        e.target.value = data.price;
+    const onBlurPrice = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.value = data.price.toString();
     }
 
     // 호스트 소개 data 반영
-    const onChangeHostIntro = (e) => {
-        setData((current) => {
+    const onChangeHostIntro = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setData((current) : UploadPostType => {
             const newData = {...current};
             newData.host_intro = e.target.value;
             return newData;
@@ -604,77 +574,52 @@ const PostUploadEdit = () => {
 
     // 등록 하기 !
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
-    const onSubmitPost = async (e) => {
+    const onSubmitPost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // 메인 이미지 수정 시 체크
-        if(data.main_image.length !== 0){
-            const mainImageArray = Array.from(data.main_image);
-            if (
-                mainImageArray.some(file => file.name.includes(" "))
-            ) {
-                alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
-                return;
-            }
-            // 파일 이름 길이가 20자를 초과하는지 확인
-            if (
-                mainImageArray.some(file => file.name.length > 20)
-            ) {
-                alert("이미지 파일 이름은 20자 이내여야 합니다.");
-                return;
-            }
-            // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사하는 정규 표현식
-            const unsafePattern = /[<>:"/\\|?*\u007F-\uFFFF]/;
-            // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사
-            let hasUnsafeCharacters = false;
-            if (!hasUnsafeCharacters) {
-                for (const v of mainImageArray) {
-                    if (unsafePattern.test(v.name)) {
-                        hasUnsafeCharacters = true;
-                        break;
-                    }
-                }
-            }
-            if (hasUnsafeCharacters) {
-                alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
-                return;
+        const subImagesArray = Array.from(data.sub_images);
+        const mainImageArray = Array.from(data.main_image);
+        // 파일 이름에 공백이 포함되어 있는지 확인
+        if (
+            subImagesArray.some(file => file.name.includes(" ")) ||
+            mainImageArray.some(file => file.name.includes(" "))
+        ) {
+            alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
+            return;
+        }
+        // 파일 이름 길이가 20자를 초과하는지 확인
+        if (
+            subImagesArray.some(file => file.name.length > 20) ||
+            mainImageArray.some(file => file.name.length > 20)
+        ) {
+            alert("이미지 파일 이름은 20자 이내여야 합니다.");
+            return;
+        }
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사하는 정규 표현식
+        const unsafePattern = /[<>:"/\\|?*\u007F-\uFFFF]/;
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사
+        let hasUnsafeCharacters = false;
+        for (const v of subImagesArray) {
+            if (unsafePattern.test(v.name)) {
+                hasUnsafeCharacters = true;
+                break; 
             }
         }
-
-        // 서브 이미지 수정 시 체크
-        if(data.sub_images.length > 0){
-            const subImagesArray = Array.from(data.sub_images);
-            // 파일 이름에 공백이 포함되어 있는지 확인
-            if (
-                subImagesArray.some(file => file.name.includes(" "))
-            ) {
-                alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
-                return;
-            }
-            // 파일 이름 길이가 20자를 초과하는지 확인
-            if (
-                subImagesArray.some(file => file.name.length > 20)
-            ) {
-                alert("이미지 파일 이름은 20자 이내여야 합니다.");
-                return;
-            }
-            // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사하는 정규 표현식
-            const unsafePattern = /[<>:"/\\|?*\u007F-\uFFFF]/;
-            // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사
-            let hasUnsafeCharacters = false;
-            for (const v of subImagesArray) {
+        if (!hasUnsafeCharacters) {
+            for (const v of mainImageArray) {
                 if (unsafePattern.test(v.name)) {
                     hasUnsafeCharacters = true;
-                    break; 
+                    break;
                 }
             }
-            if (hasUnsafeCharacters) {
-                alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
-                return;
-            }
         }
+        if (hasUnsafeCharacters) {
+            alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
+            return;
+        }
+        
 
-        if(!data.title || data.price < 1000 || !data.main_location
+        if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){
                 alert("입력이 누락되거나 잘못된 항목을 확인해주세요.");
                 return;
@@ -686,55 +631,38 @@ const PostUploadEdit = () => {
         const formData = new FormData();
         // 파일들을 'images'라는 필드 이름으로 추가 (서버에는 images 에 main 첫번째 나머지 subimage로 들어가야 함)
         // 백엔드에서 main_image <-> sub_images 분리시킴
-        if(data.main_image.length > 0){
-            formData.append('images', data.main_image[0]);
+        formData.append('images', data.main_image[0]);
+        for (let i = 0; i < data.sub_images.length; i++) {
+            formData.append('images', data.sub_images[i]);
         }
-        if(data.sub_images.length > 0){
-            for (let i = 0; i < data.sub_images.length; i++) {
-                formData.append('images', data.sub_images[i]);
-            }
-        }
-        if((data.category && data.category[0] !== "전체") && data.category.length > 0){
+        if(data.category.length > 0){
             for (let k = 0; k < data.category.length; k++) {
                 formData.append('category', data.category[k]);
             }
         } else {
             // category 가 없을 시 서버에서 length 확인 후 "전체" 로 삽입
-            formData.append('category', []);
+            formData.append('category', "");
         }
         formData.append('title', data.title);
-        formData.append('max_adult', data.max_adult);
-        formData.append('max_child', data.max_child);
-        formData.append('max_baby', data.max_baby);
-        formData.append('price', data.price);
+        formData.append('max_adult', String(data.max_adult));
+        formData.append('max_child', String(data.max_child));
+        formData.append('max_baby', String(data.max_baby));
+        formData.append('price', String(data.price));
         formData.append('main_location', data.main_location);
         formData.append('sub_location', data.sub_location);
         formData.append('contents', data.contents);
-        formData.append('room_num', data.room_num);
+        formData.append('room_num', String(data.room_num));
         formData.append('host_intro', data.host_intro);
-
-        // mode 값이 추가로 담겨져야 함!!!(1: 메인 이미지, 2: 서브, 3: 둘 다 교체, 0. 교체 안함)
-        let mode;
-        if(data.main_image.length > 0 && data.sub_images.length > 0){
-            mode = 3;
-        } else if(data.main_image.length > 0){
-            mode = 1;
-        } else if(data.sub_images.length > 0){
-            mode = 2;
-        } else {
-            mode = 0;
-        }
-
-        formData.append('nanoid', nanoid);
-        formData.append('mode', mode);
         
-        myPostEdit(formData)
+        myPostUpload(formData)
         .then(res => {
-            if(res.data && res.data.code === 200){
-                // 성공 모달 창을 띄우며 나의 숙소 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
+            if(res && res.data && res.data.code === 200){
+                // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
-                alert(res?.data?.message);
+                if(res){
+                    alert(res?.data?.message);
+                }
             }
         })
         .catch(e => {
@@ -742,27 +670,31 @@ const PostUploadEdit = () => {
         });
     };
 
+ 
+
+    console.log(data, imageName)
+
     return (
         <Container>
             <SubHeader/>
-                <motion.div 
-                    initial={{ opacity: 0, transform: 'translateX(100%)' }}
-                    animate={{ opacity: 1, transform: 'translateX(0)' }}
-                    transition={{ duration: 0.3 }}>
+            <motion.div 
+                initial={{ opacity: 0, transform: 'translateX(100%)' }}
+                animate={{ opacity: 1, transform: 'translateX(0)' }}
+                transition={{ duration: 0.3 }}>
                 <ImageUploadForm onSubmit={onSubmitPost}>
                     <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
-                        <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 변경해보세요 !</MainImageSpan>
+                        <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
                     </ImageUploadLabel>
                     <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
-                    <ShortInputText placeholder="첨부하지 않을 시 기존 이미지가 유지됩니다." value={imageName.main_image} disabled />
+                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled />
                     <OutlineDiv />
-                    <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 변경</SubImageUploadLabel>
+                    <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
                     <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="첨부하지 않을 시 기존 이미지가 유지됩니다. 최대 4장" value={imageName.sub_images} disabled />
+                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText value={data.title} onChange={onChangeTitle} maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내" />
+                        <ShortInputText onChange={onChangeTitle} maxLength={20} placeholder="숙소 이름을 작성해주세요. 20자 이내" />
                     </InputDiv>    
                     <OutlineDiv />
                     <InputDiv>
@@ -788,7 +720,7 @@ const PostUploadEdit = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea value={data.contents} onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                        <InputTextArea onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
@@ -803,22 +735,22 @@ const PostUploadEdit = () => {
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
                         <InputSubTitle>1박 가격</InputSubTitle>
-                        <ShortInputText type="number" defaultValue={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
+                        <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength="500" value={data.host_intro}  onChange={onChangeHostIntro} />
+                        <InputTextArea maxLength="500" placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={onChangeHostIntro} />
                     </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
                 </ImageUploadForm>
-                </motion.div>
+            </motion.div>
             <Footer/>
-            {showFinishModal && <AccommodationModal message="숙소 수정이 완료되었습니다 !"
+            {showFinishModal && <ReservationModal message="숙소 등록이 완료되었습니다 !"
                 onClose={() => setshowFinishModal(false)} />}
         </Container>
     );
 };
 
-export default PostUploadEdit;
+export default PostUpload;

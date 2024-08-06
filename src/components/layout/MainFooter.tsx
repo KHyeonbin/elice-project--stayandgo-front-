@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import footerState from "../../atoms/footerState";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
+import { ContextImageData, WebpackRequireContext } from "../../model/main(with detail, upload)/mainTypes";
 
 const Container = styled.div`
     position: fixed;
@@ -37,7 +38,7 @@ const ItemImg = styled.img`
     height: 22px;
 `
 
-const Footer = () => {
+const Footer : React.FC = () => {
     // footer menu 전역 상태 확인 및 변경
     const setMenu = useSetRecoilState(footerState);
     const menu = useRecoilValue(footerState);
@@ -65,16 +66,19 @@ const Footer = () => {
     },[])
 
     // mainCatetory 디렉토리 이미지 가져오기
-    const importAllImages = (v) => {
-        return v.keys().map((key) => ({
-            src: v(key),
-            name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-          }));
+    const importAllImages = (v: WebpackRequireContext) : ContextImageData[] => {
+        return v.keys().map((key) => {
+            const match = key.match(/[^/]+$/);
+            return {
+                src: v(key),
+                name: match ? match[0] : 'unknown', // 파일 이름만 추출
+            }
+        });
     };
-    const normalImages = importAllImages(require.context('../../assets/icons/mainFooterMenu/normal', false, /\.(png|jpe?g|gif)$/));
-    const clickedImages = importAllImages(require.context('../../assets/icons/mainFooterMenu/clicked', false, /\.(png|jpe?g|gif)$/));
+    const normalImages = importAllImages(require.context('../../assets/icons/mainFooterMenu/normal', false, /\.(png|jpe?g|gif)$/) as WebpackRequireContext);
+    const clickedImages = importAllImages(require.context('../../assets/icons/mainFooterMenu/clicked', false, /\.(png|jpe?g|gif)$/) as WebpackRequireContext);
     // 파일 이름 순으로 정렬
-    const sortedImages = (images) => {
+    const sortedImages = (images: ContextImageData[]) : ContextImageData[] => {
         const retImages = images.sort((a, b) => {
         const aNumber = parseInt(a.name.split('_')[0], 10);
         const bNumber = parseInt(b.name.split('_')[0], 10);
@@ -86,7 +90,7 @@ const Footer = () => {
     const clickedSortImages = sortedImages(clickedImages);
 
     // 아이템 클릭 시 해당 메뉴 페이지로 이동
-    const onClickImage = (index) => {
+    const onClickImage = (index: number) : void => {
         // navigate 추가
         if(index === 0){
             navigate('/');

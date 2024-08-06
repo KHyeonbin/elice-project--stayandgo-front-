@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Link  } from "react-router-dom";
 import { logoutUser } from "../../api/logoutUser";
+import React from "react";
+import { HeaderProps } from "../../model/main(with detail, upload)/mainTypes";
 
 const Container = styled.div`
     top: 0;
@@ -66,8 +68,23 @@ const LinkText = styled(Link)`
     }
 `
 
-const Header = ({user, isModal}) => {
-    const onClickLogout = () => {
+const AText = styled.a`
+    font-size: 14px;
+    font-weight: 500;
+    color: #FF385C;
+
+    transition: color 0.5s;
+
+    &:hover{
+        color: #FF6F8C;
+    }
+    &:focus{
+        color: #FF385C;
+    }
+`
+
+const Header : React.FC <HeaderProps> = ({user, isModal}) => {
+    const onClickLogout = () : void => {
         logoutUser()
         .then(res => {
             if(res?.data && res.data.code === 200){
@@ -102,7 +119,7 @@ const Header = ({user, isModal}) => {
                                     <LinkDiv><LinkText to={'/admin'}>관리자</LinkText></LinkDiv>
                                 }
                                 <LinkDiv><LinkText to={'/upload'}>숙소등록</LinkText></LinkDiv>
-                                <LinkDiv><LinkText onClick={onClickLogout}>로그아웃</LinkText></LinkDiv>
+                                <LinkDiv><AText onClick={onClickLogout}>로그아웃</AText></LinkDiv>
                             </>
                         ||
                             <>

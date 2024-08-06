@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {AdultProps, BabyProps, ChildProps, SearchGuestSettingProps, SearchType} from '../../model/main(with detail, upload)/mainTypes';
 
 const BiggerDivSub2 = styled.div`
     width: 100%;
@@ -34,7 +35,7 @@ const GuestSettingDiv = styled.div`
     justify-content: center;
     gap: 15px;
 `
-const GuestSettingMinus = styled.div.attrs(props => ({
+const GuestSettingMinus = styled.div.attrs<AdultProps>(props => ({
     style: {
         border: props.$adult === 0 ? "1px solid #EBEBEB" : "1px solid #333",
     }
@@ -47,7 +48,7 @@ const GuestSettingMinus = styled.div.attrs(props => ({
     align-items: center;
     cursor: pointer;
 `
-const GuestSettingMinusText = styled.span.attrs(props => ({
+const GuestSettingMinusText = styled.span.attrs<AdultProps>(props => ({
     style: {
         color: props.$adult === 0 ? "#EBEBEB" : "#333",
     }
@@ -60,63 +61,79 @@ const GuestSettingInput = styled.input`
     border: none;
     background-color: white;
 `
-const GuestSettingPlus = styled(GuestSettingMinus).attrs(props => ({
+const GuestSettingPlus = styled(GuestSettingMinus).attrs<AdultProps>(props => ({
     style: {
         border: props.$adult === 10 ? "1px solid #EBEBEB" : "1px solid #333",
     }
 }))`
 `
-const GuestSettingPlusText = styled(GuestSettingMinusText).attrs(props => ({
+const GuestSettingPlusText = styled(GuestSettingMinusText).attrs<AdultProps>(props => ({
     style: {
         color: props.$adult === 10 ? "#EBEBEB" : "#333",
     }
 }))`
     font-size: 22px;
 `
-const GuestSettingChildMinus = styled(GuestSettingMinus).attrs(props => ({
+const GuestSettingChildMinus = styled.span.attrs<ChildProps>(props => ({
     style: {
         border: props.$child === 0 ? "1px solid #EBEBEB" : "1px solid #333",
     }
 }))`
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 `
-const GuestSettingChildMinusText = styled(GuestSettingMinusText).attrs(props => ({
+const GuestSettingChildMinusText = styled.span.attrs<ChildProps>(props => ({
     style: {
         color: props.$child === 0 ? "#EBEBEB" : "#333",
     }
 }))`
+    font-size: 27px;
 `
-const GuestSettingChildPlus = styled(GuestSettingMinus).attrs(props => ({
+const GuestSettingChildPlus = styled(GuestSettingChildMinus).attrs<ChildProps>(props => ({
     style: {
         border: props.$child === 10 ? "1px solid #EBEBEB" : "1px solid #333",
     }
 }))`
 `
-const GuestSettingChildPlusText = styled(GuestSettingMinusText).attrs(props => ({
+const GuestSettingChildPlusText = styled(GuestSettingChildMinusText).attrs<ChildProps>(props => ({
     style: {
         color: props.$child === 10 ? "#EBEBEB" : "#333",
     }
 }))`
     font-size: 22px;
 `
-const GuestSettingBabyMinus = styled(GuestSettingMinus).attrs(props => ({
+const GuestSettingBabyMinus = styled.span.attrs<BabyProps>(props => ({
     style: {
         border: props.$baby === 0 ? "1px solid #EBEBEB" : "1px solid #333",
     }
 }))`
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 `
-const GuestSettingBabyMinusText = styled(GuestSettingMinusText).attrs(props => ({
+const GuestSettingBabyMinusText = styled.span.attrs<BabyProps>(props => ({
     style: {
         color: props.$baby === 0 ? "#EBEBEB" : "#333",
     }
 }))`
+    font-size: 27px;
 `
-const GuestSettingBabyPlus = styled(GuestSettingMinus).attrs(props => ({
+const GuestSettingBabyPlus = styled(GuestSettingBabyMinus).attrs<BabyProps>(props => ({
     style: {
         border: props.$baby === 10 ? "1px solid #EBEBEB" : "1px solid #333",
     }
 }))`
 `
-const GuestSettingBabyPlusText = styled(GuestSettingMinusText).attrs(props => ({
+const GuestSettingBabyPlusText = styled(GuestSettingBabyMinusText).attrs<BabyProps>(props => ({
     style: {
         color: props.$baby === 10 ? "#EBEBEB" : "#333",
     }
@@ -124,68 +141,68 @@ const GuestSettingBabyPlusText = styled(GuestSettingMinusText).attrs(props => ({
     font-size: 22px;
 `
 
-const SearchGuestSetting = ({search, setSearch}) => {
+const SearchGuestSetting: React.FC <SearchGuestSettingProps> = ({search, setSearch}) => {
     // adult minus 핸들러
-    const onClickAdultMinus = () => {
+    const onClickAdultMinus = () : void => {
         if(search.adult === 0){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.adult--;
             return newSearch;
         });
     };
     // adult plus 핸들러
-    const onClickAdultPlus = () => {
+    const onClickAdultPlus = () : void => {
         if(search.adult === 10){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.adult++;
             return newSearch;
         });
     };
     // child minus 핸들러
-    const onClickChildMinus = () => {
+    const onClickChildMinus = () : void => {
         if(search.child === 0){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.child--;
             return newSearch;
         });
     };
     // child plus 핸들러
-    const onClickChildPlus = () => {
+    const onClickChildPlus = () : void => {
         if(search.child === 5){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.child++;
             return newSearch;
         });
     };
     // baby minus 핸들러
-    const onClickBabyMinus = () => {
+    const onClickBabyMinus = () : void => {
         if(search.baby === 0){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.baby--;
             return newSearch;
         });
     };
     // baby plus 핸들러
-    const onClickBabyPlus = () => {
+    const onClickBabyPlus = () : void => {
         if(search.baby === 5){
             return;
         }
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             newSearch.baby++;
             return newSearch;

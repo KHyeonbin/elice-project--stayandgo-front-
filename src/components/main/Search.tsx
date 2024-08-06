@@ -8,10 +8,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {getDateFormat} from '../../util/getDateFormat';
 import { getNextDate } from "../../util/getNextDate";
 import {ko} from 'date-fns/locale';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import { korCity } from "../../util/data/arrayStaticData";
 import SearchGuestSetting from "./SearchGuestSetting";
 import { getNextNextDate } from "../../util/getNextNextDate";
+import { optionType, PageType, SearchProps, AdultProps, SearchType } from "../../model/main(with detail, upload)/mainTypes";
+import styles from './DatePicker.module.css';
 
 const Container = styled.div`
     width: 100%;
@@ -50,7 +52,7 @@ const SearchTitle = styled.span`
     font-size: 13px;
     font-weight: 500;
 `
-const SearchSub = styled.span.attrs(props => ({
+const SearchSub = styled.span.attrs<AdultProps>(props => ({
     style: {
         fontSize: props.$adult > 0 ? "13px" : "10px"
     }
@@ -146,15 +148,29 @@ const BiggerDivSubTitle = styled.span`
     font-weight: bold;
     color: #6E6E6E;
 `
-const DatepickerCustom = styled(DatePicker)`
+const StyledDatePicker = styled(DatePicker)`
     width: 200px;
-    text-align: center;
+  text-align: center;
+  
+  .react-datepicker__header {
     background-color: white;
     color: #E61E51;
     border: none;
-    text-decoration: underline;
-    font-size: 19px;
-    cursor: pointer;
+    text-align: center;
+  }
+
+  .react-datepicker__day--selected {
+    background-color: #E61E51;
+    color: white;
+  }
+
+  .react-datepicker__day--keyboard-selected {
+    background-color: #F07C8C;
+  }
+
+  .react-datepicker__current-month {
+    color: #E61E51;
+  }
 `
 // 인원 선택 부분 (searchGuestSetting.jsx)
 const ModalContentBigger2 = styled(ModalContentBigger)`
@@ -226,7 +242,7 @@ const SearchBtnSpan = styled.span`
     color: white;
 `
 // react-select css
-const selectCustom = {
+const selectCustom: StylesConfig = {
     option: (provided, state) => {
         let backgroundColor = 'white';
         let color = '#333';
@@ -265,9 +281,9 @@ const selectCustom = {
 };
 
 
-const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, setStartSearch}) => {
+const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearch, setStartSearch, isModal, setIsModal}) => {
     // 검색 초기 값 *(전체 삭제 클릭 시 해당 기본 값으로 모두 초기화됨)
-    const defaultValue = {
+    const defaultValue : SearchType  = {
         city: "전체",
         startDate: getDateFormat(getNextDate()),
         endDate: getDateFormat(getNextNextDate()),
@@ -275,25 +291,27 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
         child: 0,
         baby: 0
     };
+    const minDate = new Date(defaultValue.startDate);
+    const maxDate = new Date('2025-12-30');
     // 지역 정의 배열 사용
     // react-select 에는 key 값이 없어서 미리 option 정의
-    const option = korCity.map((v) => {
-        return {value: v, label: v}
+    const option = korCity.map((v : string) : optionType => {
+        return {value: v, label: v};
     });
     // react-select box value 설정하기 위함
-    const [selectValue, setSelectValue] = useState(option[0]);
+    const [selectValue, setSelectValue] = useState<optionType | null>(option[0]);
     
     // 시작 날짜, 끝 날짜 state
-    const [startDate, setStartDate] = useState(getNextDate());
-    const [endDate, setEndDate] = useState(getNextNextDate());
+    const [startDate, setStartDate] = useState<Date>(getNextDate());
+    const [endDate, setEndDate] = useState<Date>(getNextNextDate());
 
     // 최종 검색한 검색 내용 출력 상태
-    const [startSearchText, setStartSearchText] = useState("어디든지 • 언제든 • 게스트 추가");
-    const [startSearchTextPerson, setStartSearchPerson] = useState("");
+    const [startSearchText, setStartSearchText] = useState<string>("어디든지 • 언제든 • 게스트 추가");
+    const [startSearchTextPerson, setStartSearchPerson] = useState<string>("");
 
     // 시작 날짜, 끝 날짜 검색 데이터에 반영
     useEffect(() => {
-        setSearch((current) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
             const startD = getDateFormat(startDate);
             const endD = getDateFormat(endDate);
@@ -306,7 +324,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
     // 어린이, 유아 1명 이상일 때 성인 1명 동반
     useEffect(() => {
         if(search.adult === 0 && (search.child > 0 || search.baby > 0)){
-            setSearch((current) => {
+            setSearch((current) : SearchType => {
                 const newSearch = {...current};
                 newSearch.adult++;
                 return newSearch;
@@ -323,7 +341,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
     },[startSearch])
 
     // 클릭 시 모달 활성화
-    const onClickModal = () => {
+    const onClickModal = () : void => {
         setIsModal(true);
         document.body.style.overflowY = "hidden";
     };
@@ -333,15 +351,16 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
         document.body.style.overflowY = "auto";
     };
     // 지역 셀렉트 박스 이벤트 핸들러
-    const onChangeSelect = (e) => {
-        setSearch((current) => {
+    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSearch((current) : SearchType => {
             const newSearch = {...current};
-            newSearch.city = e.value;
+            newSearch.city = e.target.value;
             return newSearch;
         });
         // react-select value 설정
-        setSelectValue(() => {
-            return option.filter(v => v.value === e.value);
+        setSelectValue(() : optionType | null => {
+            const selectedOption = option.find(v => v.value === e.target.value) || null;
+            return selectedOption;
         });
     };
 
@@ -363,7 +382,7 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
             setIsModal(false);
             document.body.style.overflowY = "auto";
             setStartSearch(search);
-            setPage((current) => {
+            setPage((current) : PageType => {
                 const newPage = {...current};
                 newPage.page = 1;
                 return newPage;
@@ -385,29 +404,35 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
                             <ModalContentBigger>
                                 <ModalcontentBiggerTitle>여행 날짜는 언제인가요?</ModalcontentBiggerTitle>
                                 <BiggerDivSub>
-                                        <DatepickerCustom value={search.startDate} 
+                                    <div className={styles.datepickerWrapper}>
+                                        <DatePicker value={search.startDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                            minDate={defaultValue.startDate} // minDate 이전 날짜 선택 불가
-                                            maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
+                                            minDate={minDate} // minDate 이전 날짜 선택 불가
+                                            maxDate={maxDate} // maxDate 이후 날짜 선택 불가
                                             selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            onChange={(date: Date) => setStartDate(date)}
                                             locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 키보드 비활성화
+                                            wrapperClassName={styles.datepickerWrapper}
                                         />
+                                    </div>
                                         <BiggerDivSubTitle>~</BiggerDivSubTitle>
-                                        <DatepickerCustom value={search.endDate} 
+                                    <div className={styles.datepickerWrapper}>
+                                        <DatePicker value={search.endDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
-                                            minDate={defaultValue.endDate} // minDate 이전 날짜 선택 불가
-                                            maxDate={new Date('2025-12-30')} // maxDate 이후 날짜 선택 불가
+                                            minDate={minDate} // minDate 이전 날짜 선택 불가
+                                            maxDate={maxDate} // maxDate 이후 날짜 선택 불가
                                             selected={endDate}
-                                            onChange={(date) => setEndDate(date)}
+                                            onChange={(date: Date) => setEndDate(date)}
                                             locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 포커스를 받을 때 자동으로 blur() 호출하여 키보드 비활성화
+                                            wrapperClassName={styles.datepickerWrapper}
                                         />
+                                    </div>
                                 </BiggerDivSub>
                             </ModalContentBigger>
                             <ModalContentBigger2>

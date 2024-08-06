@@ -2,6 +2,7 @@ import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { calc } from "antd/es/theme/internal";
+import { DotDivProps, DotProps, ItemBackgroundDivProps, OneItemProps, SearchType } from "../../model/main(with detail, upload)/mainTypes";
 
 const ItemDiv = styled.div`
     width: 90%;
@@ -26,7 +27,7 @@ const ItemImagePrev = styled.div`
 const ItemImageNext = styled(ItemImagePrev)`
     right: 0%;
 `
-const ItemBackgroundDiv = styled.div.attrs(props => ({
+const ItemBackgroundDiv = styled.div.attrs<ItemBackgroundDivProps>(props => ({
     style: {
         backgroundImage: `url(${props.$background})`,
     }
@@ -81,7 +82,7 @@ const ItemPriceText = styled.span`
     font-size: 13px;
     font-weight: 600;
 `
-const DotDiv = styled.div.attrs(props => ({
+const DotDiv = styled.div.attrs<DotDivProps>(props => ({
     style: {
         // 10px : dot 의 width(10px) / 2 + gap (10px) / 2
         left: `calc(50% - (10px * ${props.$dotNum}) + 5px)`
@@ -93,7 +94,7 @@ const DotDiv = styled.div.attrs(props => ({
     justify-content: flex-start;
     gap: 10px;
 `
-const Dot = styled.div.attrs(props => ({
+const Dot = styled.div.attrs<DotProps>(props => ({
     style: {
         backgroundColor: props.$index === props.$imgIndex ? '#E61E51' : 'white'
     }
@@ -106,46 +107,52 @@ const Dot = styled.div.attrs(props => ({
 `;
 
 
-const OneItem = ({v, startSearch}) => {
+const OneItem : React.FC <OneItemProps> = ({v, startSearch}) => {
     // 캐러셀 이미지 인덱스
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState<number>(0);
     // 캐러셀 이미지 배열
     const images = [v.main_image, ...v.sub_images];
     // 배경 div targetref 지정(translate left or right)
-    const backgroundRef = useRef(null);
-    // dot index
-    const [dots, setDots] = useState(0);
+    const backgroundRef = useRef<HTMLDivElement | null>(null);
 
     // 아이템 좌 우 클릭 시 이전 다음 사진으로 변화
-    const onClickItemImagePrev = () => {
+    const onClickItemImagePrev = () : void => {
         if(index === 0){
             setIndex(images.length - 1);
         } else {
             setIndex(index - 1);
         }
-        backgroundRef.current.style.animation = "changeCarouselAniLeft  0.3s ease-out";
-        // 애니메이션 효과에서 settimeout 사용
-        setTimeout(() => {
-            backgroundRef.current.style.animation = "none";
-        }, 350);
+        if(backgroundRef && backgroundRef.current){
+            backgroundRef.current.style.animation = "changeCarouselAniLeft 0.3s ease-out";
+            // 애니메이션 효과에서 settimeout 사용
+            setTimeout(() => {
+                if(backgroundRef && backgroundRef.current){
+                    backgroundRef.current.style.animation = "none";
+                }
+            }, 350);
+        }
     }
-    const onClickItemImageNext = () => {
+    const onClickItemImageNext = () : void => {
         if(index === images.length - 1){
             setIndex(0);
         } else {
             setIndex(index + 1);
         }
-        backgroundRef.current.style.animation = "changeCarouselAniRight 0.3s ease-out";
-        // 애니메이션 효과에서 settimeout 사용
-        setTimeout(() => {
-            backgroundRef.current.style.animation = "none";
-        }, 350);
+        if(backgroundRef && backgroundRef.current){
+            backgroundRef.current.style.animation = "changeCarouselAniRight 0.3s ease-out";
+            // 애니메이션 효과에서 settimeout 사용
+            setTimeout(() => {
+                if(backgroundRef && backgroundRef.current){
+                    backgroundRef.current.style.animation = "none";
+                }
+            }, 350);
+        }
     }
 
-    function formatObject(obj) {
+    const formatObject = (obj: SearchType) => {
         return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
     }
-    const formattedString = formatObject(startSearch);
+    const formattedString : string = formatObject(startSearch);
 
     // 아이템 클릭 시 아이템 상세보기로 이동
     return (

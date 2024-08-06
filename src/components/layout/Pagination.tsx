@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import styled, {css} from 'styled-components';
+import { PagenationProps, PageType, PaginationSpanProps } from '../../model/main(with detail, upload)/mainTypes';
 
 const PaginationDiv = styled.div`
     width: 100%;
@@ -15,7 +16,7 @@ const PaginationUl = styled.ul`
     justify-content: space-around;
     align-items: center;
 `;
-const PaginationSpan = styled.span`
+const PaginationSpan = styled.span<PaginationSpanProps>`
     cursor: pointer;
     font-weight: bold;
     transition: color 0.5s;
@@ -48,17 +49,16 @@ const PaginationLi = styled.li`
     }
 `;
 
-const Pagination = ({ page, setPage }) => {
-
-  const scrollToTop = () => {
+const Pagination : React.FC<PagenationProps> = ({ page, setPage }) => {
+  const scrollToTop = () : void => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
   };
 
-  const getPaginationArray = useCallback(() => {
-    const pageArray = [];
+  const getPaginationArray = useCallback(() : number[] => {
+    const pageArray : number[] = [];
     let remainPage = page.page;
     let count = 0;
     while ((remainPage - count) % 5 !== 1) {
@@ -76,8 +76,8 @@ const Pagination = ({ page, setPage }) => {
     return pageArray;
   }, [page]);
 
-  const pageCurrentHandle = (i) => {
-    setPage((current) => {
+  const pageCurrentHandle = (i : number) : void => {
+    setPage((current) : PageType => {
       const newPage = { ...current };
       newPage.page = i;
       return newPage;
@@ -85,13 +85,15 @@ const Pagination = ({ page, setPage }) => {
     scrollToTop();
   };
 
-  const pagePrevHandle = () => {
-    if (page.page === 1) return;
+  const pagePrevHandle = () : void => {
+    if (page.page === 1) {
+      return;
+    };
     let i = page.page - 5;
     if (i < 1) {
       i = 1;
     }
-    setPage((current) => {
+    setPage((current) : PageType => {
       const newPage = { ...current };
       newPage.page = i;
       return newPage;
@@ -99,13 +101,13 @@ const Pagination = ({ page, setPage }) => {
     scrollToTop();
   };
 
-  const pageNextHandle = () => {
+  const pageNextHandle = () : void => {
     if (page.page === page.totalPage) return;
     let i = page.page + 5;
     if (i > page.totalPage) {
       i = page.totalPage;
     }
-    setPage((current) => {
+    setPage((current) : PageType => {
       const newPage = { ...current };
       newPage.page = i;
       return newPage;
