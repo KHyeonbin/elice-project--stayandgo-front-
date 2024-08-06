@@ -15,6 +15,7 @@ import { tagArr } from "../../util/data/arrayStaticData";
 import loading from "../../assets/icons/loading.png";
 import kakaoBtnImg from "../../assets/icons/kakao_btn.png";
 import { useScript } from "../../api/hooks";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const SwiperDiv = styled.div` 
   position: relative;
@@ -384,12 +385,6 @@ const RoomDetails = () => {
     setIsOpenShareModal(false);
   };
 
-  // 주소 클립보드에 복사
-  const onCopyUrl = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('주소를 클립보드에 복사하였습니다.')
-    console.log(window.location.href);
-  };
 
 
 
@@ -579,12 +574,15 @@ const RoomDetails = () => {
                     </svg>
                 </ModalCloseBtn>
                 <p>공유하기</p>
-                <div style={{display: "flex", justifyContent: "center", gap: "20px"}}>
-                  <button type="button" onClick={onCopyUrl}>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
-                      <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
-                    </svg>                
-                  </button>
+                <div>
+                  <CopyToClipboard className="Toram" text={window.location.href} onCopy={() => alert("주소를 클립보드에 복사되었습니다.")}>
+                    <button type="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
+                        <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
+                      </svg>                
+                    </button>
+                  </CopyToClipboard>
+
                   <button type="button" onClick={handleKakaoButton} id="kakaoShareBtn">
                     <img src={kakaoBtnImg} />
                   </button>
