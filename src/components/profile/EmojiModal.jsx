@@ -15,13 +15,13 @@ const EmojiModalOverlay = styled.div`
 `;
 
 const EmojiModalContent = styled.div`
-  width: 290px;
-  height: 150px;
+  width: 310px;
+  height: auto;
   background-color: white;
   padding: 15px;
   border-radius: 10px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   justify-content: center;
   position: relative;
 
@@ -34,15 +34,15 @@ const EmojiModalContent = styled.div`
 const EmojiButton = styled.button`
   background: none;
   border: none;
-  font-size: 35px;
+  font-size: 32px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 
   @media (max-width: 400px) {
-    width: 17%;
     font-size: 25px;
+    padding: 0;
   }
 `;
 
