@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useSearchParams, NavLink } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -13,6 +13,8 @@ import { SlideModal } from "../../atoms/modalAtom";
 import loginState from "../../atoms/loginState";
 import { tagArr } from "../../util/data/arrayStaticData";
 import loading from "../../assets/icons/loading.png";
+import kakaoBtnImg from "../../assets/icons/kakao_btn.png";
+import { useScript } from "../../api/hooks";
 
 const SwiperDiv = styled.div` 
   position: relative;
@@ -43,8 +45,81 @@ const Container = styled.div`
 
 const Title = styled.h2`
   font-size: 20px;
-  padding: 15px 0 0;
+  padding: 15px 30px 0 0;
+  position: relative;
 `;
+
+const ShareBtn = styled.button`
+  position: absolute;
+  right: 0;
+  top: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  & svg {
+   vertical-align: top;
+  }
+`;
+
+const ShareModal = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  border-radius: 5px;
+  background: #fff;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  z-index: 12;
+  & button {
+    border: 0;
+    background: none;
+    padding: 5px;
+  }
+  & p {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #333;
+    margin: 10px 0 10px;
+  };
+  & div {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  & div > button {
+    padding: 0;
+    background:#fff;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+  };
+  & svg, & img {
+    vertical-align: top;
+    width: 40px;
+    height: 40px;
+  }
+`;
+const ModalCloseBtn = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 10x;
+  & svg {
+    width: 20px;
+    height: 20px;
+  }
+`
+
+const ModalDim = styled.div`
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 11;
+`
 
 const InfoText = styled.p`
   font-size: 16px;
@@ -214,6 +289,7 @@ const OrderBtnDiv = styled.div`
   background: #fff;
   border-top: 1px solid #ddd;
   box-sizing: border-box;
+  z-index: 1;
 `;
 
 const ReservationBtn = styled.button`
@@ -262,8 +338,15 @@ const RoomDetails = () => {
   const sortedImages = useRef();
   const [query, setQuery] = useSearchParams();
   const [footerPrice, setFooterPrice] = useState(0);
+  const [isOpenShareModal, setIsOpenShareModal] = useState(false);
   let totalPrice = useRef(0);
   let totalDate = useRef(0);
+  const location = useLocation();
+  // link를 타고 들어온 건지, 공유하기 링크를 타고 들어온건지 판단 state
+  const [is_notLink, setIs_notLink] = useState(false);
+
+  // kakao SDK 스크립트 로드 상태 확인
+  const status = useScript("https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js");
 
 
   // mainCatetory 디렉토리 이미지 가져오기
@@ -281,7 +364,70 @@ const RoomDetails = () => {
     return aNumber - bNumber;
   });
 
-  
+  const onOpenShareModal = () => {
+    setIsOpenShareModal(true);
+  };
+
+  const onCloseShareModal = () => {
+    setIsOpenShareModal(false);
+  };
+
+  // 주소 클립보드에 복사
+  const onCopyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('주소를 클립보드에 복사하였습니다.')
+    console.log(window.location.href);
+  };
+
+	// kakao sdk 초기화하기
+	// status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
+	useEffect(() => {
+		if (status === "ready" && window.Kakao) {
+			// 중복 initialization 방지
+			if (!window.Kakao.isInitialized()) {
+				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
+        console.log('init');
+				//window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
+			}
+		}
+	}, [status]);	
+
+  // 주소 카카오톡에 공유
+  const handleKakaoButton = () => {
+    // 크롬 브라우저 > 개발자모드 > 모바일 설정 지원하지 않음
+    if (window.Kakao && window.Kakao.Share) {
+      window.Kakao.init(process.env.REACT_APP_KAKAO_APP_KEY);
+      window.Kakao.Share.createDefaultButton({
+        container: '#kakaoShareBtn',
+        objectType: 'feed',
+        content: {
+          title: roomInfo.title,
+          description: roomInfo.contents,
+          imageUrl: roomInfo.main_image,
+          link: {
+            // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+            mobileWebUrl: window.location.href,
+            webUrl: window.location.href,
+          },
+        },
+        buttons: [
+          {
+            title: '보러가기',
+            link: {
+              mobileWebUrl: window.location.href,
+              webUrl: window.location.href,
+            },
+          },
+        ],            
+        // 카카오톡 미설치 시 카카오톡 설치 경로이동
+        installTalk: true,
+      });
+
+    } else {
+        console.error('Kakao SDK is not ready.');
+    }
+};
+
   useEffect(() => {
     // 방 정보 가져오기
     (async() => {
@@ -294,7 +440,9 @@ const RoomDetails = () => {
         console.error(error);
       }
     })();
-
+    // location 객체를 useEffect를 통해 받고 해당 컴포넌트에 사용할 state에 set
+    setIs_notLink(location.state ? location.state.is_notLink : false);
+    console.log(location.state);
   }, [id]);
 
 
@@ -313,7 +461,8 @@ const RoomDetails = () => {
     if (roomInfo) {
       totalPrice.current = Math.floor((Number(roomInfo.price) * totalDate.current)/100) * 100;
       setFooterPrice(totalPrice.current);
-    }
+    };
+
     
   }, [roomInfo, query]);
 
@@ -390,7 +539,62 @@ const RoomDetails = () => {
       </SwiperDiv>
 
       <Container>
-        <Title>[{roomInfo.title}]</Title>
+        <Title>
+          [{roomInfo.title}]
+          <ShareBtn type="button" onClick={onOpenShareModal}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#333">
+              <path d="M680-80q-50 0-85-35t-35-85q0-6 3-28L282-392q-16 15-37 23.5t-45 8.5q-50 0-85-35t-35-85q0-50 35-85t85-35q24 0 45 8.5t37 23.5l281-164q-2-7-2.5-13.5T560-760q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35q-24 0-45-8.5T598-672L317-508q2 7 2.5 13.5t.5 14.5q0 8-.5 14.5T317-452l281 164q16-15 37-23.5t45-8.5q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-200q0-17-11.5-28.5T680-240q-17 0-28.5 11.5T640-200q0 17 11.5 28.5T680-160ZM200-440q17 0 28.5-11.5T240-480q0-17-11.5-28.5T200-520q-17 0-28.5 11.5T160-480q0 17 11.5 28.5T200-440Zm480-280q17 0 28.5-11.5T720-760q0-17-11.5-28.5T680-800q-17 0-28.5 11.5T640-760q0 17 11.5 28.5T680-720Zm0 520ZM200-480Zm480-280Z"/>
+            </svg>
+          </ShareBtn>
+          {isOpenShareModal && 
+            <>
+              <ModalDim />
+              <ShareModal>
+                <ModalCloseBtn onClick={onCloseShareModal}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <rect width="20" height="20" fill="url(#pattern0_2_619)" />
+                      <defs>
+                        <pattern
+                          id="pattern0_2_619"
+                          patternContentUnits="objectBoundingBox"
+                          width="1"
+                          height="1"
+                        >
+                          <use xlinkHref="#image0_2_619" transform="scale(0.0104167)" />
+                        </pattern>
+                        <image
+                          id="image0_2_619"
+                          width="96"
+                          height="96"
+                          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAAAzVJREFUeF7t3O1t2zAUhWEKXCTdwIAWSDZpJykyiUdJBrAAb1ANYgGFCgkwAssiKV6ec9PTv3Z6xfcJ/SEr7oL+QQt00OkaHgQA/iUQgADABcDjtQMEAC4AHq8dIABwAfB47QABgAuAx2sHCABcADxeO0AA4ALg8doBAgAXAI/XDhAAuAB4vHbAdwc4nU4vMcbf0zS9X6/XEbzepPHLMX9M0/RmfcymO2BZyDmE8BpCGFssKKnwkzstx/xnuYv5MZsBfIm/Ltl8QUcAvsRvcswmABvxmyyoFGAjvvkxVwfYiW++oBKAnfimx1wdoO/7+TH/Z0IIioejxPjrcj6HYXhLWFvyXaoDrK8gQggvCUcBRciMP3Zd9+tyuXwmrCv5LtUB5skeEBjiz61MANgRWOKbArAiMMU3B2BDYIvfBIAFgTF+MwA0Amv8pgAoBOb4zQFaI7DHhwC0QvAQHwZgjeAlPhTACsFTfDhAbQRv8SkAaiF4jE8DcBTBa3wqgFKE+edijOtnuHungU1OKe8NfXa72dnQ0oPKPZWd+LnDfDh08el2wIqWiZBiTRmfFqDg4egZAm18aoBKCNTx6QEOItDHdwFQiOAivjeA1Jea/17xeLgM0gVA5pus+ydjFwh07wPuCx6Iv/439Ai0ABXiu0CgBKgYnx6BDiAz/voHH/SXQW69U6QCyI0/X6t5u93GGONH4jkhuucEGoCS+OuFspnnjqgQKACOxC88gUeDAAeoEd8zAhSgZnyvCDAAi/geESAAlvG9ITQHaBHfE0JTgJbxvSA0A0DE94DQBAAZnx3BHIAhPjOCKQBTfFYEMwDG+IwIJgDM8dkQqgN4iM+EUB2g7/v56oWkD0gsvnvh2SVyj27LPJX9bb6sg+q6nUSEcRiGH7nAe/evvgMSLqSiip/4cGQS3/S6oI3fKsr4Owhm8U0BHuwE6vgbCKbxzQHuEM5d173X/rKjvcfX0tuX3Xuu/e1Yj47H5DmgdOH/488JAKwuAAGAC4DHawcIAFwAPF47QADgAuDx2gECABcAj9cOEAC4AHi8doAAwAXA47UDBAAuAB6vHSAAcAHweO0AAYALgMf/BSG73n/ZKYWZAAAAAElFTkSuQmCC"
+                        />
+                      </defs>
+                    </svg>
+                </ModalCloseBtn>
+                <p>공유하기</p>
+                <div>
+                  <button type="button" onClick={onCopyUrl}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
+                      <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
+                    </svg>                
+                  </button>
+                  <button type="button" onClick={handleKakaoButton} id="kakaoShareBtn">
+                    <img src={kakaoBtnImg} />
+                  </button>
+                </div>
+
+              </ShareModal>
+            </>
+          }
+          
+        </Title>
         <InfoText>
         {Number(roomInfo.price).toLocaleString()}원 / {roomInfo.main_location}
           <br />
@@ -439,7 +643,7 @@ const RoomDetails = () => {
             <HostImg>{roomInfo.author.photo}</HostImg>
             <div>
               <HostName>{roomInfo.author.nickname}({roomInfo.author.name})</HostName>
-              <p>{roomInfo.author.email}</p>
+              <p><a href={`mailto:${roomInfo.author.email}`}>{roomInfo.author.email}</a></p>
               <HostPhone href={`tel:${roomInfo.author.phone}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#333">
                   <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/>
@@ -468,7 +672,7 @@ const RoomDetails = () => {
       </Container>
 
       <OrderBtnDiv>
-        {!userState.is_logined && (
+        {is_notLink && !userState.is_logined && (
           <>
           <PriceDiv>
             <b>로그인이 필요합니다.</b>
@@ -476,7 +680,7 @@ const RoomDetails = () => {
           <ReservationBtn onClick={()=>navigate('/login')}>로그인하기</ReservationBtn>
           </>
         )}
-        {userState.is_logined && (
+        {is_notLink && userState.is_logined && (
           <>
           <PriceDiv>
             <b>{footerPrice.toLocaleString()}원</b> / {totalDate.current}박

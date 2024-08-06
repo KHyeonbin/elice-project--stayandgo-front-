@@ -152,7 +152,7 @@ const OneItem = ({v, startSearch}) => {
             <ItemDiv id={v.nanoid}>
                 <ItemImagePrev onClick={onClickItemImagePrev}>{"<"}</ItemImagePrev>
                 <ItemImageNext onClick={onClickItemImageNext}>{">"}</ItemImageNext>
-                <Link to={`/room/details/${v.nanoid}?${formattedString}`}>
+                <Link to={`/room/details/${v.nanoid}?${formattedString}`} state={{is_notLink: true}}>
                     <ItemBackgroundDiv ref={backgroundRef} $background={images[index]} />
                 </Link>
                 <DotDiv $dotNum={images.length} >
