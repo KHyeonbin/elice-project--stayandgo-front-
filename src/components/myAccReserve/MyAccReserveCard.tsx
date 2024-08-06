@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import MyAccModal from "./MyAccModal";
 import ImageSlider from "../layout/ImageSlider";
 import * as Card from "./MyAccReserveCard.style";
+import {MyAccReserveCardProps} from "../../model/profile/myaccReserve"
 
-const MyAccReserveCard = ({
+const MyAccReserveCard: React.FC<MyAccReserveCardProps> = ({
   id,
   title,
   main_image,
@@ -21,10 +22,10 @@ const MyAccReserveCard = ({
   isChecked,
   showCheckbox
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); //모달창 열렸는지? 기본값 false
-  const [imageUrls, setImageUrls] = useState([]); //이미지 url을 배열상태로 저장
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); //현재이미지의 index값 첫번째는 0
-  const [modalImageIndex, setModalImageIndex] = useState(0); //모달창에서도 동일
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); //모달창 열렸는지? 기본값 false
+  const [imageUrls, setImageUrls] = useState<string[]>([]); //이미지 url을 배열상태로 저장
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); //현재이미지의 index값 첫번째는 0
+  const [modalImageIndex, setModalImageIndex] = useState<number>(0); //모달창에서도 동일
 
   //이미지가 변경될때마다 상태 업데이트 및 배열에 넣어줌
   useEffect(() => {
@@ -43,7 +44,9 @@ const MyAccReserveCard = ({
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation();
-    onCheckboxChange(id);
+    if (onCheckboxChange) {
+      onCheckboxChange(id);
+    }
   };
 
   return (
@@ -82,8 +85,6 @@ const MyAccReserveCard = ({
           author={author}
           imageUrls={imageUrls}
           title={title}
-          startDate={startDate}
-          endDate={endDate}
           adult={adult}
           child={child}
           baby={baby}

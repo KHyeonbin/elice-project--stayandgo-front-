@@ -3,8 +3,9 @@ import React from "react";
 import ImageSlider from "../layout/ImageSlider";
 import closeImg from "../../assets/icons/close.png";
 import * as Modal from "./MyAccModal.style";
+import {MyAccModalProps} from "../../model/profile/myaccReserve"
 
-const MyAccModal = ({
+const MyAccModal: React.FC<MyAccModalProps> = ({
   modalImageIndex,
   setModalImageIndex,
   closeModal,

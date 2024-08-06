@@ -1,5 +1,3 @@
-// src/components/layout/ImageSlider.js
-
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -9,7 +7,7 @@ import 'swiper/css/pagination';
 import styled from 'styled-components';
 
 // Swiper 관련 스타일
-const SwiperContainer = styled.div`
+const SwiperContainer = styled.div<{ size: number }>`
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   border-radius: 15px;
@@ -17,12 +15,35 @@ const SwiperContainer = styled.div`
   z-index: 0;
 `;
 
-const ImageSlider = ({
+interface ImageSliderProps {
+  imageUrls: string[];
+  currentIndex: number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  size?: number;
+}
+
+interface ExtendedCSSProperties extends React.CSSProperties {
+  '--swiper-pagination-bottom'?: string;
+  '--swiper-theme-color'?: string;
+  '--swiper-pagination-bullet-inactive-color'?: string;
+  '--swiper-pagination-bullet-inactive-opacity'?: string;
+}
+
+const ImageSlider: React.FC<ImageSliderProps> = ({
   imageUrls,
   currentIndex,
   setCurrentIndex,
   size = 111,
-}) => {
+}) => { 
+  const customStyles: ExtendedCSSProperties = {
+    '--swiper-pagination-bottom': '10px',
+    '--swiper-theme-color': '#fff',
+    '--swiper-pagination-bullet-inactive-color': '#fff',
+    '--swiper-pagination-bullet-inactive-opacity': '0.4',
+    width: '100%',
+    height: '100%',
+  };
+
   return (
     <SwiperContainer size={size}>
       <Swiper
@@ -32,14 +53,7 @@ const ImageSlider = ({
         initialSlide={currentIndex}
         onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
         modules={[Pagination]}
-        style={{
-          "--swiper-pagination-bottom": "10px",
-          "--swiper-theme-color": "#fff",
-          "--swiper-pagination-bullet-inactive-color": "#fff",
-          "--swiper-pagination-bullet-inactive-opacity": "0.4",
-          width: '100%',
-          height: '100%',
-        }}
+        style={customStyles}
       >
         {imageUrls.map((imageUrl, index) => (
           <SwiperSlide key={index}>

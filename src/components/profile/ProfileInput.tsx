@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import { ProfileInputProps } from "../../model/profile/profile"
 
 const Input = styled.input`
   margin-top: 10px;
@@ -21,7 +22,7 @@ const ErrorMessage = styled.div`
   padding: 5px 0;
 `;
 
-const ProfileInput = React.memo(({type, name, value, placeholder, required, onChange, disabled, error})=> (
+const ProfileInput: React.FC<ProfileInputProps> = React.memo(({type, name, value, placeholder, required, onChange, disabled, error})=> (
     <>
     <Input
     type={type}

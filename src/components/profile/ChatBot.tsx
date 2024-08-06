@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
+import { QnA, Message } from "../../model/profile/profile"
 
 const ChatBotHeader = styled.div`
     margin-bottom: 15px;
@@ -39,7 +40,7 @@ const ChatContainer = styled.div`
     border-top: 1px solid #ddd;
 `;
 
-const ChatMessage = styled.div`
+const ChatMessage = styled.div<{$isUser:boolean, $isFirstMessage?:boolean}>`
     margin: 15px 0;
     padding: 10px;
     background-color: ${props => (props.$isUser ? "black" : "#eee")};
@@ -64,7 +65,7 @@ const FollowUpContainer = styled.div`
     margin-top: 10px;
 `;
 
-const QnAData = [
+const QnAData: QnA[] = [
     {
         question: "예약 방법",
         answer: "숙소 예약 방법은 다음과 같습니다.\n1. 검색창에 원하는 목적지와 날짜를 입력하고 게스트의 인원을 추가해 주세요.\n2. 검색 결과에서 마음에 드는 숙소를 선택합니다.\n3. '예약하기' 버튼을 클릭하면 예약이 확정됩니다.",
@@ -97,12 +98,12 @@ const initialMessages = [
     { text: "안녕하세요 ☺️ 'stay_and_go' 이용 관련해서 궁금하신 내용의 버튼을 클릭해 주세요.", isUser: false, isFirstMessage: true }
 ];
 
-const ChatBot = () => {
-    const [messages, setMessages] = useState(initialMessages);
-    const chatEndRef = useRef(null); // 마지막 메세지를 참조하기 위해 useRef 사용
+const ChatBot: React.FC = () => {
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
+    const chatEndRef = useRef<HTMLDivElement>(null); // 마지막 메세지를 참조하기 위해 useRef 사용
 
     /** 사용자가 질문 버튼 클릭 시 */
-    const onClickHandleQnAMessage = (question, answer, followUp = []) => {
+    const onClickHandleQnAMessage = (question: string, answer: string, followUp: string[] = []) => {
         const newMessages = [...messages, { text: question, isUser: true }, { text: answer, isUser: false, followUp }];
         setMessages(newMessages);
     };

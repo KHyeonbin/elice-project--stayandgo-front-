@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { EmojiModalProps } from "../../model/profile/profile"
 
 const EmojiModalOverlay = styled.div`
   position: fixed;
@@ -45,7 +46,7 @@ const CloseButton = styled.button`
 `
 
 /** 개인정보 수정 프로필 이모지 모달 */
-const EmojiModal = ({ onSelect, onClose }) => {
+const EmojiModal: React.FC<EmojiModalProps> = ({ onSelect, onClose }) => {
   const emojis = ["🧒🏻", "👦🏻", "👧🏻", "👨🏻", "👩🏻", "👶🏻", "👱🏻‍♂️", "👱🏻‍♀️", "👨🏻‍🦳", "👵🏻"];
 
   return (

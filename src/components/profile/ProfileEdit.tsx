@@ -16,9 +16,11 @@ import loginState from "../../atoms/loginState";
 import { useRecoilValue } from "recoil";
 import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 import EmojiModal from "./EmojiModal"; // 프로필 이모지 모달
+import { UserData, ProfileModalProps, ProfileInputProps, EmojiModalProps } from "../../model/profile/profile"
+
 
 /** 비밀번호 유효성 검사 함수 */
-const validatePassword = (password) => {
+const validatePassword = (password: string) => {
   if (password.length > 0 && password.length < 10) {
     return "10자 이상 입력해주세요.";
   } else {
@@ -36,11 +38,11 @@ const validatePassword = (password) => {
 /** 휴대폰 번호 형태 정의 */
 const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
 
-const ProfileEdit = () => {
+const ProfileEdit: React.FC = () => {
   const loginUser = useRecoilValue(loginState);
   console.log(loginUser);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserData>({
     email: "",
     password: "",
     passwordCheck: "",
@@ -50,10 +52,10 @@ const ProfileEdit = () => {
     photo: "",
   });
 
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordCheckError, setPasswordCheckError] = useState("");
-  const [isModal, setIsModal] = useState(false);
-  const [isEmojiModal, setIsEmojiModal] = useState(false);
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [passwordCheckError, setPasswordCheckError] = useState<string>("");
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [isEmojiModal, setIsEmojiModal] = useState<boolean>(false);
 
   const { id } = useParams(); // url 파라미터로 사용자 id값 가져옴
 

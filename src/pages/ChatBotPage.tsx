@@ -5,7 +5,7 @@ import MainFooter from "../components/layout/MainFooter";
 import ChatBot from '../components/profile/ChatBot'
 import { motion } from "framer-motion";
 
-const ChatBotPage = () => {
+const ChatBotPage: React.FC = () => {
     return (
       <>
         <SubHeader />
