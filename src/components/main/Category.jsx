@@ -33,13 +33,8 @@ const ItemDiv = styled.div`
     // oneline
     flex-wrap: nowrap;
     
-	/* 브라우저가 scroll-snap-type을 지원할 때 */
-    @supports (scroll-snap-type: x mandatory) {
-        // 스크롤 시 하나씩 넘기기
-        scroll-snap-type: x mandatory;
-        /* 끝에서 바운스 되도록 */
-        -webkit-overflow-scrolling: touch;
-    }
+    // firefox scroll none
+    scrollbar-width: none;
 `
 
 const Item = styled.div`
@@ -55,11 +50,6 @@ const Item = styled.div`
     flex-shrink: 0;
     flex-basis: 75px;
     cursor: pointer;
-    /* 브라우저가 scroll-snap-type을 지원할 때 */
-    @supports (scroll-snap-align: start) {
-        // 스크롤 시 하나씩 넘기기(아이템)
-        scroll-snap-align: start;
-    }
 `
 const ItemTitle = styled.span`
     font-size: 12px;
