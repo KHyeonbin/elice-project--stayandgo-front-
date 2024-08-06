@@ -212,11 +212,7 @@ const RoomMyDetails = () => {
   const [query, setQuery] = useSearchParams();
   const {id} = useParams();
   // sub_images, category, author 부분은 null, undefined 방지
-  const [roomInfo, setRoomInfo] = useState({
-    sub_images: [],
-    category: [],
-    author: {nickname: ""}
-  });
+  const [roomInfo, setRoomInfo] = useState(null);
 
   useEffect(() => {
     // 방 정보 가져오기
@@ -273,7 +269,7 @@ const RoomMyDetails = () => {
           }}
         >
             <SwiperSlide key={`slide0`}>
-              <ImgDiv><img src={query.get('main_image')}></img></ImgDiv>
+              <ImgDiv><img src={roomInfo.main_image}></img></ImgDiv>
             </SwiperSlide>
           {roomInfo.sub_images.length > 0 &&
           roomInfo.sub_images.map((img, i)=>{
@@ -287,12 +283,12 @@ const RoomMyDetails = () => {
       </SwiperDiv>
 
       <Container>
-        <Title>[{query.get('title')}]</Title>
+        <Title>{roomInfo.title}</Title>
         <InfoText>
-        {Number(query.get('price')).toLocaleString()}원 / {query.get('main_location')}
+        {Number(roomInfo.price).toLocaleString()}원 / {roomInfo.main_location}
           <br />
-          최대 인원 {Number(query.get('max_adult')) + Number(query.get('max_baby')) + Number(query.get('max_child'))}명 * 
-          침실 {query.get('room_num')}개
+          최대 인원 {Number(roomInfo.max_adult) + Number(roomInfo.max_baby) + Number(roomInfo.max_child)}명 * 
+          침실 {roomInfo.room_num}개
         </InfoText>
         <MainOptionBox>
           {roomInfo.category.length > 0 && 
@@ -313,14 +309,14 @@ const RoomMyDetails = () => {
           <p>숙소 소개</p>
           {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
           <div style={{whiteSpace: "pre-wrap"}}>
-              {query.get('contents')}
+              {roomInfo.contents}
           </div>
           <button
             type="button"
             onClick={()=>setSlideModal(prev => ({
               isOpen: true,
               title: '숙소 소개',
-              text: query.get('contents'),
+              text: roomInfo.contents,
             }))}
           >
             더보기 &gt;
@@ -330,9 +326,9 @@ const RoomMyDetails = () => {
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap address={query.get('sub_location')} title={query.get('title')} />
+            <KakaoMap moveup={-1} address={roomInfo.sub_location} title={roomInfo.title} />
           </Location>
-          <LocationText>{query.get('sub_location')}</LocationText>
+          <LocationText>{roomInfo.sub_location}</LocationText>
         </LocationDiv>
 
         <HostInfoDiv>
@@ -353,14 +349,14 @@ const RoomMyDetails = () => {
           <HostText>
             {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
             <div style={{whiteSpace: "pre-wrap"}}>
-                {query.get('host_intro')}
+                {roomInfo.host_intro}
             </div>
             <button
               type="button"
               onClick={()=>setSlideModal(prev => ({
                 isOpen: true,
                 title: '호스트 소개',
-                text: query.get('host_intro'),
+                text: roomInfo.host_intro,
               }))}
             >
               더보기 &gt;

@@ -325,12 +325,10 @@ const Search = ({setPage, search, setSearch, isModal, setIsModal, startSearch, s
     // 클릭 시 모달 활성화
     const onClickModal = () => {
         setIsModal(true);
-        document.body.style.overflowY = "hidden";
     };
     // x 버튼 클릭 시 모달 비활성화
     const onClickModalClose = () => {
         setIsModal(false);
-        document.body.style.overflowY = "auto";
     };
     // 지역 셀렉트 박스 이벤트 핸들러
     const onChangeSelect = (e) => {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link  } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { logoutUser } from "../../api/logoutUser";
 
 const Container = styled.div`
@@ -22,12 +22,18 @@ const LeftArea = styled.div`
     justify-content: center;
 
     margin-left: 10px;
+
+    cursor: pointer;
+    color:#FF385C;
+    transition: color 0.5s;
+    &:hover{
+        color: #FF6F8C;
+    }
 `
 const TextLogo = styled.p`
     font-size: 23px;
     font-family: "Playwrite BE VLG", sans-serif;
     font-weight: bold;
-    color: #FF385C;
 `
 const RightArea = styled(LeftArea)`
     width: 200px;
@@ -67,6 +73,8 @@ const LinkText = styled(Link)`
 `
 
 const Header = ({user, isModal}) => {
+    const navigate = useNavigate();
+
     const onClickLogout = () => {
         logoutUser()
         .then(res => {
@@ -83,6 +91,10 @@ const Header = ({user, isModal}) => {
     };
     console.log(user)
 
+    const onClickHome = () => {
+        window.location.href = '/';
+    }
+
     return (
         <>
             {isModal && 
@@ -90,7 +102,7 @@ const Header = ({user, isModal}) => {
                 ||
                 <>
                     <Container>
-                    <LeftArea>
+                    <LeftArea onClick={onClickHome}>
                         <TextLogo>
                             stayandgo
                         </TextLogo>

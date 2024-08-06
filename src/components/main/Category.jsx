@@ -26,10 +26,15 @@ const ItemDiv = styled.div`
     overflow-x: auto;
     // oneline
     flex-wrap: nowrap;
-    // 스크롤 시 하나씩 넘기기	
-	scroll-snap-type: x mandatory;
-    /* 끝에서 바운스 되도록 */
-    -webkit-overflow-scrolling: touch;
+    
+	/* 브라우저가 scroll-snap-type을 지원할 때 */
+    @supports (scroll-snap-type: x mandatory) {
+        // 스크롤 시 하나씩 넘기기
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        /* 끝에서 바운스 되도록 */
+        -webkit-overflow-scrolling: touch;
+    }
     /* 스크롤바 숨기기 */
     ::-webkit-scrollbar {
         display: none;
@@ -46,13 +51,16 @@ const Item = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    // 스크롤 시 하나씩 넘기기(아이템)
-    scroll-snap-align: start;
     // + "이미지 크기 고정" 작업(div > img 구조 + div 에서 flex-frow, shrink, basis(절대 크기) 설정 !)
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: 75px;
     cursor: pointer;
+    /* 브라우저가 scroll-snap-type을 지원할 때 */
+    @supports (scroll-snap-align: start) {
+        // 스크롤 시 하나씩 넘기기(아이템)
+        scroll-snap-align: start;
+    }
 `
 const ItemTitle = styled.span`
     font-size: 12px;

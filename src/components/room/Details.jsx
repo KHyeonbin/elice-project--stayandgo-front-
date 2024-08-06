@@ -340,6 +340,8 @@ const RoomDetails = () => {
   const [query, setQuery] = useSearchParams();
   const [footerPrice, setFooterPrice] = useState(0);
   const [isOpenShareModal, setIsOpenShareModal] = useState(false);
+  const [moveup, setMoveup] = useState(0);
+
   let totalPrice = useRef(0);
   let totalDate = useRef(0);
   const location = useLocation();
@@ -352,7 +354,7 @@ const RoomDetails = () => {
   // kakao sdk 초기화하기
 	// status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
 	useEffect(() => {
-		if (status === "ready" && window.Kakao) {
+		if (status === "ready" && window.Kakao && moveup === -1) {
 			// 중복 initialization 방지
 			if (!window.Kakao.isInitialized()) {
 				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
@@ -391,7 +393,7 @@ const RoomDetails = () => {
   // 주소 카카오톡에 공유
   const handleKakaoButton = () => {
     // 크롬 브라우저 > 개발자모드 > 모바일 설정 지원하지 않음
-    if (window.Kakao && window.Kakao.Share) {
+    if (window.Kakao && window.Kakao.Share && moveup === -1) {
       window.Kakao.Share.createDefaultButton({
         container: '#kakaoShareBtn',
         objectType: 'feed',
@@ -444,10 +446,14 @@ const RoomDetails = () => {
   useEffect(() => {
     // 검색 정보 가져오기
     if(query.get('adult') === '0') {
-      alert('예약 정보를 설정해주세요.');
-      navigate('/');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      setMoveup(1);
+      return;
     };
-
+    setMoveup(-1);
     const startDate = new Date(query.get('startDate'));
     const endDate = new Date(query.get('endDate'));
     
@@ -460,6 +466,13 @@ const RoomDetails = () => {
 
     
   }, [roomInfo, query]);
+
+  useEffect(() => {
+    if(moveup === 1){
+      alert('예약 정보를 설정해주세요.');
+      navigate('/');
+    }
+  },[moveup]);
 
 
   const onReservate = async() => {
@@ -630,7 +643,7 @@ const RoomDetails = () => {
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap address={roomInfo.sub_location} title={roomInfo.title} />
+            <KakaoMap moveup={moveup} address={roomInfo.sub_location} title={roomInfo.title} />
           </Location>
           <LocationText>{roomInfo.sub_location}</LocationText>
         </LocationDiv>
