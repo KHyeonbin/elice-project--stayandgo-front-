@@ -9,22 +9,26 @@ const EmojiModalOverlay = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 50%;
 `;
 
 const EmojiModalContent = styled.div`
   width: 290px;
   height: 150px;
   background-color: white;
-  padding: 25px;
+  padding: 15px;
   border-radius: 10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
-  bottom: 15%;
-  
+
+  @media (max-width: 400px) {
+    width: 80%;
+    padding: 15px;
+  }
 `;
 
 const EmojiButton = styled.button`
@@ -32,7 +36,15 @@ const EmojiButton = styled.button`
   border: none;
   font-size: 35px;
   cursor: pointer;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 400px) {
+    width: 17%;
+    font-size: 25px;
+  }
+`;
 
 const CloseButton = styled.button`
   position: absolute;
@@ -42,7 +54,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 20px;
   cursor: pointer;
-`
+`;
 
 /** 개인정보 수정 프로필 이모지 모달 */
 const EmojiModal = ({ onSelect, onClose }) => {
