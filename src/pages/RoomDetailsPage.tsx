@@ -6,14 +6,13 @@ import { isLoginSelector } from "../atoms/TokenAtom";
 import { motion } from "framer-motion";
 
 const RoomDetailsPage = () => {
-  const isLogin = useRecoilValue(isLoginSelector);
   return (
     <motion.div
     initial={{ opacity: 0, position: 'relative', left: '100%' }}
     animate={{ opacity: 1, position: 'relative', left: '0' }}
       transition={{ duration: 0.3 }}
     >
-      <SubHeader isLogin={isLogin} />
+    <SubHeader />
       <Details />
     </motion.div>
   );

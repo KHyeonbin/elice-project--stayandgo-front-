@@ -3,7 +3,7 @@ import SubHeader from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import styled from "styled-components";
 import addImg from '../assets/icons/addImg.png';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostEdit } from "../api/myPostEdit";
 import AccommodationModal from "../components/myAccommodation/AccommodationModal";
@@ -13,6 +13,8 @@ import loginState from "../atoms/loginState";
 import { useLocation, useNavigate } from "react-router-dom";
 import { detailPost } from "../api/detailPost";
 import { motion } from "framer-motion";
+import { ContextImageData, imageNameType, ImageUploadLabelProps, ImageUploadSpanProps, LoginStateType, WebpackRequireContext } from "../model/main(with detail, upload)/mainTypes";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 const Container = styled.div`
     width: 100%;
@@ -29,7 +31,7 @@ const ImageUploadForm = styled.form`
 `
 // input element 를 숨기고 label 로 대신 기능을 받음 (id <=> for)
 // 파일 선택, 선택된 파일 없음 숨기기 위함
-const ImageUploadLabel = styled.label.attrs(props => ({
+const ImageUploadLabel = styled.label.attrs<ImageUploadLabelProps>(props => ({
     style: {
         backgroundImage: props.$isUpload === true ? `url(${props.$newImg})` : `url(${addImg})`,
         backgroundSize: props.$isUpload === true ? "cover" : "auto",
@@ -48,7 +50,7 @@ const ImageUploadLabel = styled.label.attrs(props => ({
 
     position: relative;
 `
-const MainImageSpan = styled.span.attrs(props => ({
+const MainImageSpan = styled.span.attrs<ImageUploadSpanProps>(props => ({
     style: {
         display: props.$isUpload === true ? "none" : "block"
     }
@@ -121,7 +123,7 @@ const InputSubTitle = styled.span`
 `
 
 // react-select css
-const selectCustom = {
+const selectCustom: StylesConfig = {
     option: (provided, state) => {
         let backgroundColor = 'white';
         let color = '#333';
@@ -225,21 +227,32 @@ const SubmitButton = styled.button`
 `
 
 const PostUploadEdit : React.FC = () => {
-    const loginUser = useRecoilValue(loginState);
+    const loginUser = useRecoilValue<LoginStateType>(loginState);
     const navigate = useNavigate();
     const location = useLocation();
     const nanoid = location.state.v;
     // 수정 전 상태 정의
     // 등록 데이터 state
     const [data, setData] = useState({
-        main_image: "",
-        sub_images: []
+        main_image: new FileList(),
+        sub_images: new FileList(),
+        title: "",
+        room_num: 0,
+        max_adult: 1,
+        max_child: 0,
+        max_baby: 0,
+        price: 0,
+        main_location: "",
+        sub_location: "",
+        contents: "",
+        category: [""],
+        host_intro: ""
     }); 
     
     // 첨부된 images 이름 state
-    const [imageName, setImageName] = useState({
+    const [imageName, setImageName] = useState<imageNameType>({
         main_image: "",
-        sub_images: ""
+        sub_images: [""]
     });
     // main_image 가 업로드 된 상태, 라벨에 넣을 배경 이미지 상태, URL 해제
     const [isUpload, setIsUpload] = useState(false);
@@ -293,7 +306,7 @@ const PostUploadEdit : React.FC = () => {
 
         detailPost({nanoid})
         .then(res => {
-          if(res.data && res.data.code === 200){
+          if(res && res.data && res.data.code === 200){
               const saveData = res.data.data;
               setData((current) => {
                   const newData = {...current};
@@ -333,7 +346,7 @@ const PostUploadEdit : React.FC = () => {
               });
               return;
           } else {
-              alert(res.data.message);
+              alert(res?.data.message);
               navigate('/');
               return;
           }
@@ -348,7 +361,7 @@ const PostUploadEdit : React.FC = () => {
 
 
     // 숙소 이름 data 반영
-    const onChangeTitle = (e) => {
+    const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData((current) => {
             const newData = {...current};
             newData.title = e.target.value;
@@ -357,14 +370,16 @@ const PostUploadEdit : React.FC = () => {
     };
 
     // 메인이미지 file input 변경 시 적용
-    const onChangeFiles = (e) => {
+    const onChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         // 모든 파일이 이미지 파일이 아닐 때 오류 반환 및 종료
         if(e.target.files && e.target.files.length > 0){
             const filesNameArray = Array.from(e.target.files);
             const notImages = filesNameArray.filter(
                 v => {
-                    const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    if(v && v.name){
+                        const extension = v.name.split('.').pop()?.toLowerCase() ?? '';
+                        return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    }
             });
             if(notImages && notImages.length > 0){
                 alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
@@ -388,20 +403,22 @@ const PostUploadEdit : React.FC = () => {
             
             setData((current) => {
                 const newData = {...current};
-                newData.main_image = e.target.files;
+                newData.main_image = e.target.files as FileList;
                 return newData;
             });
         }
         return;
     };
     // 서브이미지 변경 시 적용
-    const onChangeSubFiles = (e) => {
+    const onChangeSubFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files && e.target.files.length > 0){
             const filesNameArray = Array.from(e.target.files);
             const notImages = filesNameArray.filter(
                 v => {
-                    const extension = v.name.split('.').pop().toLowerCase();
-                    return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    if(v && v.name){
+                        const extension = v.name.split('.').pop()?.toLowerCase() ?? '';
+                        return !['jpg', 'png', 'jpeg', 'webp'].includes(extension);
+                    }
             });
             if(notImages && notImages.length > 0){
                 alert("이미지 파일만(jpg, png, jpeg, webp) 첨부할 수 있습니다.");
@@ -421,7 +438,7 @@ const PostUploadEdit : React.FC = () => {
             
             setData((current) => {
                 const newData = {...current};
-                newData.sub_images = e.target.files;
+                newData.sub_images = e.target.files as FileList;
                 return newData;
             });
         }
@@ -430,66 +447,69 @@ const PostUploadEdit : React.FC = () => {
     
 
     // 방 갯수 상태 및 data 상태 변경
-    const onChangeSelectRoom = (e) => {
-        setOptionRoom(e);
+    const onChangeSelectRoom = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionRoom({value: e.target.value, label: e.target.value});
         setData((current) => {
             const newData = {...current};
-            newData.room_num = Number(e.value[0]);
+            newData.room_num = Number(e.target.value[0]);
             return newData;
         });
     };
 
     // 어른 옵션 상태 및 data 상태 변경
-    const onChangeSelectPerson = (e) => {
-        setOptionPerson(e);
+    const onChangeSelectPerson = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionPerson({value: e.target.value, label: e.target.value});
 
         setData((current) => {
             const newData = {...current};
-            newData.max_adult = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_adult = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     };
     // 어린이 옵션 상태 및 data 상태 변경
-    const onChangeSelectChild = (e) => {
-        setOptionChild(e);
+    const onChangeSelectChild = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionChild({value: e.target.value, label: e.target.value});
 
         setData((current) => {
             const newData = {...current};
-            newData.max_child = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_child = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     };
     // 유아 옵션 상태 및 data 상태 변경
-    const onChangeSelectBaby = (e) => {
-        setOptionBaby(e);
+    const onChangeSelectBaby = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setOptionBaby({value: e.target.value, label: e.target.value});
 
         setData((current) => {
             const newData = {...current};
-            newData.max_baby = Number(e.value.slice(0, e.value.indexOf("명")));
+            newData.max_baby = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
             return newData;
         });
     }
     
     // 카테고리 상태 값 및 data 상태 변경
-    const onChangeCategory = (e) => {
-        if(e.length > 3){
+    const onChangeCategory = (e: CheckboxChangeEvent) => {
+        if(e.target.value.length > 3){
             alert("카테고리는 최대 3개까지 지정 가능합니다!");
             return;
         }
         setData((current) => {
             const newData = {...current};
-            newData.category = e;
+            newData.category = e.target.value;
             return newData;
         });
     };
     // mainCatetory 디렉토리 이미지 가져오기
-    const importAllImages = (v) => {
-        return v.keys().map((key) => ({
-            src: v(key),
-            name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-          }));
+    const importAllImages = (v: WebpackRequireContext) : ContextImageData[] => {
+        return v.keys().map((key) => {
+            const match = key.match(/[^/]+$/);
+            return {
+                src: v(key),
+                name: match ? match[0] : 'unknown', // 파일 이름만 추출
+            }
+        });
     };
-    const images = importAllImages(require.context('../assets/icons/mainCategory', false, /\.(png|jpe?g)$/));
+    const images = importAllImages(require.context('../assets/icons/mainCategory', false, /\.(png|jpe?g)$/) as WebpackRequireContext);
     // 파일 이름 순으로 정렬
     const sortedImages = images.sort((a, b) => {
         const aNumber = parseInt(a.name.split('_')[0], 10);
@@ -503,7 +523,7 @@ const PostUploadEdit : React.FC = () => {
     const optionWithIcon = optionValues.map((v, i) => ({label: v, value: v, icon: optionIcons[i].src}));
 
     // 숙소 소개 data 상태 반영
-    const onChangeContents = (e) => {
+    const onChangeContents = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData((current) => {
             const newData = {...current};
             newData.contents = e.target.value;
@@ -512,12 +532,12 @@ const PostUploadEdit : React.FC = () => {
     };
 
     // 숙소 주요 위치 option 및 data 상태 반영
-    const onChangeMainLocation = (e) => {
-        setoptionMainLocation(e);
+    const onChangeMainLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setoptionMainLocation({value: e.target.value, label: e.target.value});
         
         setData((current) => {
             const newData = {...current};
-            newData.main_location = e.value;
+            newData.main_location = e.target.value;
             return newData;
         });
     }
@@ -563,7 +583,7 @@ const PostUploadEdit : React.FC = () => {
     // 1. 입력한 문자에서 숫자만 추출
     // 2. 끝 자리 자동으로 1000 단위로 강제 변경
     // 3. 수정된 string은 숫자로 변경 후 data 반영
-    const onChangePrice = (e) => {
+    const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
         // 1. 입력한 문자에서 숫자만 추출
         const inputPrice = e.target.value.replace(/[^0-9]/g, '').toString();
         if(inputPrice.length >= 4){
@@ -589,12 +609,12 @@ const PostUploadEdit : React.FC = () => {
         }
     };
     // input 필드 벗어날 때 input value 교체
-    const onBlurPrice = (e) => {
-        e.target.value = data.price;
+    const onBlurPrice = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.value = data.price.toString();
     }
 
     // 호스트 소개 data 반영
-    const onChangeHostIntro = (e) => {
+    const onChangeHostIntro = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData((current) => {
             const newData = {...current};
             newData.host_intro = e.target.value;
@@ -604,7 +624,7 @@ const PostUploadEdit : React.FC = () => {
 
     // 등록 하기 !
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
-    const onSubmitPost = async (e) => {
+    const onSubmitPost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // 메인 이미지 수정 시 체크
@@ -700,21 +720,21 @@ const PostUploadEdit : React.FC = () => {
             }
         } else {
             // category 가 없을 시 서버에서 length 확인 후 "전체" 로 삽입
-            formData.append('category', []);
+            formData.append('category', "");
         }
         formData.append('title', data.title);
-        formData.append('max_adult', data.max_adult);
-        formData.append('max_child', data.max_child);
-        formData.append('max_baby', data.max_baby);
-        formData.append('price', data.price);
+        formData.append('max_adult', String(data.max_adult));
+        formData.append('max_child', String(data.max_child));
+        formData.append('max_baby', String(data.max_baby));
+        formData.append('price', String(data.price));
         formData.append('main_location', data.main_location);
         formData.append('sub_location', data.sub_location);
         formData.append('contents', data.contents);
-        formData.append('room_num', data.room_num);
+        formData.append('room_num', String(data.room_num));
         formData.append('host_intro', data.host_intro);
 
         // mode 값이 추가로 담겨져야 함!!!(1: 메인 이미지, 2: 서브, 3: 둘 다 교체, 0. 교체 안함)
-        let mode;
+        let mode : number;
         if(data.main_image.length > 0 && data.sub_images.length > 0){
             mode = 3;
         } else if(data.main_image.length > 0){
@@ -726,11 +746,11 @@ const PostUploadEdit : React.FC = () => {
         }
 
         formData.append('nanoid', nanoid);
-        formData.append('mode', mode);
+        formData.append('mode', mode.toString());
         
         myPostEdit(formData)
         .then(res => {
-            if(res.data && res.data.code === 200){
+            if(res && res.data && res.data.code === 200){
                 // 성공 모달 창을 띄우며 나의 숙소 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
@@ -762,7 +782,7 @@ const PostUploadEdit : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText value={data.title} onChange={onChangeTitle} maxLength="20" placeholder="숙소 이름을 작성해주세요. 20자 이내" />
+                        <ShortInputText value={data.title} onChange={onChangeTitle} maxLength={20} placeholder="숙소 이름을 작성해주세요. 20자 이내" />
                     </InputDiv>    
                     <OutlineDiv />
                     <InputDiv>
@@ -776,7 +796,7 @@ const PostUploadEdit : React.FC = () => {
                         <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
                         <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
-                        <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
+                        <CategoryCheckbox value={data.category} onChange={() => onChangeCategory}>
                             {optionWithIcon.map((v, i) => (
                                 <CategoryCheckboxOption key={i} value={v.value}>
                                 <div className="icon" style={{ backgroundImage: `url(${v.icon})` }} />
@@ -788,7 +808,7 @@ const PostUploadEdit : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea value={data.contents} onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                        <InputTextArea value={data.contents} onChange={() => onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
@@ -808,7 +828,7 @@ const PostUploadEdit : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength="500" value={data.host_intro}  onChange={onChangeHostIntro} />
+                        <InputTextArea maxLength={500} value={data.host_intro}  onChange={() => onChangeHostIntro} />
                     </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>

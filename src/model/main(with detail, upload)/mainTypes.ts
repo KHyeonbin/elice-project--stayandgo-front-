@@ -173,6 +173,10 @@ export interface ImageUploadLabelProps {
     $isUpload: boolean;
     $newImg: string;
 };
+export interface CategoryCheckboxProps {
+    value: string[],
+    onChange: void
+};
 
 
 // OneItem.tsx
@@ -189,4 +193,12 @@ export interface DotDivProps {
 export interface DotProps {
     $index: number;
     $imgIndex: number;
+};
+
+// Details.tsx
+export interface CSSPropertiesExtended extends React.CSSProperties {
+    '--swiper-pagination-bottom'?: string;
+    '--swiper-theme-color'?: string;
+    '--swiper-pagination-bullet-inactive-color'?: string;
+    '--swiper-pagination-bullet-inactive-opacity'?: string;
 };

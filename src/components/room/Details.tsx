@@ -1,4 +1,5 @@
 import axios from "axios";
+import React from "react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
@@ -16,6 +17,7 @@ import loading from "../../assets/icons/loading.png";
 import kakaoBtnImg from "../../assets/icons/kakao_btn.png";
 import { useScript } from "../../api/hooks";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ContextImageData, CSSPropertiesExtended, WebpackRequireContext } from "../../model/main(with detail, upload)/mainTypes";
 
 const SwiperDiv = styled.div` 
   position: relative;
@@ -334,9 +336,24 @@ const RoomDetails = () => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const userState = useRecoilValue(loginState);
-  const [roomInfo, setRoomInfo] = useState(null);
+  const [roomInfo, setRoomInfo] = useState({
+    title: "",
+    contents: "",
+    main_image: "",
+    price: 0,
+    sub_images: [""],
+    max_adult: 0,
+    max_child: 0,
+    max_baby: 0,
+    room_num: 0,
+    main_location: "",
+    category: [""],
+    sub_location: "",
+    author: {name: "", photo: "", email: "", nickname: "", phone: ""},
+    host_intro: ""
+  });
   const {id} = useParams();
-  const sortedImages = useRef();
+  const sortedImages = useRef<ContextImageData[]>();
   const [query, setQuery] = useSearchParams();
   const [footerPrice, setFooterPrice] = useState(0);
   const [isOpenShareModal, setIsOpenShareModal] = useState(false);
@@ -363,13 +380,16 @@ const RoomDetails = () => {
 	}, [status]);	
 
   // mainCatetory 디렉토리 이미지 가져오기
-  const importImages = (v) => {
-    return v.keys().map((key) => ({
-        src: v(key),
-        name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-      }));
-  };
-  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+    const importImages = (v: WebpackRequireContext) : ContextImageData[] => {
+        return v.keys().map((key) => {
+            const match = key.match(/[^/]+$/);
+            return {
+                src: v(key),
+                name: match ? match[0] : 'unknown', // 파일 이름만 추출
+            }
+        });
+    };
+  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/) as WebpackRequireContext);
   // 파일 이름 순으로 정렬
   sortedImages.current = images.sort((a, b) => {
     const aNumber = parseInt(a.name.split('_')[0], 10);
@@ -448,13 +468,13 @@ const RoomDetails = () => {
       navigate('/');
     };
 
-    const startDate = new Date(query.get('startDate'));
-    const endDate = new Date(query.get('endDate'));
+    const startDate = new Date(query.get('startDate') as string);
+    const endDate = new Date(query.get('endDate') as string);
     
-    totalDate.current = Number(endDate - startDate) / (1000 * 60 * 60 * 24);
+    totalDate.current = Number(endDate) - Number(startDate) / (1000 * 60 * 60 * 24);
 
     if (roomInfo) {
-      totalPrice.current = Math.floor((Number(roomInfo.price) * totalDate.current)/100) * 100;
+      totalPrice.current = Math.floor((roomInfo.price * totalDate.current)/100) * 100;
       setFooterPrice(totalPrice.current);
     };
 
@@ -500,6 +520,13 @@ const RoomDetails = () => {
     );
   }
 
+  const customStyle: CSSPropertiesExtended = {
+    '--swiper-pagination-bottom': '10px',
+    '--swiper-theme-color': '#fff',
+    '--swiper-pagination-bullet-inactive-color': '#fff',
+    '--swiper-pagination-bullet-inactive-opacity': '0.4',
+  };
+
   return (
     <>
       <SwiperDiv>
@@ -513,12 +540,7 @@ const RoomDetails = () => {
             console.log(swiper.realIndex);
           }}
           pagination={{ clickable: true }}
-          style={{
-            "--swiper-pagination-bottom": "10px",
-            "--swiper-theme-color": "#fff",
-            "--swiper-pagination-bullet-inactive-color": "#fff",
-            "--swiper-pagination-bullet-inactive-opacity": "0.4",
-          }}
+          style={customStyle}
         >
             <SwiperSlide key={`slide0`}>
               <ImgDiv><img src={roomInfo.main_image}></img></ImgDiv>
@@ -594,16 +616,16 @@ const RoomDetails = () => {
           
         </Title>
         <InfoText>
-        {Number(roomInfo.price).toLocaleString()}원 / {roomInfo.main_location}
+        {roomInfo.price.toLocaleString()}원 / {roomInfo.main_location}
           <br />
-          최대 인원 {Number(roomInfo.max_adult) + Number(roomInfo.max_baby) + Number(roomInfo.max_child)}명 * 
+          최대 인원 {roomInfo.max_adult + roomInfo.max_baby + roomInfo.max_child}명 * 
           침실 {roomInfo.room_num}개
         </InfoText>
         <MainOptionBox>
           {roomInfo.category.map((cate, i)=>
             tagArr.map((tag, ii) => {
               if(tag === cate) {
-                return <MainOption key={i}><img src={sortedImages.current[ii].src} />{cate}</MainOption>
+                return <MainOption key={i}><img src={sortedImages.current ? sortedImages.current[ii].src : ""} />{cate}</MainOption>
               }
             })
           )}
@@ -683,7 +705,7 @@ const RoomDetails = () => {
           <>
           <PriceDiv>
             <b>{footerPrice.toLocaleString()}원</b> / {totalDate.current}박
-            <p>{query.get('startDate').substring(5)}~{query.get('endDate').substring(5)}</p>
+            <p>{query.get('startDate')?.substring(5)}~{query.get('endDate')?.substring(5)}</p>
           </PriceDiv>
           <ReservationBtn onClick={onReservate}>예약하기</ReservationBtn>
           </>

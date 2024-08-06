@@ -708,7 +708,7 @@ const PostUpload : React.FC = () => {
                         <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
                         <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
-                        <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
+                        <CategoryCheckbox value={data.category} onChange={() => onChangeCategory}>
                             {optionWithIcon.map((v, i) => (
                                 <CategoryCheckboxOption key={i} value={v.value}>
                                 <div className="icon" style={{ backgroundImage: `url(${v.icon})` }} />
@@ -720,7 +720,7 @@ const PostUpload : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea onChange={onChangeContents} maxLength="1000" placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                        <InputTextArea onChange={() => onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
@@ -740,7 +740,7 @@ const PostUpload : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength="500" placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={onChangeHostIntro} />
+                        <InputTextArea maxLength={500} placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={(e) => onChangeHostIntro} />
                     </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
