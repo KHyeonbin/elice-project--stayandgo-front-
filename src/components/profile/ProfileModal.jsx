@@ -49,7 +49,7 @@ const CheckInput = styled.input`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) => (props.singleButton ? "center" : "space-between")};
   width: 100%;
   margin-top: 20px;
 `;
@@ -68,28 +68,30 @@ const ModalButton = styled.button`
 `;
 
 /** 공통 모달 컴포넌트 */
-const ProfileModal = ({ message, onClose, onConfirm, onCancel }) => {
+const ProfileModal = ({ message, onClose, onConfirm, onCancel, isDelete = false }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleConfirm = () => {
     if (inputValue === "회원 탈퇴를 진행하겠습니다") {
       onConfirm();
     } else {
-      alert("입력된 문구가 정확하지 않습니다.")
+      alert("입력된 문구가 정확하지 않습니다.");
     }
-  }
+  };
 
   return (
     <ModalOverlay>
       <ModalContent>
         <ModalTitle>{message}</ModalTitle>
+        {isDelete && (
         <CheckInput
           type="text"
           placeholder="회원 탈퇴를 진행하겠습니다"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <ButtonContainer>
+        )}
+        <ButtonContainer singleButton={!onConfirm && !onCancel}>
           {onConfirm && onCancel ? (
             <>
               <ModalButton onClick={handleConfirm}>예</ModalButton>

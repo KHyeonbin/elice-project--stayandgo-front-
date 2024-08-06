@@ -161,6 +161,7 @@ const Profile = () => {
           message="정말 탈퇴하시겠습니까?"
           onConfirm={onClickHandleConfirmDelete}
           onCancel={onClickHandleCancelDelete}
+          isDelete={true}
         />
       )}
     </ProfileContainer>
