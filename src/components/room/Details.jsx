@@ -402,7 +402,7 @@ const RoomDetails = () => {
         objectType: 'feed',
         content: {
           title: roomInfo.title,
-          description: roomInfo.contents,
+          description: roomInfo.contents.substring(0, 190) + '...',
           imageUrl: roomInfo.main_image,
           link: {
             // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
