@@ -2,6 +2,7 @@ import React, {useCallback} from "react";
 import styled from "styled-components";
 import TravelCard from "./TravelCard";
 import Pagination from "../layout/Pagination";
+import { TravelCategoryPropsType } from "../../model/travel/travel";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const CategoryBox = styled.div`
 `;
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelCategory = ({ pastTravelData, noReservation, pastPage, setPastPage }) => {
+const TravelCategory:React.FC<TravelCategoryPropsType> = ({ pastTravelData, noReservation, pastPage, setPastPage }) => {
 
   return (
     <>

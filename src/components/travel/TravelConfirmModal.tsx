@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { TravelConfirmModalPropsType } from "../../model/travel/travel";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -40,7 +41,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const ModalButton = styled.button`
+const ModalButton = styled.button<{ type:string }>`
   width: 100px;
   height: 38px;
   border: 1px solid #f87878;
@@ -54,7 +55,7 @@ const ModalButton = styled.button`
 `;
 
 /** 공통 모달 컴포넌트 */
-const TravelConfirmModal = ({ message, onConfirm, onCancel }) => {
+const TravelConfirmModal:React.FC<TravelConfirmModalPropsType> = ({ message, onConfirm, onCancel }) => {
   const handleConfirm = () => {
       onConfirm();
   }
@@ -64,7 +65,7 @@ const TravelConfirmModal = ({ message, onConfirm, onCancel }) => {
       <ModalContent>
         <ModalTitle>{message}</ModalTitle>
         <ButtonContainer>
-            <ModalButton onClick={handleConfirm}>예</ModalButton>
+            <ModalButton onClick={handleConfirm} type="button">예</ModalButton>
             <ModalButton type="cancel" onClick={onCancel}>
               아니오
             </ModalButton>
