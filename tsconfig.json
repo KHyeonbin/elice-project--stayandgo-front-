@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+      "outDir": "./dist",
+      "sourceMap": false,
+      "strictNullChecks": true,
+      "module": "es6",
+      "jsx": "react",
+      "target": "es5",
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true,
+      // react-router-dom import 에러 방지
+      "moduleResolution": "node"
+  },
+  "include": [
+      "./src/"
+  ]
+}
