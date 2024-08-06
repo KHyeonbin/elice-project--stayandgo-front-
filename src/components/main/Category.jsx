@@ -13,6 +13,11 @@ const Container = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    // x축 scroll 작업
+    overflow: hidden;
+    ::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨기기 */
+    }
 `
 const ItemDiv = styled.div`
     width: 90%;
@@ -24,6 +29,7 @@ const ItemDiv = styled.div`
     gap: 5px;
     // x축 scroll 작업
     overflow-x: auto;
+    
     // oneline
     flex-wrap: nowrap;
     
@@ -35,12 +41,6 @@ const ItemDiv = styled.div`
         /* 끝에서 바운스 되도록 */
         -webkit-overflow-scrolling: touch;
     }
-    /* 스크롤바 숨기기 */
-    ::-webkit-scrollbar {
-        display: none;
-    }
-    -ms-overflow-style: none;
-    scrollbar-width: none; 
 `
 
 const Item = styled.div`
