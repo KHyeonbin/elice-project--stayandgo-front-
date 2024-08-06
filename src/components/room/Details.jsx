@@ -574,7 +574,7 @@ const RoomDetails = () => {
                     </svg>
                 </ModalCloseBtn>
                 <p>공유하기</p>
-                <div>
+                <div style={{display: "flex", justifyContent: "center", gap: "20px"}}>
                   <CopyToClipboard className="Toram" text={window.location.href} onCopy={() => alert("주소를 클립보드에 복사되었습니다.")}>
                     <button type="button">
                       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
