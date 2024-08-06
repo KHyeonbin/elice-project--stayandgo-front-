@@ -82,11 +82,11 @@ const Category = ({setCategory, setPage}) => {
         const handleWheel = (e) => {
             // X축 스크롤로 변환
             if (e.deltaY !== 0) {
+                // y 축 스크롤은 멈추게 함
                 e.preventDefault();
                 const scrollAmount = e.deltaY;
                 e.currentTarget.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
+                    left: scrollAmount
                 });
             }
         };
