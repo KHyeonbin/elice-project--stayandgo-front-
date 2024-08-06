@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import homeImage from '../../assets/images/home.png';
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -27,37 +26,13 @@ const PrevPageBtn = styled.button`
   cursor: pointer;
 `;
 
-const RightArea = styled.div`
-  margin-right: 20px;
-`;
-const LinkDiv = styled.div`
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-
-  background-image: url(${homeImage});
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-`;
-
-const LinkText = styled(Link)`
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-`;
-
-const SubHeader = () => {
+const SubHeaderHome = () => {
   const navigate = useNavigate();
-
-  const onClickHome = () => {
-    window.location.href = "/";
-  }
 
   return (
     <Container>
       <LeftArea>
-        <PrevPageBtn onClick={() => navigate(-1)}>
+        <PrevPageBtn onClick={() => navigate('/')}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -69,11 +44,8 @@ const SubHeader = () => {
           </svg>
         </PrevPageBtn>
       </LeftArea>
-      <RightArea>
-        <LinkDiv onClick={onClickHome} />
-      </RightArea>
     </Container>
   );
 };
 
-export default SubHeader;
+export default SubHeaderHome;

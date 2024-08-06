@@ -132,43 +132,43 @@ const TravelPage = () => {
   useEffect(() => {
     // page
     if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
-      alert('로그인하지 않은 사용자입니다.');
-      navigate('/');
+      navigate('/loginHome');
       return;
     }
-
-    getTravelLoad.getReservePastPage({mymode: true})
-    .then(res => {
-      setPastPage(res || defaultPage);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    getTravelLoad.getReserveUpcomingPage({mymode: true})
-    .then(res => {
-      setUpcomingPage(res || defaultPage);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    // list
-    getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
-    .then(res => {
-      setPastTravelData(res || []);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
-    .then(res => {
-      setUpcomingTravelData(res || []);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    
-    setIsIngLoading(true);
-    setIsPastLoading(true);
+    else {
+      getTravelLoad.getReservePastPage({mymode: true})
+      .then(res => {
+        setPastPage(res || defaultPage);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      getTravelLoad.getReserveUpcomingPage({mymode: true})
+      .then(res => {
+        setUpcomingPage(res || defaultPage);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      // list
+      getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setPastTravelData(res || []);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setUpcomingTravelData(res || []);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      
+      setIsIngLoading(true);
+      setIsPastLoading(true);
+    }
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
