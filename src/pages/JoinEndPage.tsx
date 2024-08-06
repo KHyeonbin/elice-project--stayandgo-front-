@@ -4,7 +4,7 @@ import JoinEnd from "../components/account/JoinEnd";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const JoinEndPage = () => {
+const JoinEndPage: React.FC = () => {
   return (
     <>
       <SubHeader />

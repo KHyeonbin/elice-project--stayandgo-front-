@@ -27,7 +27,7 @@ const UserBtn = styled.button`
     }
 `
 
-const AdminIntroPage = () => {
+const AdminIntroPage: React.FC = () => {
     return (
         <>
             <SubHeader />

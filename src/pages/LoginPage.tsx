@@ -4,7 +4,7 @@ import Login from "../components/account/Login";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   return (
     <>
       <SubHeader />

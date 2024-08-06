@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 import React from "react";
 
-const ChangePasswordPage = () => {
+const ChangePasswordPage: React.FC = () => {
   return (
     <>
       <SubHeader />

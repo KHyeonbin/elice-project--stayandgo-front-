@@ -4,7 +4,7 @@ import FindPassword from "../components/account/FindPassword";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const FindPasswordpage = () => {
+const FindPasswordpage: React.FC = () => {
   return (
     <>
       <SubHeader />

@@ -4,7 +4,7 @@ import FindId from "../components/account/FindId";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const FindIdPage = () => {
+const FindIdPage: React.FC = () => {
   return (
     <>
       <SubHeader/>
