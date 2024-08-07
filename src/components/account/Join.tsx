@@ -160,31 +160,29 @@ const Join: React.FC = () => {
   };
 
   // 이메일 요청 버튼 클릭 시
-  const onEmailRequestHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+  const onEmailRequestHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/users/verify", {
+      const response = await axios.post("/users/verify", {
         email: userInfo.email,
       });
-      if ( emailRequestBtn.current && emailCodeInput.current) {
-        e.currentTarget.disabled = true;
-        emailCodeInput.current.readOnly = false;
-        emailRequestBtn.current.style.color = "#333";
-        emailRequestBtn.current.style.border = "1px solid #333";
-        emailRequestBtn.current.style.cursor = "default";
+      if(response.data.code == 200) {
+        if ( emailRequestBtn.current && emailCodeInput.current) {
+          e.target.disabled = true;
+          emailCodeInput.current.readOnly = false;
+        }
       }
-      alert("이메일이 발송되었습니다.");
+      alert(response.data.message);
       // 이메일 인증 요청 시 버튼 비활성화
     } catch(error) {
-      e.currentTarget.disabled = false;
+      e.target.disabled = false;
       alert(error.response.data.message);
     };
   };
 
 
   // 이메일 인증 확인 버튼 클릭 시
-  const onEmailCheckHandler = async (e: MouseEvent<HTMLButtonElement>) => {
-    //e.preventDefault();
+  const onEmailCheckHandler = async (e) => {
     try {
       const response = await axios.post(
         "/users/verify/confirm",
@@ -195,15 +193,16 @@ const Join: React.FC = () => {
       );
       // 이메일 인증 요청 시 버튼 비활성화
       if (emailOkBtn.current && emailCodeInput.current) {
-        e.currentTarget.disabled = true;
+        e.target.disabled = true;
         emailCodeInput.current.readOnly = true;
         emailOkBtn.current.style.cursor = "default";
       }
-        alert(response.data.message);
+      alert(response.data.message);
+
       } catch(error) {
       //emailRequestBtn.current.disabled = false;
-      e.currentTarget.disabled = false;
-      alert(error.response?.data?.message); // 확인 !!
+      e.target.disabled = false;
+      alert(error.message); // 확인 !!
     }
   };
 

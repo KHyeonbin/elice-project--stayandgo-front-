@@ -2,6 +2,8 @@ import React, {ChangeEvent, FormEvent, useState} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { findIDUser } from "../../api/findIDUser";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -43,7 +45,12 @@ const ShowBtn = styled.button`
 
 const UserInfoDiv = styled.div`
   text-align: center;
-  padding: 20px 0;
+  padding: 30px 0;
+  border: 2px dashed #ffbebe;
+  margin-top: 30px;
+  border-radius: 20px;
+  background: #fff6f6;
+  & button {border: 0; background: 0; font-size: 16px;}
 `;
 
 const JoinBox = styled.div`
@@ -117,9 +124,12 @@ const FindId: React.FC = () => {
       </JoinBox>
 
       {userId && (
-        <UserInfoDiv>
-          아이디는 <b>{userId}</b>입니다.
-        </UserInfoDiv>
+        <CopyToClipboard className="Toram" text={userId} onCopy={() => alert("아이디가 클립보드에 복사되었습니다.")}>
+          <UserInfoDiv>
+            아이디는 <button type="button"><b>{userId}</b></button>입니다.
+          </UserInfoDiv>
+        </CopyToClipboard>
+
       )}
     </form>
   );

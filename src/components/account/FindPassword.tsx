@@ -83,16 +83,13 @@ const Findpassword: React.FC = () => {
   const emailRequestBtn = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
 
-  const onEmailRequestHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+  const onEmailRequestHandler = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post<{message: string}>('/users/verify/findpw', {email});
       if (emailRequestBtn.current) {
-      e.currentTarget.disabled = true;
-      emailRequestBtn.current.style.color = "#333";
-      emailRequestBtn.current.style.border = "1px solid #333";
-      emailRequestBtn.current.style.cursor = "default";
+      e.target.disabled = true;
       }
       alert(response.data.message);
     } catch(error) {
@@ -110,8 +107,11 @@ const Findpassword: React.FC = () => {
         navigate("/changePassword", {state: {email} });
       } 
     } catch(error) {
+      if(error.response.status == 400) {
+        alert('인증번호를 확인해주세요.')
+      }
       console.log(error);
-      alert(error.response.data ? error.response.data.message : error.response);
+      alert(error.response);
     }
 
   };
