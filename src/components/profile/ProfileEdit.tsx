@@ -63,7 +63,7 @@ const ProfileEdit: React.FC = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const userData = await fetchUserData(id);
+        const userData = await fetchUserData(id as string);
         setFormData({
           email: userData.email || loginUser.email,
           password: "",

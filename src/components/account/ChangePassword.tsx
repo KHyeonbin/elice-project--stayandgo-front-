@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PasswordRegex } from "./Regex";
-import { changePWUser } from "../../api/changePWUser.js";
+import { changePWUser } from "../../api/changePWUser";
 import { Errors, UserInfo } from "../../model/user/user";
 
 const LoginInput = styled.input`

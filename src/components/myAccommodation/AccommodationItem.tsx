@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { AccommodationType, ItemPropsType } from "../../model/myaccommodation(with edit)/Accommodation";
 
-const AccommodationItem:React.FC<ItemPropsType> = ({ CheckboxOption, accommodation }) => {
+const AccommodationItem:React.FC<ItemPropsType> = ({ key, CheckboxOption, accommodation }) => {
   /** 각 숙소 클릭 시 상세 페이지로 이동 */
   // 숙소 상세 정보를 받고 link + nanoid + 쿼리 스트링 포멧 state
   const [link, setLink] = useState("");

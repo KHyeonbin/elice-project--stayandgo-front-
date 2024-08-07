@@ -1,19 +1,22 @@
 // MyAcommodations.tsx type 선언
 export type searchType = {
-    city: string;
-    adult: number;
-    child: number;
-    baby: number;
+    city: string,
+    adult: number,
+    child: number,
+    baby: number,
 }; 
 // Accommodation 타입 정의
 export type AccommodationType = {
-  nanoid: string;
-  [key: string]: any; // 추가 필드들에 대한 타입
+    nanoid: string,
+    main_image: string,
+    title: string,
+    price: number | string;
 };
 export type ItemPropsType = {
-    accommodation: AccommodationType;
-    CheckboxOption: React.FC<any>;
-    onChangeHandleCheckBox(checkedValue: unknown[]): void;
+    accommodation: AccommodationType,
+    CheckboxOption: React.FC<any>,
+    key: number,
+    children?: React.ReactNode; // children 속성 추가
 };
 
 
