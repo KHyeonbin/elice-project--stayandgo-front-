@@ -43,7 +43,7 @@ const ImgDiv = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0 15px 80px;
 `;
 
 const Title = styled.h2`
