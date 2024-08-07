@@ -11,7 +11,7 @@ import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { motion } from "framer-motion";
-import { Option, Page } from "../model/travel/travel";
+import { Option, Page, TravelData } from "../model/travel/travel";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -119,8 +119,8 @@ const TravelPage: React.FC = () => {
   const [isingLoading, setIsIngLoading] = useState<boolean>(false);
   const [isPastLoading, setIsPastLoading] = useState<boolean>(false);
   //오늘 날짜 기준으로 지난여행, 다가오는여행 상태 세팅
-  const [pastTravelData, setPastTravelData] = useState([]);
-  const [upcomingTravelData, setUpcomingTravelData] = useState([]);
+  const [pastTravelData, setPastTravelData] = useState<TravelData[]>([]);
+  const [upcomingTravelData, setUpcomingTravelData] = useState<TravelData[]>([]);
 
   // react-select 에는 key 값이 없어서 미리 option 정의
   const option: Option[] = [{value: "다가오는 여행", label: "다가오는 여행"},
