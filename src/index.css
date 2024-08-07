@@ -23,7 +23,19 @@ body {
   color: #333;
   font-size: 14px;
 
+  /* 스크롤바 안보이게 처리 */
+  -ms-overflow-style: none;
+
 }
+
+/* 스크롤바 안보이게 처리 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+
 
 /* 모바일 자동 확대 설정 제한 (16px 이상일 때 ios, 안드로이드 자동 확대 되지 않음) */
 input, textarea {
@@ -46,5 +58,4 @@ h1,h2,h3,h4,h5 {
 #root {
   background: #fff;
   min-height: 100vh;
-  overflow: hidden;
 }
