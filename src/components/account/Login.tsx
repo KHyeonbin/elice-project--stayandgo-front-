@@ -2,6 +2,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import React, { FormEvent, useState } from "react";
+import CryptoJS from 'crypto-js';
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -56,14 +57,23 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
+  const encryptPassword = (password: string, key: string) : string => {
+    const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+    return encryptedPassword;
+  };
+
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/login", { email, password }, {
+      // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
+      // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
+      const key = `${process.env.REACT_APP_AES_KEY}`;
+      const aesPassword = encryptPassword(password, key);
+
+      const response = await axios.post("/login", { email, password: aesPassword }, {
          // 쿠키를 포함시키기 위해 필요
     });
-      //console.log(response.data);
       // 여행, 등록숙소 페이지에서 새로고침 시 로그인 상태 확인용 localstorage data 추가
       // : front 에서 강제로 localstorage 를 수정하더라도 그 때는 전역 상태 loginstate 에 저장된 값에 따라 
       // 데이터를 출력하기 때문에 빈 값이 나오도록 함.
