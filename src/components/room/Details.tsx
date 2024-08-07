@@ -501,12 +501,7 @@ const RoomDetails = () => {
     if(moveup === 1){
       alert('예약 정보를 설정해주세요.');
       navigate('/');
-    } else {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
+    } 
   },[moveup]);
 
   const onReservate = async() => {
