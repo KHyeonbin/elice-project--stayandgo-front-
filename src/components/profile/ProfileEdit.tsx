@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, ChangeEvent, MouseEvent } from "react";
 import { useParams } from "react-router-dom";
 import {
   ProfileEditContainer,
@@ -16,7 +16,7 @@ import loginState from "../../atoms/loginState";
 import { useRecoilValue } from "recoil";
 import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 import EmojiModal from "./EmojiModal"; // 프로필 이모지 모달
-import { UserData, ProfileModalProps, ProfileInputProps, EmojiModalProps } from "../../model/profile/profile"
+import { UserData } from "../../model/profile/profile"
 
 
 /** 비밀번호 유효성 검사 함수 */
@@ -82,7 +82,7 @@ const ProfileEdit: React.FC = () => {
   }, [id, loginUser]);
 
   /** 인풋 변경 핸들러 */
-  const onChangeHandler = useCallback((e) => {
+  const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === "phone") {
@@ -100,7 +100,7 @@ const ProfileEdit: React.FC = () => {
   }, [formData.password]);
 
   /** 완료 버튼 클릭 시 */
-  const onClickHandleSave = async (e) => {
+  const onClickHandleSave = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { email, password, passwordCheck, nickname, phone, photo } = formData;
 
@@ -138,7 +138,7 @@ const ProfileEdit: React.FC = () => {
   }
 
   /** 이모지 선택 */
-  const onSelectHandleEmoji = (emoji) => {
+  const onSelectHandleEmoji = (emoji: string) => {
     setFormData((prev) => ({ ...prev, photo: emoji }));
     setIsEmojiModal(false);
   }
