@@ -210,7 +210,7 @@ const RoomMyDetails = () => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const sortedImages = useRef<ContextImageData[]>();
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const {id} = useParams();
   // sub_images, category, author 부분은 null, undefined 방지
   const [roomInfo, setRoomInfo] = useState({
@@ -306,10 +306,10 @@ const RoomMyDetails = () => {
       <Container>
         <Title>[{roomInfo.title}]</Title>
         <InfoText>
-        {Number(query.get('price')).toLocaleString()}원 / {query.get('main_location')}
+        {roomInfo.price.toLocaleString()}원 / {roomInfo.main_location}
           <br />
-          최대 인원 {Number(query.get('max_adult')) + Number(query.get('max_baby')) + Number(query.get('max_child'))}명 * 
-          침실 {query.get('room_num')}개
+          최대 인원 {roomInfo.max_adult + roomInfo.max_baby + roomInfo.max_child}명 * 
+          침실 {roomInfo.room_num}개
         </InfoText>
         <MainOptionBox>
           {roomInfo.category.length > 0 && 
