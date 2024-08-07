@@ -20,6 +20,7 @@ const ErrorMessage = styled.div`
   font-size: 12px;
   color: red;
   padding: 5px 0;
+  margin-left: 5px;
 `;
 
 const ProfileInput: React.FC<ProfileInputProps> = React.memo(({type, name, value, placeholder, required, onChange, disabled, error})=> (
