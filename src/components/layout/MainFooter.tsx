@@ -52,13 +52,13 @@ const Footer : React.FC = () => {
         setMenu((current) => {
             const newMenu = {...current};
             const path = location.pathname;
-            if(path === "/"){
+            if(path === "/"  || path === '/upload' || path === '/upload/edit'){
                 newMenu.menu = menu.menuArr[0];
             } else if(path === "/travel"){
                 newMenu.menu = menu.menuArr[1];
             } else if(path === "/myaccommodation"){
                 newMenu.menu = menu.menuArr[2];
-            } else if(path === "/profile"){
+            } else {
                 newMenu.menu = menu.menuArr[3];
             }
             return newMenu;

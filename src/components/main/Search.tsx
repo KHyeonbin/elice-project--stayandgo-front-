@@ -344,12 +344,10 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
     // 클릭 시 모달 활성화
     const onClickModal = () : void => {
         setIsModal(true);
-        document.body.style.overflowY = "hidden";
     };
     // x 버튼 클릭 시 모달 비활성화
     const onClickModalClose = () => {
         setIsModal(false);
-        document.body.style.overflowY = "auto";
     };
     // 지역 셀렉트 박스 이벤트 핸들러
     const onChangeSelect = (e: SingleValue<{ value: string, label: string }> | null) => {
@@ -383,7 +381,10 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
             return;
         } else {
             setIsModal(false);
-            document.body.style.overflowY = "auto";
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
             setStartSearch(search);
             setPage((current) : PageType => {
                 const newPage = {...current};
