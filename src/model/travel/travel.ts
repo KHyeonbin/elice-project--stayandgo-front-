@@ -88,3 +88,10 @@ export interface Option {
     value: string;
     label: string;
 }
+
+export interface Page {
+    page: number;
+    perPage: number;
+    total: number;
+    totalPage: number;
+  }
