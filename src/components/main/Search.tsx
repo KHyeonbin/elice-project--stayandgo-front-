@@ -8,12 +8,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {getDateFormat} from '../../util/getDateFormat';
 import { getNextDate } from "../../util/getNextDate";
 import {ko} from 'date-fns/locale';
-import Select, { StylesConfig } from 'react-select';
+import Select, { StylesConfig, SingleValue } from 'react-select';
 import { korCity } from "../../util/data/arrayStaticData";
 import SearchGuestSetting from "./SearchGuestSetting";
 import { getNextNextDate } from "../../util/getNextNextDate";
 import { optionType, PageType, SearchProps, AdultProps, SearchType } from "../../model/main(with detail, upload)/mainTypes";
 import styles from './DatePicker.module.css';
+import classNames from 'classnames';
 
 const Container = styled.div`
     width: 100%;
@@ -351,17 +352,19 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
         document.body.style.overflowY = "auto";
     };
     // 지역 셀렉트 박스 이벤트 핸들러
-    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSearch((current) : SearchType => {
-            const newSearch = {...current};
-            newSearch.city = e.target.value;
-            return newSearch;
-        });
-        // react-select value 설정
-        setSelectValue(() : optionType | null => {
-            const selectedOption = option.find(v => v.value === e.target.value) || null;
-            return selectedOption;
-        });
+    const onChangeSelect = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setSearch((current) : SearchType => {
+                const newSearch = {...current};
+                newSearch.city = e.value;
+                return newSearch;
+            });
+            // react-select value 설정
+            setSelectValue(() : optionType | null => {
+                const selectedOption = option.find(v => v.value === e.value) || null;
+                return selectedOption;
+            });
+        }
     };
 
     // 전체 삭제 클릭 시 이벤트 핸들러
@@ -404,7 +407,7 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
                             <ModalContentBigger>
                                 <ModalcontentBiggerTitle>여행 날짜는 언제인가요?</ModalcontentBiggerTitle>
                                 <BiggerDivSub>
-                                    <div className={styles.datepickerWrapper}>
+                                    <div>
                                         <DatePicker value={search.startDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
@@ -415,11 +418,18 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
                                             locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 키보드 비활성화
-                                            wrapperClassName={styles.datepickerWrapper}
+                                            className={classNames(
+                                                styles.wrapper, // 전체 스타일을 적용
+                                                styles.daySelected,     // 선택된 날짜 스타일
+                                                styles.dayKeyboardSelected, // 키보드 선택 스타일
+                                                styles.currentMonth,     // 현재 월 스타일
+                                            )} 
+                                            wrapperClassName={styles.wrapper} // 래퍼 스타일을 적용
+                                            calendarClassName={classNames(styles.header)} // 날짜 선택기 헤더 스타일을 적용
                                         />
                                     </div>
                                         <BiggerDivSubTitle>~</BiggerDivSubTitle>
-                                    <div className={styles.datepickerWrapper}>
+                                    <div>
                                         <DatePicker value={search.endDate} 
                                             dateFormat='yyyy-MM-dd' // 날짜 형태
                                             shouldCloseOnSelect // 날짜를 선택하면 datepicker가 자동으로 닫힘
@@ -430,7 +440,14 @@ const Search : React.FC <SearchProps> = ({setPage, search, setSearch, startSearc
                                             locale={ko}
                                             disabledKeyboardNavigation // 키보드 비활성화
                                             onFocus={e => e.target.blur()} // 포커스를 받을 때 자동으로 blur() 호출하여 키보드 비활성화
-                                            wrapperClassName={styles.datepickerWrapper}
+                                            className={classNames(
+                                                styles.wrapper, // 전체 스타일을 적용
+                                                styles.daySelected,     // 선택된 날짜 스타일
+                                                styles.dayKeyboardSelected, // 키보드 선택 스타일
+                                                styles.currentMonth,     // 현재 월 스타일
+                                            )} 
+                                            wrapperClassName={styles.wrapper} // 래퍼 스타일을 적용
+                                            calendarClassName={classNames(styles.header)} // 날짜 선택기 헤더 스타일을 적용
                                         />
                                     </div>
                                 </BiggerDivSub>

@@ -1,19 +1,27 @@
-.datepickerHeader {
-    background-color: white;
-    color: #E61E51;
-    border: none;
-    text-align: center;
-  }
-  
-  .datepickerDaySelected {
-    background-color: #E61E51;
-    color: white;
-  }
-  
-  .datepickerDayKeyboardSelected {
-    background-color: #F07C8C;
-  }
-  
-  .datepickerCurrentMonth {
-    color: #E61E51;
-  }
+.__header {
+  background-color: white;
+  color: #E61E51;
+  border: none;
+  text-align: center;
+}
+
+.daySelected {
+  background-color: #E61E51;
+  color: white;
+}
+
+.dayKeyboardSelected {
+  background-color: white;
+}
+
+.currentMonth {
+  color: #E61E51;
+}
+
+.wrapper {
+  width: 200px;
+  text-align: center;
+  font-size: 22px;
+  text-decoration: underline;
+  border: none;
+}
