@@ -44,7 +44,7 @@ const Profile: React.FC = () => {
       navigate('/login');
       return;
     }
-    navigate(`/profile/edit/${user.id}`);
+    navigate(`/profile/edit/${user.email}`);
   };
 
   /** 등록숙소 예약관리 페이지로 이동 */
@@ -162,6 +162,7 @@ const Profile: React.FC = () => {
           message="정말 탈퇴하시겠습니까?"
           onConfirm={onClickHandleConfirmDelete}
           onCancel={onClickHandleCancelDelete}
+          isDelete={true}
         />
       )}
     </ProfileContainer>
