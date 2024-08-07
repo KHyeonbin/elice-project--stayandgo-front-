@@ -8,9 +8,11 @@ import React from "react";
 const ModalOverlay = styled.div`
   position: fixed;
   background-color: rgba(0, 0, 0, 0);
-  left: 0;
+  left: 50%;
   top: 0;
+  transform: translate(-50%, 0);
   width: 100%;
+  max-width: 700px;
   height: 100%;
   overflow-y: initial;
   z-index: 101;
@@ -22,10 +24,12 @@ const ModalOverlay = styled.div`
 // 모달 컨테이너 div
 const ModalContainer = styled.div`
   position: fixed;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
   height: 100vh;
+  width:100%;
+  max-width: 700px;
   scrollbar-width: none;
   background-color: #fff;
   transition: top 0.3s ease-in-out;
