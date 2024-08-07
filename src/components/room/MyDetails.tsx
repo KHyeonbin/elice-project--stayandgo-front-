@@ -347,7 +347,7 @@ const RoomMyDetails = () => {
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap address={roomInfo.sub_location} title={roomInfo.title} />
+            <KakaoMap moveup={-1} address={roomInfo.sub_location} title={roomInfo.title} />
           </Location>
           <LocationText>{roomInfo.sub_location}</LocationText>
         </LocationDiv>
