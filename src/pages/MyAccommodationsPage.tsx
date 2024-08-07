@@ -5,7 +5,7 @@ import MainFooter from "../components/layout/MainFooter";
 import MyAccommodations from "../components/myAccommodation/MyAccommodations";
 import { motion } from "framer-motion";
 
-const MyAccommodationsPage = () => {
+const MyAccommodationsPage: React.FC = () => {
   return (
     <>
     <SubHeader />
