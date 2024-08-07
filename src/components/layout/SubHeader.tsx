@@ -11,10 +11,12 @@ const Container = styled.div`
   align-items: center;
   border-bottom: 2px solid #eeeeee;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  left: 0;
+  position: fixed;
+  left: 50%;
   top: 0;
+  transform: translate(-50%, 0);
   width: 100%;
+  max-width: 700px;
   background: #fff;
   z-index: 101;
 `;
@@ -56,7 +58,7 @@ const SubHeader = () => {
   }
 
   return (
-    <Container>
+    <Container className="subHeader">
       <LeftArea>
         <PrevPageBtn onClick={() => navigate(-1)}>
           <svg

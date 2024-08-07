@@ -33,7 +33,7 @@ const SubHeaderHome = () => {
   const navigate = useNavigate();
 
   return (
-    <Container>
+    <Container className="subHeader">
       <LeftArea>
         <PrevPageBtn onClick={() => navigate('/')}>
           <svg
