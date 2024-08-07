@@ -19,7 +19,7 @@ const NoAccomodation:React.FC = () => {
         <No.Description>
           나의 숙소를 등록해주세요!!
         </No.Description>
-        <No.SearchButton onClick={handleClick}>나의 숙소 등록하기</No.SearchButton>
+        
       </No.Content>
       <No.ImageContainer />
     </No.Container>
