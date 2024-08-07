@@ -397,10 +397,18 @@ const RoomDetails = () => {
 
   const onOpenShareModal = () => {
     setIsOpenShareModal(true);
+    // 모달 떠 있는 동안 바디 스크롤 막기
+    document.body.style.height = '100%';
+    document.body.style.overflow = 'hidden';
+    document.body.style['touch-action'] = 'none';
   };
 
   const onCloseShareModal = () => {
     setIsOpenShareModal(false);
+    // 바디 스크롤
+    document.body.style.height = 'auto';
+    document.body.style.overflow = 'initial'; 
+    document.body.style['touch-action'] = 'initial';
   };
 
 
