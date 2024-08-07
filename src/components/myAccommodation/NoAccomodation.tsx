@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import homeImg from "../../assets/images/home.png";
 import * as No from "./NoAccomodation.style"
 
-const NoAccomodation = () => {
+const NoAccomodation:React.FC = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {

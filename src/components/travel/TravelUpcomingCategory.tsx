@@ -5,6 +5,7 @@ import {Checkbox} from 'antd';
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
 import TravelConfirmModal from "./TravelConfirmModal";
 import Pagination from "../layout/Pagination";
+import { TravelUpcomingCategoryPropsType } from "../../model/travel/travel";
 
 const CategoryBox = styled.div`
   display: flex;
@@ -67,15 +68,15 @@ const CheckDelBtn = styled.button`
 `
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
+const TravelUpcomingCategory:React.FC<TravelUpcomingCategoryPropsType> = ({ setSelectValue, upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
   // 1개 체크 박스 상태(nanoid : value)
-  const [checkValue, setCheckValue] = useState([]);
+  const [checkValue, setCheckValue] = useState<unknown[]>([]);
 
   // 확인 모달 상태
   const [isModal, setIsModal] = useState(false);
 
   // checkbox 1개 씩 선택 가능하다.
-  const onChangeCheckbox = (e) => {
+  const onChangeCheckbox = (e: unknown[]) => {
     if(e.length > 1){
         alert("다가오는 여행은 -2 일 전까지 1개 씩 삭제 가능합니다.");
         return;
@@ -101,7 +102,7 @@ const TravelUpcomingCategory = ({ setSelectValue, upcomingTravelData, noReservat
   const onClickHandleConfirmDelete = async () => {
     travelDeleteFromCheck({nanoid: checkValue[0]})
         .then(res => {
-            if(res.data && res.data.code === 200){
+            if(res?.data && res?.data.code === 200){
                 alert('정상적으로 취소되었습니다.');
                 // 유사 새로고침 효과 부여
                 setSelectValue({value: "다가오는 여행", label: "다가오는 여행"});
