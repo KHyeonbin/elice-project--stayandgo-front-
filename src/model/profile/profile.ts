@@ -18,6 +18,7 @@ export interface ProfileModalProps {
     onClose?: () => void;
     onConfirm?: () => void;
     onCancel?: () => void;
+    isDelete?: boolean;
   }
   
 export interface ProfileInputProps {
