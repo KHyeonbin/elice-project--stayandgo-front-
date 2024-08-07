@@ -77,7 +77,7 @@ const SearchButton = styled.button`
   }
 `;
 
-const NoReservation = () => {
+const NoReservation: React.FC = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {

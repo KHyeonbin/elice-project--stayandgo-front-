@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
-import Header from "../components/layout/SubHeader";
-import Footer from "../components/layout/MainFooter";
+import SubHeader from "../components/layout/SubHeader";
+import MainFooter from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
 import NoReservation from "../components/travel/NoReservation";
 import TravelCategory from "../components/travel/TravelCategory";
@@ -11,6 +11,7 @@ import getTravelLoad from "../api/getTravelLoad";
 import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { motion } from "framer-motion";
+import { Option, Page } from "../model/travel/travel";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -101,28 +102,28 @@ const Loading_img = styled.img`
     }
 `
 
-const TravelPage = () => {
+const TravelPage: React.FC = () => {
   // 로그인 상태 확인
   const loginUser = useRecoilValue(loginState);
 
   // 페이지네이션 정의 (초기 1페이지만 지정함(perPage 수정은 server 에서 담당)
-  const defaultPage = {
+  const defaultPage: Page = {
     page: 1,
     perPage: 0,
     total: 0,
     totalPage: 0,
   }
-  const [upcomingPage, setUpcomingPage] = useState(defaultPage);
-  const [pastPage, setPastPage] = useState(defaultPage);
+  const [upcomingPage, setUpcomingPage] = useState<Page>(defaultPage);
+  const [pastPage, setPastPage] = useState<Page>(defaultPage);
   // 로딩 상태 정의
-  const [isingLoading, setIsIngLoading] = useState(false);
-  const [isPastLoading, setIsPastLoading] = useState(false);
+  const [isingLoading, setIsIngLoading] = useState<boolean>(false);
+  const [isPastLoading, setIsPastLoading] = useState<boolean>(false);
   //오늘 날짜 기준으로 지난여행, 다가오는여행 상태 세팅
   const [pastTravelData, setPastTravelData] = useState([]);
   const [upcomingTravelData, setUpcomingTravelData] = useState([]);
 
   // react-select 에는 key 값이 없어서 미리 option 정의
-  const option = [{value: "다가오는 여행", label: "다가오는 여행"},
+  const option: Option[] = [{value: "다가오는 여행", label: "다가오는 여행"},
                   {value: "지난 여행", label: "지난 여행"}];
   // react-select box value 설정하기 위함
   const [selectValue, setSelectValue] = useState(option[0]);
@@ -226,7 +227,7 @@ const TravelPage = () => {
 
   return (
     <>
-      <Header user={loginUser} />
+      <SubHeader />
       <motion.div 
       initial={{ opacity: 0, position: 'relative', left: '100%' }}
       animate={{ opacity: 1, position: 'relative', left: '0' }}
@@ -258,7 +259,7 @@ const TravelPage = () => {
         </Container>
         </MainContainer>
       </motion.div>
-      <Footer user={loginUser} />
+      <MainFooter />
     </>
   );
 };
