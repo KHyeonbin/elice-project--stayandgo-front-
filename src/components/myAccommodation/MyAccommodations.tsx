@@ -15,23 +15,25 @@ import AccommodationItem from "./AccommodationItem"; // 분리한 숙소아이�
 import mainPostLoad from "../../api/mainPostLoad";
 import { mypostDelete } from "../../api/myPostDelete";
 import MyAccommodationModal from "./MyAccommodationModal";
+import { searchType, AccommodationType } from "../../model/myaccommodation(with edit)/Accommodation";
 
-const MyAccommodations = () => {
+
+const MyAccommodations:React.FC = () => {
   // modal 호출 state
-  const [isModal, setIsModal] = useState(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
   // 로딩 state
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
   // 나의 숙소 state
-  const [accommodations, setAccommodations] = useState([]);
+  const [accommodations, setAccommodations] = useState<AccommodationType[]>([]);
   // checkbox state
-  const [checkValue, setCheckValue] = useState([]);
+  const [checkValue, setCheckValue] = useState<unknown[]>([]);
 
   // 첫 페이지 load 나 삭제 시 재 loading 을 위한 함수 셋팅
   const loadingFunction = () => {
     // 기존 메인에서 post read 하는 api 를 mymode 값으로 제어하기 때문에 나머지 값들은 기본 값으로 셋팅
-    const search = {
+    const search:searchType = {
       city: "전체",
       adult: 0,
       child: 0,
@@ -69,13 +71,12 @@ const MyAccommodations = () => {
   },[accommodations]);
 
   /** 체크박스 클릭 시 해당 숙소 checked 상태 변경 */
-  const onChangeHandleCheckBox = (e) => {
-    if(e.length > 1){
+  const onChangeHandleCheckBox = (checkedValue: unknown[]): void => {
+    if(checkedValue.length > 1){
       alert("등록 삭제 및 수정은 1 개씩 가능합니다.");
       return;
     }
-    setCheckValue(e);
-    return;
+    setCheckValue(checkedValue);
   };
 
   /** 등록 삭제 버튼 클릭 시 */
@@ -108,15 +109,15 @@ const MyAccommodations = () => {
   const onClickHandleConfirmDelete = async () => {
     try {
       mypostDelete({nanoid: checkValue[0]})
-      .then(res => {
-        if(res.data && res.data.code === 200){
+      .then((res) => {
+        if(res?.data && res?.data.code === 200){
           loadingFunction();
           // 체크 벨류 초기화
           setCheckValue([]);
         } 
         else {
           alert(res?.data?.message);
-        }
+        } 
       })
       .catch(e => {
         console.log(e);
@@ -142,7 +143,7 @@ const MyAccommodations = () => {
       </Header>
       {!isLoading &&
         <CheckboxGroup value={checkValue} onChange={onChangeHandleCheckBox}>
-          {accommodations.map((accommodation, i) => (
+          {accommodations.map((accommodation, i:number) => (
             <AccommodationItem
             key={i}
             accommodation={accommodation}

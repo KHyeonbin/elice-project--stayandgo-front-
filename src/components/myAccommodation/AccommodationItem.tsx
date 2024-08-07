@@ -7,15 +7,16 @@ import {
   Price,
 } from "./MyAccommodationsStyle";
 import { Link } from "react-router-dom";
+import { AccommodationType, ItemPropsType } from "../../model/myaccommodation(with edit)/Accommodation";
 
-const AccommodationItem = ({ CheckboxOption, accommodation }) => {
+const AccommodationItem:React.FC<ItemPropsType> = ({ CheckboxOption, accommodation }) => {
   /** 각 숙소 클릭 시 상세 페이지로 이동 */
   // 숙소 상세 정보를 받고 link + nanoid + 쿼리 스트링 포멧 state
   const [link, setLink] = useState("");
   const [query, setQuery] = useState("");
 
   // detail 페이지 연결은 쿼리 포멧팅 후 쿼리를 적용한 Link 컴포넌트로 연결 
-  const formatObject = useCallback((obj, nanoid) => {
+  const formatObject = useCallback((obj:AccommodationType, nanoid:string) => {
     setLink(`/room/my/details/${nanoid}`);
     // URL 에서 일부 특수문자를 포함 시킬 때 URL 인코딩 과정을 추가해야 함.
     const objCopy = {...obj};
@@ -39,7 +40,7 @@ const AccommodationItem = ({ CheckboxOption, accommodation }) => {
       <ListItem>
         <Image $imageUrl={accommodation.main_image} >
           <CheckboxOption key={accommodation.nanoid} value={accommodation.nanoid}
-           onClick={(e) => e.stopPropagation()} /> 
+           onClick={(e:React.MouseEvent) => e.stopPropagation()} /> 
            {/* (윗 문장 e.stopPropagation(): 이벤트 전파 방지(Link는 동작안하고 체크박스만 동작하게 함) */}
         </Image>
         <DetailContainer>
