@@ -10,35 +10,47 @@ const EmojiModalOverlay = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 50%;
 `;
 
 const EmojiModalContent = styled.div`
-  width: 290px;
-  height: 150px;
+  width: 310px;
+  height: auto;
   background-color: white;
-  padding: 25px;
+  padding: 15px;
   border-radius: 10px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   justify-content: center;
   position: relative;
-  bottom: 15%;
-  
+
+  @media (max-width: 400px) {
+    width: 80%;
+    padding: 15px;
+  }
 `;
 
 const EmojiButton = styled.button`
   background: none;
   border: none;
-  font-size: 35px;
+  font-size: 32px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 400px) {
+    font-size: 25px;
+    padding: 0;
+  }
 `
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 1px;
+  right: 3px;
   background: none;
   border: none;
   font-size: 20px;
