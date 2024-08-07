@@ -19,10 +19,7 @@ const AccommodationItem:React.FC<ItemPropsType> = ({ CheckboxOption, accommodati
   const formatObject = useCallback((obj:AccommodationType, nanoid:string) => {
     setLink(`/room/my/details/${nanoid}`);
     // URL 에서 일부 특수문자를 포함 시킬 때 URL 인코딩 과정을 추가해야 함.
-    const objCopy = {...obj};
-    objCopy.contents = encodeURIComponent(obj.contents);
-    objCopy.title = encodeURIComponent(obj.title);
-    objCopy.host_intro = encodeURIComponent(obj.host_intro);
+    const objCopy = {nanoid: nanoid};
     setQuery(`?${Object.entries(objCopy).map(([key, value]) => `${key}=${value}`).join('&')}`);
     return;
   },[])

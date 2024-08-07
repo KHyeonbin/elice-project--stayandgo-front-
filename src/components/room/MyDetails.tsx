@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,6 +11,7 @@ import KakaoMap from "../layout/KakaoMap";
 import { SlideModal } from "../../atoms/modalAtom";
 import { tagArr } from "../../util/data/arrayStaticData";
 import { detailPost } from "../../api/detailPost";
+import { ContextImageData, CSSPropertiesExtended, WebpackRequireContext } from "../../model/main(with detail, upload)/mainTypes";
 
 const SwiperDiv = styled.div` 
   position: relative;
@@ -208,21 +209,32 @@ const LoadingDiv = styled.div`
 const RoomMyDetails = () => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
-  const sortedImages = useRef();
+  const sortedImages = useRef<ContextImageData[]>();
   const [query, setQuery] = useSearchParams();
   const {id} = useParams();
   // sub_images, category, author 부분은 null, undefined 방지
   const [roomInfo, setRoomInfo] = useState({
-    sub_images: [],
-    category: [],
-    author: {nickname: ""}
+    title: "",
+    contents: "",
+    main_image: "",
+    price: 0,
+    sub_images: [""],
+    max_adult: 0,
+    max_child: 0,
+    max_baby: 0,
+    room_num: 0,
+    main_location: "",
+    category: [""],
+    sub_location: "",
+    author: {name: "", photo: "", email: "", nickname: "", phone: ""},
+    host_intro: ""
   });
 
   useEffect(() => {
     // 방 정보 가져오기
     detailPost({nanoid: id})
     .then(res => {
-      if(res.data && res.data.code === 200){
+      if(res && res.data && res.data.code === 200){
         setRoomInfo(res.data.data);
       }
     })
@@ -233,13 +245,16 @@ const RoomMyDetails = () => {
   }, [id]);
   
   // mainCatetory 디렉토리 이미지 가져오기
-  const importImages = (v) => {
-    return v.keys().map((key) => ({
-        src: v(key),
-        name: key.match(/[^/]+$/)[0], // 파일 이름만 추출
-      }));
-  };
-  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/));
+  const importImages = (v: WebpackRequireContext) : ContextImageData[] => {
+    return v.keys().map((key) => {
+        const match = key.match(/[^/]+$/);
+        return {
+            src: v(key),
+            name: match ? match[0] : 'unknown', // 파일 이름만 추출
+        }
+    });
+};
+  const images = importImages(require.context('../../assets/icons/mainCategory', false, /\.(png|jpe?g|gif)$/) as WebpackRequireContext);
   // 파일 이름 순으로 정렬
   sortedImages.current = images.sort((a, b) => {
     const aNumber = parseInt(a.name.split('_')[0], 10);
@@ -251,6 +266,13 @@ const RoomMyDetails = () => {
   if (!roomInfo) {
     return <LoadingDiv>Loading...</LoadingDiv>;
   }
+
+  const customStyle: CSSPropertiesExtended = {
+    '--swiper-pagination-bottom': '10px',
+    '--swiper-theme-color': '#fff',
+    '--swiper-pagination-bullet-inactive-color': '#fff',
+    '--swiper-pagination-bullet-inactive-opacity': '0.4',
+  };
 
   return (
     <>
@@ -265,15 +287,10 @@ const RoomMyDetails = () => {
             console.log(swiper.realIndex);
           }}
           pagination={{ clickable: true }}
-          style={{
-            "--swiper-pagination-bottom": "10px",
-            "--swiper-theme-color": "#fff",
-            "--swiper-pagination-bullet-inactive-color": "#fff",
-            "--swiper-pagination-bullet-inactive-opacity": "0.4",
-          }}
+          style={customStyle}
         >
             <SwiperSlide key={`slide0`}>
-              <ImgDiv><img src={query.get('main_image')}></img></ImgDiv>
+              <ImgDiv><img src={roomInfo.main_image}></img></ImgDiv>
             </SwiperSlide>
           {roomInfo.sub_images.length > 0 &&
           roomInfo.sub_images.map((img, i)=>{
@@ -287,7 +304,7 @@ const RoomMyDetails = () => {
       </SwiperDiv>
 
       <Container>
-        <Title>[{query.get('title')}]</Title>
+        <Title>[{roomInfo.title}]</Title>
         <InfoText>
         {Number(query.get('price')).toLocaleString()}원 / {query.get('main_location')}
           <br />
@@ -299,7 +316,7 @@ const RoomMyDetails = () => {
           roomInfo.category.map((cate, i)=>
             tagArr.map((tag, ii) => {
               if(tag === cate) {
-                return <MainOption key={i}><img src={sortedImages.current[ii].src} />{cate}</MainOption>
+                return <MainOption key={i}><img src={sortedImages.current ? sortedImages.current[ii].src : ""} />{cate}</MainOption>
               }
               else {
                 return null;
@@ -313,14 +330,14 @@ const RoomMyDetails = () => {
           <p>숙소 소개</p>
           {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
           <div style={{whiteSpace: "pre-wrap"}}>
-              {query.get('contents')}
+              {roomInfo.contents}
           </div>
           <button
             type="button"
             onClick={()=>setSlideModal(prev => ({
               isOpen: true,
               title: '숙소 소개',
-              text: query.get('contents'),
+              text: roomInfo.contents,
             }))}
           >
             더보기 &gt;
@@ -330,37 +347,37 @@ const RoomMyDetails = () => {
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap address={query.get('sub_location')} title={query.get('title')} />
+            <KakaoMap address={roomInfo.sub_location} title={roomInfo.title} />
           </Location>
-          <LocationText>{query.get('sub_location')}</LocationText>
+          <LocationText>{roomInfo.sub_location}</LocationText>
         </LocationDiv>
 
         <HostInfoDiv>
           <p>호스트 소개</p>
           <HostInfoBox>
-            <HostImg>{roomInfo.author?.photo}</HostImg>
+            <HostImg>{roomInfo.author.photo}</HostImg>
             <div>
-              <HostName>{roomInfo.author?.nickname}({roomInfo.author?.name})</HostName>
+              <HostName>{roomInfo.author.nickname}({roomInfo.author.name})</HostName>
               <p>{roomInfo.author.email}</p>
               <HostPhone href={`tel:${roomInfo.author?.phone}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#333">
                   <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/>
                 </svg>
-                {roomInfo.author?.phone}
+                {roomInfo.author.phone}
               </HostPhone>
             </div>
           </HostInfoBox>
           <HostText>
             {/* whiteSpace: "pre-wrap" 줄 바꿈 출력 css */}
             <div style={{whiteSpace: "pre-wrap"}}>
-                {query.get('host_intro')}
+                {roomInfo.host_intro}
             </div>
             <button
               type="button"
               onClick={()=>setSlideModal(prev => ({
                 isOpen: true,
                 title: '호스트 소개',
-                text: query.get('host_intro'),
+                text: roomInfo.host_intro,
               }))}
             >
               더보기 &gt;
