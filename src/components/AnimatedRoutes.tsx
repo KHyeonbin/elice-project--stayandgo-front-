@@ -23,10 +23,11 @@ import AdminIntroPage from "../pages/AdminIntroPage";
 import AdminPage from '../pages/AdminPage';
 import { AnimatePresence } from "framer-motion";
 import ChatBotPage from "../pages/ChatBotPage";
+import { routesType } from "../model/routesTypes";
 
 
 
-const AnimatedRoutes = ({ search, setSearch, startSearch, setStartSearch }) => {
+const AnimatedRoutes: React.FC<routesType> = ({ search, setSearch, startSearch, setStartSearch }) => {
     const location = useLocation();
 
     return(
