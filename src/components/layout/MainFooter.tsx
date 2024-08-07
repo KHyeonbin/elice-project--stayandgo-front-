@@ -63,7 +63,8 @@ const Footer : React.FC = () => {
             }
             return newMenu;
         });
-    },[])
+    // navigate 로 path 변경 시 location 의존성 주입으로 판단함
+    },[location])
 
     // mainCatetory 디렉토리 이미지 가져오기
     const importAllImages = (v: WebpackRequireContext) : ContextImageData[] => {
