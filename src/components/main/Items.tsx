@@ -90,7 +90,7 @@ const Items : React.FC <ItemsProps> = ({page, setPage, startSearch, category}) =
         }
     },[posts]);
 
-    console.log(page, posts);
+    console.log(page, posts, startSearch);
 
     return (
         <Container>

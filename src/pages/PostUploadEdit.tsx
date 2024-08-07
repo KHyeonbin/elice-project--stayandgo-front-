@@ -3,7 +3,7 @@ import SubHeader from "../components/layout/SubHeader";
 import Footer from "../components/layout/MainFooter";
 import styled from "styled-components";
 import addImg from '../assets/icons/addImg.png';
-import Select, { StylesConfig } from 'react-select';
+import Select, { SingleValue, StylesConfig } from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostEdit } from "../api/myPostEdit";
 import AccommodationModal from "../components/myAccommodation/AccommodationModal";
@@ -234,8 +234,8 @@ const PostUploadEdit : React.FC = () => {
     // 수정 전 상태 정의
     // 등록 데이터 state
     const [data, setData] = useState({
-        main_image: new FileList(),
-        sub_images: new FileList(),
+        main_image: [] as File[],
+        sub_images: [] as File[],
         title: "",
         room_num: 0,
         max_adult: 1,
@@ -401,9 +401,10 @@ const PostUploadEdit : React.FC = () => {
             const labelUrl = URL.createObjectURL(e.target.files[0]);
             setLabelBackground(labelUrl);
             
+            // filesNameArray : 처음에 Array.from(e.target.files); 로 변환한 Filelist
             setData((current) => {
                 const newData = {...current};
-                newData.main_image = e.target.files as FileList;
+                newData.main_image = filesNameArray;
                 return newData;
             });
         }
@@ -436,9 +437,10 @@ const PostUploadEdit : React.FC = () => {
                 return newName;
             });
             
+            // filesNameArray : 처음에 Array.from(e.target.files); 로 변환한 Filelist
             setData((current) => {
                 const newData = {...current};
-                newData.sub_images = e.target.files as FileList;
+                newData.sub_images = filesNameArray;
                 return newData;
             });
         }
@@ -447,55 +449,64 @@ const PostUploadEdit : React.FC = () => {
     
 
     // 방 갯수 상태 및 data 상태 변경
-    const onChangeSelectRoom = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setOptionRoom({value: e.target.value, label: e.target.value});
-        setData((current) => {
-            const newData = {...current};
-            newData.room_num = Number(e.target.value[0]);
-            return newData;
-        });
+    const onChangeSelectRoom = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setOptionRoom({value: e.value, label: e.value});
+
+            setData((current) => {
+                const newData = {...current};
+                newData.room_num = Number(e.value.slice(0, e.value.indexOf("개")));
+                return newData;
+            });
+        }
     };
 
     // 어른 옵션 상태 및 data 상태 변경
-    const onChangeSelectPerson = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setOptionPerson({value: e.target.value, label: e.target.value});
+    const onChangeSelectPerson = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setOptionPerson({value: e.value, label: e.value});
 
-        setData((current) => {
-            const newData = {...current};
-            newData.max_adult = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
-            return newData;
-        });
+            setData((current) => {
+                const newData = {...current};
+                newData.max_adult = Number(e.value.slice(0, e.value.indexOf("명")));
+                return newData;
+            });
+        }
     };
     // 어린이 옵션 상태 및 data 상태 변경
-    const onChangeSelectChild = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setOptionChild({value: e.target.value, label: e.target.value});
+    const onChangeSelectChild = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setOptionChild({value: e.value, label: e.value});
 
-        setData((current) => {
-            const newData = {...current};
-            newData.max_child = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
-            return newData;
-        });
+            setData((current) => {
+                const newData = {...current};
+                newData.max_child = Number(e.value.slice(0, e.value.indexOf("명")));
+                return newData;
+            });
+        }
     };
     // 유아 옵션 상태 및 data 상태 변경
-    const onChangeSelectBaby = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setOptionBaby({value: e.target.value, label: e.target.value});
+    const onChangeSelectBaby = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setOptionBaby({value: e.value, label: e.value});
 
-        setData((current) => {
-            const newData = {...current};
-            newData.max_baby = Number(e.target.value.slice(0, e.target.value.indexOf("명")));
-            return newData;
-        });
-    }
+            setData((current) => {
+                const newData = {...current};
+                newData.max_baby = Number(e.value.slice(0, e.value.indexOf("명")));
+                return newData;
+            });
+        }
+    };
     
     // 카테고리 상태 값 및 data 상태 변경
-    const onChangeCategory = (e: CheckboxChangeEvent) => {
-        if(e.target.value.length > 3){
+    const onChangeCategory = (e: string[]) => {
+        if(e.length > 3){
             alert("카테고리는 최대 3개까지 지정 가능합니다!");
             return;
         }
         setData((current) => {
             const newData = {...current};
-            newData.category = e.target.value;
+            newData.category = e;
             return newData;
         });
     };
@@ -523,7 +534,7 @@ const PostUploadEdit : React.FC = () => {
     const optionWithIcon = optionValues.map((v, i) => ({label: v, value: v, icon: optionIcons[i].src}));
 
     // 숙소 소개 data 상태 반영
-    const onChangeContents = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeContents = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setData((current) => {
             const newData = {...current};
             newData.contents = e.target.value;
@@ -532,15 +543,17 @@ const PostUploadEdit : React.FC = () => {
     };
 
     // 숙소 주요 위치 option 및 data 상태 반영
-    const onChangeMainLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setoptionMainLocation({value: e.target.value, label: e.target.value});
-        
-        setData((current) => {
-            const newData = {...current};
-            newData.main_location = e.target.value;
-            return newData;
-        });
-    }
+    const onChangeMainLocation = (e: SingleValue<{ value: string, label: string }> | null) => {
+        if(e){
+            setoptionMainLocation({value: e.value, label: e.value});
+
+            setData((current) => {
+                const newData = {...current};
+                newData.main_location = e.value
+                return newData;
+            });
+        }
+    };
     
     // 숙소 상세 주소 data 상태 반영
     // 다음 주소 api load 와 컴포넌트 언마운트 시 정리 작업
@@ -614,7 +627,7 @@ const PostUploadEdit : React.FC = () => {
     }
 
     // 호스트 소개 data 반영
-    const onChangeHostIntro = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeHostIntro = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setData((current) => {
             const newData = {...current};
             newData.host_intro = e.target.value;
@@ -796,7 +809,7 @@ const PostUploadEdit : React.FC = () => {
                         <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
                         <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
                         <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
-                        <CategoryCheckbox value={data.category} onChange={() => onChangeCategory}>
+                        <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
                             {optionWithIcon.map((v, i) => (
                                 <CategoryCheckboxOption key={i} value={v.value}>
                                 <div className="icon" style={{ backgroundImage: `url(${v.icon})` }} />
@@ -808,7 +821,7 @@ const PostUploadEdit : React.FC = () => {
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea value={data.contents} onChange={() => onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                        <InputTextArea value={data.contents} onChange={onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
@@ -823,12 +836,12 @@ const PostUploadEdit : React.FC = () => {
                     <InputDiv>
                         <InputTitle>숙소 가격 (성인 기준)</InputTitle>
                         <InputSubTitle>1박 가격</InputSubTitle>
-                        <ShortInputText type="number" defaultValue={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
+                        <ShortInputText type="number" value={data.price} placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
                     </InputDiv>
                     <OutlineDiv />
                     <InputDiv>
                         <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength={500} value={data.host_intro}  onChange={() => onChangeHostIntro} />
+                        <InputTextArea maxLength={500} value={data.host_intro}  onChange={onChangeHostIntro} />
                     </InputDiv>
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>

@@ -3,7 +3,7 @@ import SubHeader from "../components/layout/SubHeader";
 import Details from "../components/room/Details";
 import { motion } from "framer-motion";
 
-const RoomDetailsPage = () => {
+const RoomDetailsPage: React.FC = () => {
   return (
     <motion.div
     initial={{ opacity: 0, position: 'relative', left: '100%' }}

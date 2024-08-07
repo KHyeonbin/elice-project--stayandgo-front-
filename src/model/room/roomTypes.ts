@@ -1,6 +1,7 @@
 export type kakaoMapPropsType = {
-    address: string; 
-    title: string;
+    address: string,  
+    title: string,
+    moveup: number
 }
 
 
