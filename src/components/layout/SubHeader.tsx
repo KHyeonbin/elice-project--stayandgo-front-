@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import homeImage from '../../assets/images/home.png';
+import React from "react";
 
 const Container = styled.div`
   width: 100%;

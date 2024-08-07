@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { SlideModal } from "../../atoms/modalAtom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
+import React from "react";
 
 // 모달 오버레이
 const ModalOverlay = styled.div`
@@ -58,31 +59,40 @@ const SlideUpModal = ({ title, text }) => {
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
   const [isSlideUp, setIsSlideUp] = useState(false);
-  const timer = useRef();
-  const slideModalEl = useRef();
+  const timer = useRef<NodeJS.Timeout | null>(null);
+  const slideModalEl = useRef<HTMLDivElement | null>(null);
 
   // 모달 슬라이드 업 애니메이션 0.1초 후 실행
   useEffect(() => {
     if (slideModal) {
       timer.current = setTimeout(() => setIsSlideUp(true), 100);
-
       // 모달 떠 있는 동안 바디 스크롤 막기
       document.body.style.height = '100%';
       document.body.style.overflow = 'hidden';
       document.body.style['touch-action'] = 'none';
-      slideModalEl.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+
+      if(slideModalEl && slideModalEl.current){
+        slideModalEl.current.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+      
     } else {
-      clearTimeout(timer.current);
+      if(timer.current){
+        clearTimeout(timer.current);
+      }
     }
   }, [slideModal]);
 
   const onCloseModal = () => {
     setIsSlideUp(false);    
     setTimeout(() => {
-      setSlideModal(false);
+      setSlideModal((current) => {
+        const newSlide = {...current};
+        newSlide.isOpen = false;
+        return newSlide;
+      });
     }, 200);
 
       // 바디 스크롤
@@ -92,8 +102,8 @@ const SlideUpModal = ({ title, text }) => {
   };
 
   return (
-    <ModalOverlay className={isSlideUp ? "open" : null} ref={slideModalEl}>
-      <ModalContainer className={isSlideUp ? "open" : null}>
+    <ModalOverlay className={isSlideUp ? "open" : ""} ref={slideModalEl}>
+      <ModalContainer className={isSlideUp ? "open" : ""}>
         <ModalHeader>
           <ModalCloseBtn onClick={onCloseModal}>
             <svg
