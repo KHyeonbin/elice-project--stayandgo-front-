@@ -1,6 +1,16 @@
 import React, { useEffect } from "react";
+import { kakaoMapPropsType } from "../../model/room/roomTypes";
+import { StatusType } from "../../model/room/kakaoMapTypes";
 
-const KakaoMap = ({ address, title }) => {
+// kakao 객체의 존재 여부를 typescript에서 인식시키기 위해 선언
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
+const KakaoMap:React.FC<kakaoMapPropsType> = ({ address, title }) => {
+  
   useEffect(() => {
     // Kakao Maps API 스크립트를 동적으로 추가
     const script = document.createElement("script");
@@ -27,7 +37,7 @@ const KakaoMap = ({ address, title }) => {
           const geocoder = new window.kakao.maps.services.Geocoder();
 
           // 주소로 좌표를 검색합니다
-          geocoder.addressSearch(address, function(result, status) {
+          geocoder.addressSearch(address, function(result:any[], status:StatusType) {
             // 정상적으로 검색이 완료됐으면
             if (status === window.kakao.maps.services.Status.OK) {
               const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);

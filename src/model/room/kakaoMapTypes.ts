@@ -1,0 +1,1 @@
+export type StatusType = "OK" | "ZERO_RESULT" | "ERROR";
