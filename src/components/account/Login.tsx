@@ -2,8 +2,6 @@ import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import React, { FormEvent, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { TokenAttom } from "../../atoms/TokenAtom";
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -56,7 +54,6 @@ const JoinBox = styled.div`
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const setAccessToken = useSetRecoilState(TokenAttom);
   const navigate = useNavigate();
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
@@ -66,9 +63,7 @@ const Login: React.FC = () => {
       const response = await axios.post("/login", { email, password }, {
          // 쿠키를 포함시키기 위해 필요
     });
-      // 엑세스 토큰 Recoil 전역 상태에 저장
       //console.log(response.data);
-      setAccessToken(response.data.accessToken);
       // 여행, 등록숙소 페이지에서 새로고침 시 로그인 상태 확인용 localstorage data 추가
       // : front 에서 강제로 localstorage 를 수정하더라도 그 때는 전역 상태 loginstate 에 저장된 값에 따라 
       // 데이터를 출력하기 때문에 빈 값이 나오도록 함.
