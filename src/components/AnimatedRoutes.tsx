@@ -1,9 +1,7 @@
 import React from 'react';
 import { Routes, Route, useLocation } from "react-router-dom";
 import MainPage from "../pages/MainPage";
-import WishPage from "../pages/WishPage";
 import TravelPage from "../pages/TravelPage";
-import ReservationPage from "../pages/ReservationPage";
 import AboutPage from "../pages/AboutPage";
 import LoginPage from "../pages/LoginPage";
 import JoinPage from "../pages/JoinPage";
@@ -42,9 +40,7 @@ const AnimatedRoutes: React.FC<routesType> = ({ search, setSearch, startSearch, 
                 <Route path="/changePassword" element={<ChangePasswordPage />} />
                 <Route path="/room/details/:id" element={<RoomDetailsPage />} />
                 <Route path="/room/my/details/:id" element={<RoomMyDetailsPage />} />
-                <Route path="/Wish" element={<WishPage />} />
                 <Route path="/Travel" element={<TravelPage />} />
-                <Route path="/Reservation" element={<ReservationPage />} />
                 <Route path="/Profile" element={<ProfilePage />} />
                 <Route path="/Profile/Edit/:id" element={<ProfileEditPage />} />
                 <Route path="/myaccommodation" element={<MyAccommodationsPage />} />
