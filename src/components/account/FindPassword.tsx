@@ -1,7 +1,7 @@
 import axios from "axios";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import React, { useState, useRef, MouseEvent, FormEvent } from "react";
 
 const FlexDiv = styled.div`
   display: flex;
@@ -77,32 +77,35 @@ const JoinBox = styled.div`
   }
 `;
 
-const Findpassword = () => {
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const emailRequestBtn = useRef();
+const Findpassword: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+  const emailRequestBtn = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
-  const onEmailRequestHandler = async (e) => {
+
+  const onEmailRequestHandler = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/users/verify/findpw', {email});
-      e.target.disabled = true;
+      const response = await axios.post<{message: string}>('/users/verify/findpw', {email});
+      if (emailRequestBtn.current) {
+      e.currentTarget.disabled = true;
       emailRequestBtn.current.style.color = "#333";
       emailRequestBtn.current.style.border = "1px solid #333";
       emailRequestBtn.current.style.cursor = "default";
+      }
       alert(response.data.message);
     } catch(error) {
       console.log(error);
-      alert(error.response.data ? error.response.data.message : error.response);
+      alert(error.response?.data?.message || error.message);
     }
   }; 
 
   // 이메일 인증 확인 버튼 클릭 시
-  const onEmailCheckHandler = async (e) => {
+  const onEmailCheckHandler = async (e:  FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/users/verify/confirm', {email, secret: code});
+      const res = await axios.post<{code: number, message: string}>('/users/verify/confirm', {email, secret: code});
       if(res.data.code === 200){
         navigate("/changePassword", {state: {email} });
       } 

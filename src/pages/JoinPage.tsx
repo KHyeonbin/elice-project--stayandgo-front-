@@ -4,7 +4,7 @@ import Join from "../components/account/Join";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const JoinPage = () => {
+const JoinPage: React.FC = () => {
   return (
     <>
       <SubHeader />

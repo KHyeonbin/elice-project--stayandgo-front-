@@ -1,10 +1,10 @@
 import React from "react";
 import SubLayout from "../components/layout/SubLayout";
-import FindPassword from "../components/account/FindPassword";
+import Login from "../components/account/Login";
 import { motion } from "framer-motion";
 import SubHeader from "../components/layout/SubHeader";
 
-const FindPasswordpage = () => {
+const LoginPage: React.FC = () => {
   return (
     <>
       <SubHeader />
@@ -13,12 +13,12 @@ const FindPasswordpage = () => {
         animate={{ opacity: 1, transform: 'translateX(0)' }}
         transition={{ duration: 0.3 }}
       >
-        <SubLayout pageTitle="비밀번호 찾기">
-          <FindPassword />
+        <SubLayout pageTitle="로그인">
+          <Login />
         </SubLayout>
       </motion.div>
     </>
   );
 };
 
-export default FindPasswordpage;
+export default LoginPage;

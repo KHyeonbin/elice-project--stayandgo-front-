@@ -1,8 +1,10 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent, FormEvent, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
+import { PasswordRegex, PhoneNumberRegex } from "./Regex";
+import { JoinUserInfo } from "../../model/user/user";
+
 const FlexDiv = styled.div`
   display: flex;
   gap: 10px;
@@ -54,8 +56,8 @@ const MessageDiv = styled.div`
   padding: 5px 0;
 `;
 
-const Join = () => {
-  const [userInfo, setUserInfo] = useState({
+const Join: React.FC = () => {
+  const [userInfo, setUserInfo] = useState<JoinUserInfo>({
     email: "",
     password: "",
     passwordCheck: "",
@@ -64,16 +66,17 @@ const Join = () => {
     code: "",
     nickName: "",
   });
-  const [passwordCheckError, setPasswordCheckError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordError2, setPasswordError2] = useState("");
+  const [passwordCheckError, setPasswordCheckError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [passwordError2, setPasswordError2] = useState<string>("");
+
   const navigate = useNavigate();
-  const emailCodeInput = useRef();
-  const emailRequestBtn = useRef();
-  const emailOkBtn = useRef();
+  const emailCodeInput = useRef<HTMLInputElement>(null);
+  const emailRequestBtn = useRef<HTMLButtonElement>(null);
+  const emailOkBtn = useRef<HTMLButtonElement>(null);
 
   // 인풋 입력 시 상태 변경
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUserInfo((userInfoObj) => {
       const inputName = e.target.name;
       let inputValue = e.target.value;
@@ -128,7 +131,7 @@ const Join = () => {
   }, [userInfo]);
 
   //회원가입 완료 버튼 클릭 시
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -157,28 +160,30 @@ const Join = () => {
   };
 
   // 이메일 요청 버튼 클릭 시
-  const onEmailRequestHandler = async (e) => {
+  const onEmailRequestHandler = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await axios.post("/users/verify", {
         email: userInfo.email,
       });
-      e.target.disabled = true;
-      emailCodeInput.current.readOnly = false;
-      emailRequestBtn.current.style.color = "#333";
-      emailRequestBtn.current.style.border = "1px solid #333";
-      emailRequestBtn.current.style.cursor = "default";
+      if ( emailRequestBtn.current && emailCodeInput.current) {
+        e.currentTarget.disabled = true;
+        emailCodeInput.current.readOnly = false;
+        emailRequestBtn.current.style.color = "#333";
+        emailRequestBtn.current.style.border = "1px solid #333";
+        emailRequestBtn.current.style.cursor = "default";
+      }
       alert("이메일이 발송되었습니다.");
       // 이메일 인증 요청 시 버튼 비활성화
     } catch(error) {
-      e.target.disabled = false;
+      e.currentTarget.disabled = false;
       alert(error.response.data.message);
     };
   };
 
 
   // 이메일 인증 확인 버튼 클릭 시
-  const onEmailCheckHandler = async (e) => {
+  const onEmailCheckHandler = async (e: MouseEvent<HTMLButtonElement>) => {
     //e.preventDefault();
     try {
       const response = await axios.post(
@@ -189,16 +194,17 @@ const Join = () => {
         }
       );
       // 이메일 인증 요청 시 버튼 비활성화
-      e.target.disabled = true;
-      emailCodeInput.current.readOnly = true;
-      emailOkBtn.current.style.cursor = "default";
-      alert(response.data.message);
-    } catch(error) {
+      if (emailOkBtn.current && emailCodeInput.current) {
+        e.currentTarget.disabled = true;
+        emailCodeInput.current.readOnly = true;
+        emailOkBtn.current.style.cursor = "default";
+      }
+        alert(response.data.message);
+      } catch(error) {
       //emailRequestBtn.current.disabled = false;
-      e.target.disabled = false;
+      e.currentTarget.disabled = false;
       alert(error.response?.data?.message); // 확인 !!
     }
-
   };
 
   return (
