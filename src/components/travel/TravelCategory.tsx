@@ -14,7 +14,7 @@ const CategoryBox = styled.div`
 `;
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelCategory:React.FC<TravelCategoryPropsType> = ({ pastTravelData, noReservation, pastPage, setPastPage }) => {
+const TravelCategory:React.FC<TravelCategoryPropsType> = ({ pastTravelData, NoReservation, pastPage, setPastPage }) => {
 
   return (
     <>
@@ -42,7 +42,7 @@ const TravelCategory:React.FC<TravelCategoryPropsType> = ({ pastTravelData, noRe
       ) 
       || 
       (
-        noReservation
+        NoReservation
       )}
     </>
   );

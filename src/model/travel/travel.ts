@@ -18,9 +18,10 @@ export type TravelCardPropsType = {
 // TravelCategory.tsx 파일 타입
 export type TravelCategoryPropsType = {
     pastTravelData: TravelData[];
-    noReservation: React.FC;
+    NoReservation: React.ReactNode;
     pastPage: DefaultPage;
-    setPastPage: DefaultPage;
+    setPastPage: React.Dispatch<React.SetStateAction<Page>>;
+    title: string;
 };
 
 export type TravelData = {
@@ -34,6 +35,7 @@ export type TravelData = {
     adult: number;
     child: number;
     baby: number;
+    nanoid: string;
 };
 
 export type DefaultPage = {
@@ -77,9 +79,10 @@ export type TravelConfirmModalPropsType = {
 export type TravelUpcomingCategoryPropsType = {
     setSelectValue: React.Dispatch<React.SetStateAction<Option>>;
     upcomingTravelData: TravelData[];
-    noReservation:React.FC;
-    setUpcomingPage: React.Dispatch<React.SetStateAction<number>>;
-    upcomingPage: React.Dispatch<React.SetStateAction<number>>;
+    NoReservation: React.ReactNode;
+    setUpcomingPage: React.Dispatch<React.SetStateAction<Page>>;
+    upcomingPage: Page;
+    title: string;
 };
 
 

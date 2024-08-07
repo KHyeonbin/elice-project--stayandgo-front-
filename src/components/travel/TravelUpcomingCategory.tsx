@@ -68,7 +68,7 @@ const CheckDelBtn = styled.button`
 `
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약없음 안내
-const TravelUpcomingCategory:React.FC<TravelUpcomingCategoryPropsType> = ({ setSelectValue, upcomingTravelData, noReservation, setUpcomingPage, upcomingPage }) => {
+const TravelUpcomingCategory:React.FC<TravelUpcomingCategoryPropsType> = ({ setSelectValue, upcomingTravelData, NoReservation, setUpcomingPage, upcomingPage }) => {
   // 1개 체크 박스 상태(nanoid : value)
   const [checkValue, setCheckValue] = useState<unknown[]>([]);
 
@@ -153,7 +153,7 @@ const TravelUpcomingCategory:React.FC<TravelUpcomingCategoryPropsType> = ({ setS
       ) 
       || 
       (
-        noReservation
+        NoReservation
       )}
     </>
     ||

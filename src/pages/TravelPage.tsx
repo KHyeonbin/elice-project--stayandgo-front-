@@ -244,7 +244,7 @@ const TravelPage: React.FC = () => {
             <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
             </Loading_div>
           ||
-            <TravelUpcomingCategory setSelectValue={setSelectValue} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} noReservation={<NoReservation />}/>
+            <TravelUpcomingCategory setSelectValue={setSelectValue} upcomingPage={upcomingPage} setUpcomingPage={setUpcomingPage} title="다가오는 여행" upcomingTravelData={upcomingTravelData} NoReservation={<NoReservation />}/>
           }
         </Container>
         <Container style={selectValue.value === "지난 여행" ? {display:"block"} : {display:"none"}}>
@@ -254,7 +254,7 @@ const TravelPage: React.FC = () => {
               <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
             </Loading_div>
           ||
-            <TravelCategory pastPage={pastPage} setPastPage={setPastPage} title="지난 여행" pastTravelData={pastTravelData} noReservation={<NoReservation />}/>
+            <TravelCategory pastPage={pastPage} setPastPage={setPastPage} title="지난 여행" pastTravelData={pastTravelData} NoReservation={<NoReservation />}/>
           }
         </Container>
         </MainContainer>
