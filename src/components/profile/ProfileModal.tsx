@@ -77,10 +77,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ message, onClose, onConfirm
   const [inputValue, setInputValue] = useState<string>('');
 
   const handleConfirm = () => {
-    if (inputValue === "회원 탈퇴를 진행하겠습니다") {
-      onConfirm?.();
+    if (isDelete) {
+      if (inputValue === "회원 탈퇴를 진행하겠습니다") {
+        onConfirm?.();
+      } else {
+        alert("입력된 문구가 정확하지 않습니다.");
+      }
     } else {
-      alert("입력된 문구가 정확하지 않습니다.");
+      onConfirm?.();
     }
   };
 
