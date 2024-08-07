@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import ImageSlider from "../layout/ImageSlider";
 import closeImg from "../../assets/icons/close.png";
+import { TravelModalPropsType } from "../../model/travel/travel";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -98,19 +99,19 @@ const Price = styled.span`
   line-height: 17px;
 `;
 
-const TravelModal = ({
-  modalImageIndex,
-  setModalImageIndex,
-  closeModal,
-  name,
-  imageUrls,
-  title,
-  startDate,
-  endDate,
-  adult,
-  child,
-  baby,
-  totalPrice,
+const TravelModal:React.FC<TravelModalPropsType> = ({ 
+  modalImageIndex, 
+  setModalImageIndex, 
+  closeModal, 
+  name, 
+  imageUrls, 
+  title, 
+  startDate, 
+  endDate, 
+  adult, 
+  child, 
+  baby, 
+  totalPrice 
 }) => (
   <ModalOverlay>
     <ModalContent>

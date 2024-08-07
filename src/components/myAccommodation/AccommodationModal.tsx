@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { ModalPropsType } from "../../model/myaccommodation(with edit)/Accommodation";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -34,7 +35,7 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const AccommodationModal = ({ message, onClose }) => {
+const AccommodationModal:React.FC<ModalPropsType> = ({ message, onClose }) => {
   const navigate = useNavigate();
 
   const handleClose = () => {
