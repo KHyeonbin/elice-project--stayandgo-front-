@@ -22,6 +22,7 @@ import AdminPage from '../pages/AdminPage';
 import { AnimatePresence } from "framer-motion";
 import ChatBotPage from "../pages/ChatBotPage";
 import { routesType } from "../model/routesTypes";
+import LoginPageHome from '../pages/LoginPageHome';
 
 
 
@@ -33,6 +34,7 @@ const AnimatedRoutes: React.FC<routesType> = ({ search, setSearch, startSearch, 
             <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<MainPage search={search} setSearch={setSearch} startSearch={startSearch} setStartSearch={setStartSearch} />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/loginHome" element={<LoginPageHome />} />
                 <Route path="/join" element={<JoinPage />} />
                 <Route path="/findId" element={<FindIdPage />} />
                 <Route path="/findpassword" element={<FindPasswordPage />} />

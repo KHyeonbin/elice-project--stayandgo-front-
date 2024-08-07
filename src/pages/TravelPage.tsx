@@ -12,6 +12,7 @@ import loading from "../assets/icons/loading.png";
 import Select from 'react-select';
 import { motion } from "framer-motion";
 import { Option, Page, TravelData } from "../model/travel/travel";
+import { useNavigate } from "react-router-dom";
 
 const SelectDiv = styled.div`
   display: flex;
@@ -128,47 +129,49 @@ const TravelPage: React.FC = () => {
   // react-select box value 설정하기 위함
   const [selectValue, setSelectValue] = useState(option[0]);
 
+  const navigate = useNavigate();
+
   // 첫 화면 진입 및 page 와 datalist read
   useEffect(() => {
     // page
     if(!localStorage.getItem('is_logined') || localStorage.getItem('is_logined') === "false"){
-      alert('로그인하지 않은 사용자입니다.');
-      window.location.href = '/';
+      navigate('/loginHome');
       return;
     }
-
-    getTravelLoad.getReservePastPage({mymode: true})
-    .then(res => {
-      setPastPage(res || defaultPage);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    getTravelLoad.getReserveUpcomingPage({mymode: true})
-    .then(res => {
-      setUpcomingPage(res || defaultPage);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    // list
-    getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
-    .then(res => {
-      setPastTravelData(res || []);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
-    .then(res => {
-      setUpcomingTravelData(res || []);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-    
-    setIsIngLoading(true);
-    setIsPastLoading(true);
+    else {
+      getTravelLoad.getReservePastPage({mymode: true})
+      .then(res => {
+        setPastPage(res || defaultPage);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      getTravelLoad.getReserveUpcomingPage({mymode: true})
+      .then(res => {
+        setUpcomingPage(res || defaultPage);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      // list
+      getTravelLoad.getReservePastRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setPastTravelData(res || []);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      getTravelLoad.getReserveUpcomingRead({nowpage: 1, mymode: true})
+      .then(res => {
+        setUpcomingTravelData(res || []);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+      
+      setIsIngLoading(true);
+      setIsPastLoading(true);
+    }
   },[selectValue]);
 
   // 현재 여행 페이지 컨트롤
