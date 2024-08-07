@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface ItemProps {
+  reverse?: boolean;
+}
+
 export const Container = styled.div`
   padding-bottom: 60px;
   display: flex;
@@ -19,7 +23,7 @@ export const Title = styled.h1`
     text-align: center;
   }
 `;
-export const Item = styled.div`
+export const Item = styled.div<ItemProps>`
   display: flex;
   flex-direction: column;
   margin: 35px 25px;

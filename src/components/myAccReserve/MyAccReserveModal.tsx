@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import {MyAccReserveModalProps} from "../../model/profile/myaccReserve"
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -33,20 +34,6 @@ const ModalTitle = styled.h2`
   margin-bottom: 10px;
 `;
 
-const CheckInput = styled.input`
-  width:100%;
-  height: 38px;
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-
-  &:focus{
-    border: 1px solid #f87878;
-  }
-`
-
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -54,7 +41,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const ModalButton = styled.button`
+const ModalButton = styled.button<{ type?: "cancel" | "confirm" }>`
   width: 100px;
   height: 38px;
   border: 1px solid #f87878;
@@ -68,44 +55,24 @@ const ModalButton = styled.button`
 `;
 
 /** 공통 모달 컴포넌트 */
-const ProfileModal = ({ message, onClose, onConfirm, onCancel }) => {
-  const [inputValue, setInputValue] = useState('');
-
+const MyAccReserveModal: React.FC<MyAccReserveModalProps> = ({ message, onConfirm, onCancel }) => {
   const handleConfirm = () => {
-    if (inputValue === "회원 탈퇴를 진행하겠습니다") {
       onConfirm();
-    } else {
-      alert("입력된 문구가 정확하지 않습니다.")
-    }
   }
 
   return (
     <ModalOverlay>
       <ModalContent>
         <ModalTitle>{message}</ModalTitle>
-        <CheckInput
-          type="text"
-          placeholder="회원 탈퇴를 진행하겠습니다"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
         <ButtonContainer>
-          {onConfirm && onCancel ? (
-            <>
-              <ModalButton onClick={handleConfirm}>예</ModalButton>
-              <ModalButton type="cancel" onClick={onCancel}>
-                아니오
-              </ModalButton>
-            </>
-          ) : (
-            <ModalButton type="cancel" onClick={onClose}>
-              닫기
+            <ModalButton onClick={handleConfirm}>예</ModalButton>
+            <ModalButton type="cancel" onClick={onCancel}>
+              아니오
             </ModalButton>
-          )}
         </ButtonContainer>
       </ModalContent>
     </ModalOverlay>
   );
 };
 
-export default ProfileModal;
+export default MyAccReserveModal;

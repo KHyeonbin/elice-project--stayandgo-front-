@@ -5,7 +5,7 @@ import MainFooter from "../components/layout/MainFooter";
 import { motion } from "framer-motion";
 import MyAccommodationReserve from "../components/myAccReserve/MyAccReserve";
 
-const MyAccReservePage = () => {
+const MyAccReservePage: React.FC = () => {
 
   return (
     <>

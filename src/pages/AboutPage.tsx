@@ -1,13 +1,13 @@
 import React from "react";
 import {  useRecoilValue } from "recoil";
 import SubHeader from "../components/layout/SubHeader";
-import Footer from "../components/layout/MainFooter";
+import MainFooter from "../components/layout/MainFooter";
 import loginState from "../atoms/loginState";
 import About from "../components/profile/About";
 import { motion } from "framer-motion";
 
 
-const AboutPage = () => {
+const AboutPage: React.FC = () => {
   // user 전역 상태 확인 및 변경
   const loginUser = useRecoilValue(loginState);
 
@@ -20,7 +20,7 @@ const AboutPage = () => {
         transition={{ duration: 0.3 }}>
           <About />
       </motion.div>
-      <Footer user={loginUser} />
+      <MainFooter />
     </>
   );
 };

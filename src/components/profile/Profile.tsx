@@ -16,11 +16,12 @@ import {
 import ProfileModal from "./ProfileModal";
 import { fetchUserData, deleteUser } from "../../api/profile"; // 분리한 api 함수 가져오기
 import { logoutUser } from "../../api/logoutUser";
+import { User } from "../../model/profile/profile"
 
-const Profile = () => {
-  const user = useRecoilValue(loginState);
+const Profile: React.FC = () => {
+  const user: User = useRecoilValue(loginState);
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 회원 탈퇴 모달 상태 추가
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false); // 회원 탈퇴 모달 상태 추가
   const navigate = useNavigate(); // 페이지 이동하기 위해 사용
 
   useEffect(() => {

@@ -8,11 +8,12 @@ import getTravelLoad from "../../api/getTravelLoad";
 import MyAccCategory from "./MyAccCategory";
 import NoAccReserve from "./NoAccReserve";
 import { Container, SelectDiv, selectCustom } from "./MyAccReserve.style";
+import { ReserveData } from "../../model/profile/myaccReserve"
 
-const MyAccommodationReserve = () => {
+const MyAccommodationReserve: React.FC = () => {
   const loginUser = useRecoilValue(loginState);
-  const [pastReserveData, setPastReserveData] = useState([]);
-  const [upcomingReserveData, setUpcomingReserveData] = useState([]);
+  const [pastReserveData, setPastReserveData] = useState<ReserveData[]>([]);
+  const [upcomingReserveData, setUpcomingReserveData] = useState<ReserveData[]>([]);
 
   // react-select 에는 key 값이 없어서 미리 option 정의
   const option = [{value: "현재 예약 목록", label: "현재 예약 목록"},

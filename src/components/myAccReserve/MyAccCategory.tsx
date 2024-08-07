@@ -5,15 +5,16 @@ import Pagination from "../layout/Pagination";
 import MyAccReserveModal from "./MyAccReserveModal";
 import { travelDeleteFromCheck } from "../../api/travelDeleteFromCheck";
 import * as Cate from "./MyAccCategory.style";
+import {MyAccCategoryProps} from "../../model/profile/myaccReserve"
 
 
 //예약 있으면 여행카드 가져와서 배열, 없으면 예약 없음 안내
-const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, setPage }) => {
-  const [checkValue, setCheckValue] = useState([]);
-  const [isModal, setIsModal] = useState(false);
+const MyAccCategory: React.FC<MyAccCategoryProps> = ({ title, reserveData, NoAccReserve, onDataUpdate, page, setPage }) => {
+  const [checkValue, setCheckValue] = useState<string[]>([]);
+  const [isModal, setIsModal] = useState<boolean>(false);
 
   // checkbox 1개 씩 선택 가능하다.
-  const onChangeCheckbox = (id) => {
+  const onChangeCheckbox = (id:string) => {
     setCheckValue((prevCheckValue) =>
       prevCheckValue.includes(id)
         ? prevCheckValue.filter((item) => item !== id)
@@ -34,7 +35,7 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
   const onClickHandleConfirmDelete = async () => {
     try {
       const res = await travelDeleteFromCheck({ nanoid: checkValue[0], mymode: false });
-      if (res.data && res.data.code === 200) {
+      if (res?.data && res.data.code === 200) {
         alert('정상적으로 취소되었습니다.');
         setIsModal(false);
         await onDataUpdate(); // 데이터 새로 고침
@@ -78,7 +79,7 @@ const MyAccCategory = ({ title, reserveData, NoAccReserve, onDataUpdate, page, s
                 child={item.child}
                 baby={item.baby}
                 create_at={item.create_at}
-                onCheckboxChange={title === "현재 예약 목록" ? () => onChangeCheckbox(item.nanoid) : null}
+                onCheckboxChange={title === "현재 예약 목록" ? () => onChangeCheckbox(item.nanoid) : undefined}
                 isChecked={checkValue.includes(item.nanoid)}
                 showCheckbox={title === "현재 예약 목록"}
            />
