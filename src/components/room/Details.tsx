@@ -328,10 +328,7 @@ const Loading_img = styled.img`
     }
 `
 
-
-
 const RoomDetails = () => {
-  const [slideIndex, setSlideIndex] = useState(0);
   const navigate = useNavigate();
   const setSlideModal = useSetRecoilState(SlideModal);
   const slideModal = useRecoilValue(SlideModal);
@@ -357,7 +354,8 @@ const RoomDetails = () => {
   const [query, setQuery] = useSearchParams();
   const [footerPrice, setFooterPrice] = useState(0);
   const [isOpenShareModal, setIsOpenShareModal] = useState(false);
-  let totalPrice = useRef(0);
+  const [moveup, setMoveup] = useState(0);
+
   let totalDate = useRef(0);
   const location = useLocation();
   // link를 타고 들어온 건지, 공유하기 링크를 타고 들어온건지 판단 state
@@ -369,7 +367,7 @@ const RoomDetails = () => {
   // kakao sdk 초기화하기
 	// status가 변경될 때마다 실행되며, status가 ready일 때 초기화를 시도합니다.
 	useEffect(() => {
-		if (status === "ready" && window.Kakao) {
+		if (status === "ready" && window.Kakao && moveup === -1) {
 			// 중복 initialization 방지
 			if (!window.Kakao.isInitialized()) {
 				// 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
@@ -411,7 +409,7 @@ const RoomDetails = () => {
   // 주소 카카오톡에 공유
   const handleKakaoButton = () => {
     // 크롬 브라우저 > 개발자모드 > 모바일 설정 지원하지 않음
-    if (window.Kakao && window.Kakao.Share) {
+    if (window.Kakao && window.Kakao.Share && moveup === -1) {
       window.Kakao.Share.createDefaultButton({
         container: '#kakaoShareBtn',
         objectType: 'feed',
@@ -464,23 +462,41 @@ const RoomDetails = () => {
   useEffect(() => {
     // 검색 정보 가져오기
     if(query.get('adult') === '0') {
-      alert('예약 정보를 설정해주세요.');
-      navigate('/');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      setMoveup(1);
+      return;
     };
-
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    setMoveup(-1);
     const startDate = new Date(query.get('startDate') as string);
     const endDate = new Date(query.get('endDate') as string);
     
-    totalDate.current = Number(endDate) - Number(startDate) / (1000 * 60 * 60 * 24);
+    // endDate와 startDate를 밀리초 단위의 타임스탬프로 변환
+    const startDateTimestamp = startDate.getTime();
+    const endDateTimestamp = endDate.getTime();
+
+    totalDate.current = (endDateTimestamp - startDateTimestamp) / (1000 * 60 * 60 * 24);
 
     if (roomInfo) {
-      totalPrice.current = Math.floor((roomInfo.price * totalDate.current)/100) * 100;
-      setFooterPrice(totalPrice.current);
+      setFooterPrice(Math.floor((roomInfo.price * totalDate.current)/100) * 100);
     };
 
+  console.log(query.get('startDate'), roomInfo)
     
   }, [roomInfo, query]);
 
+  useEffect(() => {
+    if(moveup === 1){
+      alert('예약 정보를 설정해주세요.');
+      navigate('/');
+    }
+  },[moveup]);
 
   const onReservate = async() => {
     try{
@@ -489,7 +505,7 @@ const RoomDetails = () => {
         {
           post_nanoid: id, 
           email: userState.email,
-          amount: totalPrice.current,
+          amount: footerPrice,
           start_date: query.get('startDate'),
           end_date: query.get('endDate'),
           adult: query.get('adult'),
@@ -558,8 +574,8 @@ const RoomDetails = () => {
       <Container>
         <Title>
           [{roomInfo.title}]
-          <ShareBtn type="button" onClick={onOpenShareModal}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#333">
+          <ShareBtn type="button" style={{cursor: "pointer"}} onClick={onOpenShareModal}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
               <path d="M680-80q-50 0-85-35t-35-85q0-6 3-28L282-392q-16 15-37 23.5t-45 8.5q-50 0-85-35t-35-85q0-50 35-85t85-35q24 0 45 8.5t37 23.5l281-164q-2-7-2.5-13.5T560-760q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35q-24 0-45-8.5T598-672L317-508q2 7 2.5 13.5t.5 14.5q0 8-.5 14.5T317-452l281 164q16-15 37-23.5t45-8.5q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-200q0-17-11.5-28.5T680-240q-17 0-28.5 11.5T640-200q0 17 11.5 28.5T680-160ZM200-440q17 0 28.5-11.5T240-480q0-17-11.5-28.5T200-520q-17 0-28.5 11.5T160-480q0 17 11.5 28.5T200-440Zm480-280q17 0 28.5-11.5T720-760q0-17-11.5-28.5T680-800q-17 0-28.5 11.5T640-760q0 17 11.5 28.5T680-720Zm0 520ZM200-480Zm480-280Z"/>
             </svg>
           </ShareBtn>
@@ -567,7 +583,7 @@ const RoomDetails = () => {
             <>
               <ModalDim />
               <ShareModal>
-                <ModalCloseBtn onClick={onCloseShareModal}>
+                <ModalCloseBtn style={{cursor: "pointer"}} onClick={onCloseShareModal}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -597,15 +613,15 @@ const RoomDetails = () => {
                 </ModalCloseBtn>
                 <p>공유하기</p>
                 <div style={{display: "flex", justifyContent: "center", gap: "20px"}}>
-                  <CopyToClipboard className="Toram" text={window.location.href} onCopy={() => alert("주소를 클립보드에 복사되었습니다.")}>
-                    <button type="button">
+                  <CopyToClipboard className="Toram" text={window.location.href} onCopy={() => alert("주소가 클립보드에 복사되었습니다.")}>
+                    <button type="button" style={{cursor: "pointer"}}>
                       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#333">
                         <path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/>
                       </svg>                
                     </button>
                   </CopyToClipboard>
 
-                  <button type="button" onClick={handleKakaoButton} id="kakaoShareBtn">
+                  <button type="button" style={{cursor: "pointer"}} onClick={handleKakaoButton} id="kakaoShareBtn">
                     <img src={kakaoBtnImg} />
                   </button>
                 </div>
@@ -652,7 +668,7 @@ const RoomDetails = () => {
         <LocationDiv>
           <p>숙소 위치</p>
           <Location>
-            <KakaoMap address={roomInfo.sub_location} title={roomInfo.title} />
+            <KakaoMap moveup={moveup} address={roomInfo.sub_location} title={roomInfo.title} />
           </Location>
           <LocationText>{roomInfo.sub_location}</LocationText>
         </LocationDiv>

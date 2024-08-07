@@ -148,8 +148,8 @@ export type PostType = {
 
 // postUpload.tsx
 export interface UploadPostType {
-    main_image: FileList;
-    sub_images: FileList;
+    main_image: File[];
+    sub_images: File[];
     title: string;
     room_num: number;
     max_adult: number;
