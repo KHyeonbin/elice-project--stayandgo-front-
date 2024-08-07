@@ -17,6 +17,7 @@ import { useRecoilValue } from "recoil";
 import { PasswordRegex, PhoneNumberRegex } from "../account/Regex";
 import EmojiModal from "./EmojiModal"; // 프로필 이모지 모달
 import { UserData } from "../../model/profile/profile"
+import CryptoJS from "crypto-js";
 
 
 /** 비밀번호 유효성 검사 함수 */
@@ -40,7 +41,6 @@ const phoneRegex = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
 
 const ProfileEdit: React.FC = () => {
   const loginUser = useRecoilValue(loginState);
-  console.log(loginUser);
 
   const [formData, setFormData] = useState<UserData>({
     email: "",
@@ -99,6 +99,11 @@ const ProfileEdit: React.FC = () => {
     }
   }, [formData.password]);
 
+  const encryptPassword = (password: string, key: string) : string => {
+    const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+    return encryptedPassword;
+  };
+
   /** 완료 버튼 클릭 시 */
   const onClickHandleSave = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -118,7 +123,12 @@ const ProfileEdit: React.FC = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      await editUserData({ email, password, nickname, phone, photo});
+      // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
+      // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
+      const key = `${process.env.REACT_APP_AES_KEY}`;
+      const aesPassword = encryptPassword(password, key);
+
+      await editUserData({ email, password: aesPassword, nickname, phone, photo});
       setIsModal(true);
     } catch (error) {
       alert(error.response?.data?.message || error.code);

@@ -93,8 +93,7 @@ const Findpassword: React.FC = () => {
       }
       alert(response.data.message);
     } catch(error) {
-      console.log(error);
-      alert(error.response?.data?.message || error.message);
+      alert(error?.response?.data?.message);
     }
   }; 
 
@@ -107,11 +106,7 @@ const Findpassword: React.FC = () => {
         navigate("/changePassword", {state: {email} });
       } 
     } catch(error) {
-      if(error.response.status == 400) {
-        alert('인증번호를 확인해주세요.')
-      }
-      console.log(error);
-      alert(error.response);
+      alert(error?.response?.data?.message);
     }
 
   };

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, ChangeEvent, FormEvent, MouseEvent 
 import { useNavigate } from "react-router-dom";
 import { PasswordRegex, PhoneNumberRegex } from "./Regex";
 import { JoinUserInfo } from "../../model/user/user";
+import CryptoJS from "crypto-js";
 
 const FlexDiv = styled.div`
   display: flex;
@@ -130,6 +131,11 @@ const Join: React.FC = () => {
     }
   }, [userInfo]);
 
+  const encryptPassword = (password: string, key: string) : string => {
+    const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+    return encryptedPassword;
+  };
+
   //회원가입 완료 버튼 클릭 시
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -144,17 +150,29 @@ const Join: React.FC = () => {
         alert("비밀번호를 확인해주세요.");
         return false;
       }
+
+      // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
+      // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
+      const key = `${process.env.REACT_APP_AES_KEY}`;
+      const aesPassword = encryptPassword(userInfo.password, key);
+
       await axios.post("/users", {
         email: userInfo.email,
-        password: userInfo.password,
+        password: aesPassword,
         name: userInfo.name,
         nickname: userInfo.nickName,
         phone: userInfo.phone,
+      })
+      .then(res => {
+        navigate("/joinEnd");
+      })
+      .catch(e => {
+        alert(e?.response?.data?.message);
       });
-
-      navigate("/joinEnd");
+      
     } catch(error) {
-      alert(error.response?.data?.message);
+      console.log(error);
+      alert(error?.response?.data?.message);
     }
 
   };
@@ -176,7 +194,7 @@ const Join: React.FC = () => {
       // 이메일 인증 요청 시 버튼 비활성화
     } catch(error) {
       e.target.disabled = false;
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message);
     };
   };
 
@@ -202,7 +220,7 @@ const Join: React.FC = () => {
       } catch(error) {
       //emailRequestBtn.current.disabled = false;
       e.target.disabled = false;
-      alert(error.message); // 확인 !!
+      alert(error?.response?.data?.message); // 확인 !!
     }
   };
 

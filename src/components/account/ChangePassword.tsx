@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { PasswordRegex } from "./Regex";
 import { changePWUser } from "../../api/changePWUser";
 import { Errors, UserInfo } from "../../model/user/user";
+import CryptoJS from 'crypto-js';
 
 const LoginInput = styled.input`
   border: 1px solid #ddd;
@@ -72,6 +73,10 @@ const ChangePassword: React.FC = () => {
     return "";
   };
 
+  const encryptPassword = (password: string, key: string) : string => {
+    const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+    return encryptedPassword;
+  };
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,7 +93,12 @@ const ChangePassword: React.FC = () => {
     }
 
     try {
-      const res = await changePWUser(location.state.email, userInfo.password);
+      // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
+      // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
+      const key = `${process.env.REACT_APP_AES_KEY}`;
+      const aesPassword = encryptPassword(userInfo.password, key);
+
+      const res = await changePWUser(location.state.email, aesPassword);
       if (res && res.data && res.data.code === 200) {
         alert("비밀번호가 변경되었습니다.");
         navigate("/login");
