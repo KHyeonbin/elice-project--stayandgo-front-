@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const findIDUser = async (name, phone) => {
+export const findIDUser = async (name: string, phone: string) => {
     try {
         const res = await axios.post('/users/findid',{
             name: name,

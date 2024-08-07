@@ -1,8 +1,6 @@
 import React from "react";
 import SubHeader from "../components/layout/SubHeader";
 import Details from "../components/room/Details";
-import { useRecoilValue } from "recoil";
-import { isLoginSelector } from "../atoms/TokenAtom";
 import { motion } from "framer-motion";
 
 const RoomDetailsPage = () => {

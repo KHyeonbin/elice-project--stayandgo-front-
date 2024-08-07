@@ -34,7 +34,7 @@ const MyAccCategory: React.FC<MyAccCategoryProps> = ({ title, reserveData, NoAcc
   /** 여행 삭제하기 모달창에서 확인 */
   const onClickHandleConfirmDelete = async () => {
     try {
-      const res = await travelDeleteFromCheck({ nanoid: checkValue[0], mymode: false });
+      const res = await travelDeleteFromCheck({ nanoid: checkValue[0]});
       if (res?.data && res.data.code === 200) {
         alert('정상적으로 취소되었습니다.');
         setIsModal(false);

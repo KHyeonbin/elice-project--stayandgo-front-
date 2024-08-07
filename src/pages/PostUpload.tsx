@@ -6,7 +6,7 @@ import addImg from '../assets/icons/addImg.png';
 import Select, { StylesConfig } from 'react-select';
 import {Checkbox} from 'antd';
 import { myPostUpload } from "../api/myPostUpload";
-import ReservationModal from "../components/reservation/ReservationModal";
+import UploadModal from "../components/layout/UploadModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
@@ -747,7 +747,7 @@ const PostUpload : React.FC = () => {
                 </ImageUploadForm>
             </motion.div>
             <Footer/>
-            {showFinishModal && <ReservationModal message="숙소 등록이 완료되었습니다 !"
+            {showFinishModal && <UploadModal message="숙소 등록이 완료되었습니다 !"
                 onClose={() => setshowFinishModal(false)} />}
         </Container>
     );

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 /** 유저 데이터 가져오기 (프로필, 개인정보 수정 페이지) */
-export const fetchUserData = async (id) => {
+export const fetchUserData = async (id : string) => {
     try {
         const response = await axios.get(`/users/${id}`, {
              // 쿠키를 포함시키기 위해 필요
@@ -14,7 +14,7 @@ export const fetchUserData = async (id) => {
 };
 
 /** 회원 탈퇴 (프로필 페이지) */
-export const deleteUser = async (id) => {
+export const deleteUser = async (id : string) => {
     try {
         await axios.delete(`/users/delete`, {
             data: { email: id },
@@ -39,7 +39,7 @@ export const editUserData = async (data) => {
 };
 
 /** 관리자 페이지 회원 삭제 */
-export const adminDeleteUser = async (email) => {
+export const adminDeleteUser = async (email: string) => {
     try {
         const response = await axios.delete('/users/delete', {
             data: { email: email },

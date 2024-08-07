@@ -1,7 +1,7 @@
 import axios from "axios";
 
 /** 이메일 인증번호 전송 API 함수 */
-export async function sendEmailCertification(email) {
+export async function sendEmailCertification(email: string) {
   try {
     const response = await axios.post("http://localhost:3000/users/verify", {
       email,
@@ -20,7 +20,7 @@ export async function sendEmailCertification(email) {
 }
 
 /** 이메일 인증번호 확인 API 함수 */
-export async function certificationCode(email, code) {
+export async function certificationCode(email: string, code: string) {
   try {
     const response = await axios.post(
       "http://localhost:3000/users/verify/confirm",
