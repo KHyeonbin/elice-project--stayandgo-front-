@@ -469,10 +469,6 @@ const RoomDetails = () => {
       setMoveup(1);
       return;
     };
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
     setMoveup(-1);
     const startDate = new Date(query.get('startDate') as string);
     const endDate = new Date(query.get('endDate') as string);
@@ -495,6 +491,11 @@ const RoomDetails = () => {
     if(moveup === 1){
       alert('예약 정보를 설정해주세요.');
       navigate('/');
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
   },[moveup]);
 

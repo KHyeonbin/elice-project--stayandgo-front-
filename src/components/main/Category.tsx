@@ -14,6 +14,11 @@ const Container = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    // x축 scroll 작업
+    overflow: hidden;
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 const ItemDiv = styled.div`
     width: 90%;
