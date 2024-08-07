@@ -292,6 +292,7 @@ const AdminBody: React.FC = () => {
               onConfirm={onClickHandleConfirmDelete}
               onCancel={onClickHandleCancelDelete}
               onClose={() => {}}
+              isDelete={false}
             /> 
           }
         </UserDetail>
