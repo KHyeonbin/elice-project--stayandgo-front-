@@ -34,7 +34,7 @@ const QnAButton = styled.button`
 const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 60vh;
+    /* height: 60vh; */
     overflow-y: auto;
     padding-top: 15px;
     border-top: 1px solid #ddd;
