@@ -13,7 +13,7 @@ import loginState from "../atoms/loginState";
 import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ContextImageData, imageNameType, ImageUploadLabelProps, ImageUploadSpanProps, LoginStateType, optionType, UploadPostType, WebpackRequireContext } from "../model/main(with detail, upload)/mainTypes";
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import loading from '../assets/icons/loading.png';
 
 const Container = styled.div`
     width: 100%;
@@ -225,6 +225,22 @@ const SubmitButton = styled.button`
     }
 `
 
+const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
+const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+`
+
 const PostUpload : React.FC = () => {
     const loginUser = useRecoilValue<LoginStateType>(loginState);
     // 라벨에 넣을 배경 이미지 상태, URL 해제 가 진행되고 나서 loginUser 가 is_logined 인지 판별하도록 하는 state
@@ -266,6 +282,9 @@ const PostUpload : React.FC = () => {
     // 변화도 추가해준다.
     const [isUpload, setIsUpload] = useState<boolean>(false);
     const [labelBackground, setLabelBackground] = useState<string>('');
+    // is loading
+    const [is_Loading, set_IsLoading] = useState<boolean>(false);
+
     useEffect(() => {
         window.scrollTo({
             top: 0
@@ -589,6 +608,7 @@ const PostUpload : React.FC = () => {
     // form submit 시 formData 생성해서 formData에 입력 정보를 대입 후 백엔드로 전송 및 응답 요청
     const onSubmitPost = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        set_IsLoading(true);
 
         const subImagesArray = Array.from(data.sub_images);
         const mainImageArray = Array.from(data.main_image);
@@ -670,9 +690,11 @@ const PostUpload : React.FC = () => {
         myPostUpload(formData)
         .then(res => {
             if(res && res.data && res.data.code === 200){
+                set_IsLoading(false);
                 // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
+                set_IsLoading(false);
                 if(res){
                     alert(res?.data?.message);
                 }
@@ -686,79 +708,87 @@ const PostUpload : React.FC = () => {
 
     return (
         <Container>
-            <SubHeader/>
-            <motion.div 
-                initial={{ opacity: 0, transform: 'translateX(100%)' }}
-                animate={{ opacity: 1, transform: 'translateX(0)' }}
-                transition={{ duration: 0.3 }}>
-                <ImageUploadForm onSubmit={onSubmitPost}>
-                    <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
-                        <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
-                    </ImageUploadLabel>
-                    <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
-                    <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled />
-                    <OutlineDiv />
-                    <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
-                    <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
-                    <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>숙소 이름</InputTitle>
-                        <ShortInputText onChange={onChangeTitle} maxLength={20} placeholder="숙소 이름을 작성해주세요. 20자 이내" />
-                    </InputDiv>    
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>옵션</InputTitle>
-                        <InputSubTitle>객실 갯수</InputSubTitle>
-                        <Select styles={selectCustom} options={optionsRoom} onChange={onChangeSelectRoom} value={optionRoom} />
-                        <InputSubTitle>최대 인원(어른: 13세 이상)</InputSubTitle>
-                        <Select styles={selectCustom} options={optionsPerson} onChange={onChangeSelectPerson} value={optionPerson} />
-                        <InputSubTitle>최대 인원(어린이: 2~12세)</InputSubTitle>
-                        <Select styles={selectCustom} options={optionsChild} onChange={onChangeSelectChild} value={optionChild} />
-                        <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
-                        <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
-                        <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
-                        <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
-                            {optionWithIcon.map((v, i) => (
-                                <CategoryCheckboxOption key={i} value={v.value}>
-                                <div className="icon" style={{ backgroundImage: `url(${v.icon})` }} />
-                                {v.label}
-                                </CategoryCheckboxOption>
-                            ))}
-                        </CategoryCheckbox>
-                    </InputDiv>
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>숙소 소개</InputTitle>
-                        <InputTextArea onChange={onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
-                    </InputDiv>
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>숙소 위치</InputTitle>
-                        <InputSubTitle>주요 위치</InputSubTitle>
-                        <Select styles={selectCustom} options={optionsMainLocation} onChange={onChangeMainLocation} value={optionMainLocation} />
-                        <InputSubTitle>상세 위치</InputSubTitle>
-                        {/* 커서 투명화 css 추가 */}
-                        <ShortInputText id="inputSubLocation" placeholder="상세 주소를 입력해주세요." onClick={onClickSubLocation} value={data.sub_location} style={{caretColor: "transparent"}} readOnly />
-                    </InputDiv>
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>숙소 가격 (성인 기준)</InputTitle>
-                        <InputSubTitle>1박 가격</InputSubTitle>
-                        <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
-                    </InputDiv>
-                    <OutlineDiv />
-                    <InputDiv>
-                        <InputTitle>호스트 소개</InputTitle>
-                        <InputTextArea maxLength={500} placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={onChangeHostIntro} />
-                    </InputDiv>
-                    <OutlineDiv />
-                    <SubmitButton>등록</SubmitButton>
-                </ImageUploadForm>
-            </motion.div>
-            <Footer/>
-            {showFinishModal && <UploadModal message="숙소 등록이 완료되었습니다 !"
-                onClose={() => setshowFinishModal(false)} />}
+            {!is_Loading &&
+                <>
+                    <SubHeader/>
+                    <motion.div 
+                        initial={{ opacity: 0, transform: 'translateX(100%)' }}
+                        animate={{ opacity: 1, transform: 'translateX(0)' }}
+                        transition={{ duration: 0.3 }}>
+                        <ImageUploadForm onSubmit={onSubmitPost}>
+                            <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
+                                <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
+                            </ImageUploadLabel>
+                            <input type="file" id="inputFileOne" style={{display:"none"}} onChange={onChangeFiles} />
+                            <ShortInputText placeholder="대표 이미지를 첨부해주세요." value={imageName.main_image} disabled />
+                            <OutlineDiv />
+                            <SubImageUploadLabel htmlFor="inputFiles">추가 숙소 이미지 등록</SubImageUploadLabel>
+                            <input type="file" id="inputFiles" style={{display:"none"}} multiple onChange={onChangeSubFiles} />
+                            <ShortInputText placeholder="추가 이미지를 첨부해주세요. 최대 4장" value={imageName.sub_images} disabled />
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>숙소 이름</InputTitle>
+                                <ShortInputText onChange={onChangeTitle} maxLength={20} placeholder="숙소 이름을 작성해주세요. 20자 이내" />
+                            </InputDiv>    
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>옵션</InputTitle>
+                                <InputSubTitle>객실 갯수</InputSubTitle>
+                                <Select styles={selectCustom} options={optionsRoom} onChange={onChangeSelectRoom} value={optionRoom} />
+                                <InputSubTitle>최대 인원(어른: 13세 이상)</InputSubTitle>
+                                <Select styles={selectCustom} options={optionsPerson} onChange={onChangeSelectPerson} value={optionPerson} />
+                                <InputSubTitle>최대 인원(어린이: 2~12세)</InputSubTitle>
+                                <Select styles={selectCustom} options={optionsChild} onChange={onChangeSelectChild} value={optionChild} />
+                                <InputSubTitle>최대 인원(유아: ~ 2세)</InputSubTitle>
+                                <Select styles={selectCustom} options={optionsBaby} onChange={onChangeSelectBaby} value={optionBaby} />
+                                <InputSubTitle>숙소 카테고리 선택(최대 3개)</InputSubTitle>
+                                <CategoryCheckbox value={data.category} onChange={onChangeCategory}>
+                                    {optionWithIcon.map((v, i) => (
+                                        <CategoryCheckboxOption key={i} value={v.value}>
+                                        <div className="icon" style={{ backgroundImage: `url(${v.icon})` }} />
+                                        {v.label}
+                                        </CategoryCheckboxOption>
+                                    ))}
+                                </CategoryCheckbox>
+                            </InputDiv>
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>숙소 소개</InputTitle>
+                                <InputTextArea onChange={onChangeContents} maxLength={1000} placeholder="숙소를 자세히 소개해주세요! (1000자)" />
+                            </InputDiv>
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>숙소 위치</InputTitle>
+                                <InputSubTitle>주요 위치</InputSubTitle>
+                                <Select styles={selectCustom} options={optionsMainLocation} onChange={onChangeMainLocation} value={optionMainLocation} />
+                                <InputSubTitle>상세 위치</InputSubTitle>
+                                {/* 커서 투명화 css 추가 */}
+                                <ShortInputText id="inputSubLocation" placeholder="상세 주소를 입력해주세요." onClick={onClickSubLocation} value={data.sub_location} style={{caretColor: "transparent"}} readOnly />
+                            </InputDiv>
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>숙소 가격 (성인 기준)</InputTitle>
+                                <InputSubTitle>1박 가격</InputSubTitle>
+                                <ShortInputText type="number" placeholder="1,000원 단위로 숫자만 입력됩니다." onChange={onChangePrice} onBlur={onBlurPrice}/>
+                            </InputDiv>
+                            <OutlineDiv />
+                            <InputDiv>
+                                <InputTitle>호스트 소개</InputTitle>
+                                <InputTextArea maxLength={500} placeholder="호스트님에 대해 소개해 주세요. 500자 이내" onChange={onChangeHostIntro} />
+                            </InputDiv>
+                            <OutlineDiv />
+                            <SubmitButton>등록</SubmitButton>
+                        </ImageUploadForm>
+                    </motion.div>
+                    <Footer/>
+                    {showFinishModal && <UploadModal message="숙소 등록이 완료되었습니다 !"
+                        onClose={() => setshowFinishModal(false)} />}
+                </>
+            ||
+                <Loading_div>
+                    <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+                </Loading_div>
+            }
         </Container>
     );
 };
