@@ -113,6 +113,7 @@ const Location = styled.div`
   overflow: hidden;
   background: #eee;
   height: 60vw;
+  max-height: 400px;
 `;
 
 const LocationText = styled.div`
