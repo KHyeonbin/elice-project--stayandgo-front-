@@ -123,12 +123,15 @@ const ProfileEdit: React.FC = () => {
 
     /** 서버로 수정된 정보 전송 */
     try {
-      // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
-      // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
-      const key = `${process.env.REACT_APP_AES_KEY}`;
-      const aesPassword = encryptPassword(password, key);
+      let aesPassword = "";
+      if(password){
+        // password 를 백엔드에 보내 줄 때 aes-128 양방향 암호화 적용
+        // 백엔드에서는 aes-128 을 복호화하고 sha-256 해시화하여 db sha-256 해시 값과 비교시킨다.
+        const key = `${process.env.REACT_APP_AES_KEY}`;
+        aesPassword = encryptPassword(password, key);
+      }
 
-      await editUserData({ email, password: aesPassword, nickname, phone, photo});
+      await editUserData({ email, password: aesPassword || false, nickname, phone, photo});
       setIsModal(true);
     } catch (error) {
       alert(error.response?.data?.message || error.code);
