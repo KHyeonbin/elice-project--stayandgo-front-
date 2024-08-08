@@ -227,11 +227,10 @@ const SubmitButton = styled.button`
 
 const Loading_div = styled.div`
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 40%;
 `
 const Loading_img = styled.img`
     /* 회전 애니메이션 */
@@ -791,7 +790,7 @@ const PostUpload : React.FC = () => {
                 </>
             ||
                 <Loading_div>
-                    <Loading_img src={loading} style={{animation: "spin 0.5s 30 linear"}} />
+                    <Loading_img src={loading} style={{animation: "spin 1s 30 linear"}} />
                 </Loading_div>
             }
         </Container>
