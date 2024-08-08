@@ -315,6 +315,15 @@ const PostUploadEdit : React.FC = () => {
     const [is_Loading, set_IsLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        if(is_Loading){
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    },[is_Loading])
+
+    useEffect(() => {
         if(!loginUser.is_logined){
           alert('수정 중에 새로고침됐거나, 로그인하지 않은 사용자입니다.');
           navigate('/');
@@ -882,7 +891,7 @@ const PostUploadEdit : React.FC = () => {
                     </>
                 ||
                 <Loading_div>
-                    <Loading_img src={loading} style={{animation: "spin 1s 30 linear"}} />
+                    <Loading_img src={loading} style={{animation: "spin 0.5s 60 linear"}} />
                 </Loading_div>
             }
         </Container>

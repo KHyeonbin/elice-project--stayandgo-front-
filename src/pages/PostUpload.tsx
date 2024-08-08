@@ -297,7 +297,16 @@ const PostUpload : React.FC = () => {
         };
     }, [labelBackground]);
     
-    
+    useEffect(() => {
+        if(is_Loading){
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    },[is_Loading])
+
+
     // 방 갯수 state
     // 방 갯수 옵션 상태 정의
     const optionsRoom = optionsRoomArr.map((v) : optionType => {
@@ -790,7 +799,7 @@ const PostUpload : React.FC = () => {
                 </>
             ||
                 <Loading_div>
-                    <Loading_img src={loading} style={{animation: "spin 1s 30 linear"}} />
+                    <Loading_img src={loading} style={{animation: "spin 0.5s 60 linear"}} />
                 </Loading_div>
             }
         </Container>
