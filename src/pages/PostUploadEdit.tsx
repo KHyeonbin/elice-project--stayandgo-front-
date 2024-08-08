@@ -664,6 +664,7 @@ const PostUploadEdit : React.FC = () => {
             if (
                 mainImageArray.some(file => file.name.includes(" "))
             ) {
+                set_IsLoading(false);
                 alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
                 return;
             }
@@ -671,6 +672,7 @@ const PostUploadEdit : React.FC = () => {
             if (
                 mainImageArray.some(file => file.name.length > 20)
             ) {
+                set_IsLoading(false);
                 alert("이미지 파일 이름은 20자 이내여야 합니다.");
                 return;
             }
@@ -687,6 +689,7 @@ const PostUploadEdit : React.FC = () => {
                 }
             }
             if (hasUnsafeCharacters) {
+                set_IsLoading(false);
                 alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
                 return;
             }
@@ -699,6 +702,7 @@ const PostUploadEdit : React.FC = () => {
             if (
                 subImagesArray.some(file => file.name.includes(" "))
             ) {
+                set_IsLoading(false);
                 alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
                 return;
             }
@@ -706,6 +710,7 @@ const PostUploadEdit : React.FC = () => {
             if (
                 subImagesArray.some(file => file.name.length > 20)
             ) {
+                set_IsLoading(false);
                 alert("이미지 파일 이름은 20자 이내여야 합니다.");
                 return;
             }
@@ -720,6 +725,7 @@ const PostUploadEdit : React.FC = () => {
                 }
             }
             if (hasUnsafeCharacters) {
+                set_IsLoading(false);
                 alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
                 return;
             }
@@ -727,6 +733,7 @@ const PostUploadEdit : React.FC = () => {
 
         if(!data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){
+                set_IsLoading(false);
                 alert("입력이 누락되거나 잘못된 항목을 확인해주세요.");
                 return;
         }
@@ -791,6 +798,7 @@ const PostUploadEdit : React.FC = () => {
             }
         })
         .catch(e => {
+            set_IsLoading(false);
             console.log(e);
         });
     };
