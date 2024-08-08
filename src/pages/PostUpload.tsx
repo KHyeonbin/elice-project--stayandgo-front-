@@ -786,7 +786,7 @@ const PostUpload : React.FC = () => {
                 </>
             ||
                 <Loading_div>
-                    <Loading_img src={loading} style={{animation: "spin 0.5s 3 linear"}} />
+                    <Loading_img src={loading} style={{animation: "spin 0.5s 30 linear"}} />
                 </Loading_div>
             }
         </Container>
