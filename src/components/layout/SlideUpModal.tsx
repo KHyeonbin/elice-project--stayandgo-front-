@@ -25,7 +25,7 @@ const ModalOverlay = styled.div`
 const ModalContainer = styled.div`
   position: fixed;
   left: 50%;
-  top: 0;
+  top: 100%;
   transform: translate(-50%, 0);
   height: 100vh;
   width:100%;
@@ -69,18 +69,14 @@ const SlideUpModal = ({ title, text }) => {
   // 모달 슬라이드 업 애니메이션 0.1초 후 실행
   useEffect(() => {
     if (slideModal) {
-      timer.current = setTimeout(() => setIsSlideUp(true), 100);
+      timer.current = setTimeout(() => {
+        setIsSlideUp(true);
+        console.log(isSlideUp);
+      }, 100);
       // 모달 떠 있는 동안 바디 스크롤 막기
       document.body.style.height = '100%';
       document.body.style.overflow = 'hidden';
       document.body.style['touch-action'] = 'none';
-
-      if(slideModalEl && slideModalEl.current){
-        slideModalEl.current.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      }
       
     } else {
       if(timer.current){
