@@ -683,9 +683,6 @@ const PostUpload : React.FC = () => {
         });
     };
 
- 
-
-    console.log(data, imageName)
 
     return (
         <Container>

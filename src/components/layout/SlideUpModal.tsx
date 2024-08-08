@@ -71,7 +71,6 @@ const SlideUpModal = ({ title, text }) => {
     if (slideModal) {
       timer.current = setTimeout(() => {
         setIsSlideUp(true);
-        console.log(isSlideUp);
       }, 100);
       // 모달 떠 있는 동안 바디 스크롤 막기
       document.body.style.height = '100%';

@@ -357,7 +357,6 @@ const PostUploadEdit : React.FC = () => {
           return;
         });
       },[])
-      console.log(data)
 
 
     // 숙소 이름 data 반영

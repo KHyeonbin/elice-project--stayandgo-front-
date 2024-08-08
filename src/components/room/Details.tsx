@@ -464,7 +464,6 @@ const RoomDetails = () => {
     })();
     // location 객체를 useEffect를 통해 받고 해당 컴포넌트에 사용할 state에 set
     setIs_notLink(location.state ? location.state.is_notLink : false);
-    console.log(location.state);
   }, [id]);
 
 
@@ -491,8 +490,6 @@ const RoomDetails = () => {
     if (roomInfo) {
       setFooterPrice(Math.floor((roomInfo.price * totalDate.current)/100) * 100);
     };
-
-  console.log(query.get('startDate'), roomInfo)
     
   }, [roomInfo, query]);
 
