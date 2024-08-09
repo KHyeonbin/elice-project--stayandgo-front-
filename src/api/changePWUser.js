@@ -5,6 +5,8 @@ export const changePWUser = async (email, password) => {
         const res = await axios.put("http://localhost:3001/users/", {
         email,
         password,
+      }, {
+        withCredentials: true
       });
         return res;
     } catch (e) {

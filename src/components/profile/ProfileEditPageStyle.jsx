@@ -16,11 +16,7 @@ export const ProfileEditSection = styled.section`
   flex: 1;
 `;
 
-export const ProfileEditImageContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
-export const ProfileEditImagePlaceholder = styled.div`
+export const ProfileEditEmojiPlaceholder = styled.div`
   width: 100px;
   height: 100px;
   background-color: #d9d9d9;
@@ -40,10 +36,9 @@ export const ProfileEditImagePlaceholder = styled.div`
   }
 `;
 
-export const ProfileImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+export const ProfileEmoji = styled.span`
+  font-size: 75px;
+  margin-bottom: 10px;
 `;
 
 export const ProfileEditForm = styled.form`

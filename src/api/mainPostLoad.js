@@ -8,7 +8,9 @@ class MainPostLoad {
                 search,
                 category,
                 mymode
-            });
+            }, {
+                withCredentials: true
+              });
             return res.data.result;
         }
         catch(e) {
@@ -26,6 +28,8 @@ class MainPostLoad {
                 search,
                 category,
                 mymode
+            },{
+                withCredentials: true // 쿠키를 포함시키기 위해 필요
             });
             // 기존 db 방식일 때 
             /*
@@ -41,8 +45,8 @@ class MainPostLoad {
             */
             return /*posts*/ res.data.result;
         } catch (e) {
+            alert(e.response?.data?.message);
             console.log(e);
-            // alert
             return;
         }
     }

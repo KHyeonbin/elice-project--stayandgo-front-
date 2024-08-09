@@ -7,11 +7,8 @@ export const loginUserCheck = async () => {
         });
         return res.data;
     } catch (e) {
-        if(e.response?.data){
-            console.log(e.response.data.message);
-        } else {
-            console.log(e);
-        }
+        alert(e.response?.data?.message);
+        console.log(e);
         return;
     }
 };

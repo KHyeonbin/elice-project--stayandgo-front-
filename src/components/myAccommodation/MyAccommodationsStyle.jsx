@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import {Checkbox} from 'antd';
 
 export const Container = styled.div`
   padding: 0;
@@ -7,6 +8,7 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   height: 100vh;
+  padding-bottom: 100px;
 `;
 
 export const Header = styled.div`
@@ -23,57 +25,80 @@ export const Button = styled.div`
   margin-right: 5px;
   text-align: center;
   font-size: 12px;
-  color: ${(props) => (props.disabled ? "#ccc" : "#f87878")};
-  border: ${(props) => (props.disabled ? "1px solid #ccc" : "1px solid #f87878")};
+  font-weight: 500;
+  color: white;
+  border: none;
+  background-color: #E61E51;
   border-radius: 10px;
-  cursor: ${(props) => (props.disabled ? "" : "pointer")};
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: background-color 1s;
 
-`;
-
-export const ListContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 17px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  &:hover{
+    background-color:#F0586F;
+  }
 `;
 
 export const ListItem = styled.div`
   background-color: white;
   border-radius: 15px;
-  width: 173px;
-  box-sizing: border-box;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
-  margin: 0;
 `;
 
 export const Image = styled.div`
   background-color: #f1f1f1;
   width: 100%;
-  height: 173px;
+  height: 160px;
   border-radius: 15px;
   background-image: url(${(props) => props.$imageUrl});
   background-size: cover;
   background-position: center;
-`;
-
-export const CheckBox = styled.input`
   position: relative;
-  top: 5px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
 `;
 
+export const CheckboxGroup = styled(Checkbox.Group)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; 
+  & > a {display: block; width: calc(50% - 10px)}
+  gap: 10px;
+  width: 100%;
+`
+// antd 체크박스 css style 정의
+export const CheckboxOption = styled(Checkbox)`
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    // 체크'박스' css 
+    // 체크박스 크기
+    .ant-checkbox-input {
+        width: 27px;  
+        height: 27px; 
+    }
+    .ant-checkbox-inner {
+        width: 27px;  
+        height: 27px; 
+        border-radius: 4px; 
+    }
+    .ant-checkbox-inner:after {
+        width: 7px; 
+        height: 15px;
+    }
+    // 체크'박스' css 
+    // input 체크 후 hover 시에도 배경, 테두리 유지
+    // css 레벨에서 우선순위를 최상위로 높임 : !important
+    .ant-checkbox-input:checked + .ant-checkbox-inner {
+        background-color: #E61E51 !important;
+        border: 1px solid #F0586F !important;
+    }
+`
 export const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px 0 15px 0;
+  cursor: pointer;
 `;
 
 export const Title = styled.span`
@@ -91,3 +116,19 @@ export const Price = styled.span`
   font-weight: bold;
   color: #000000;
 `;
+
+export const Loading_div = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40%;
+`
+export const Loading_img = styled.img`
+    /* 회전 애니메이션 */
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+`

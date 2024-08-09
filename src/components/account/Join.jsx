@@ -139,6 +139,8 @@ const Join = () => {
         name: userInfo.name,
         nickname: userInfo.nickName,
         phone: userInfo.phone,
+      }, {
+        withCredentials: true
       });
 
       navigate("/joinEnd");
@@ -154,6 +156,8 @@ const Join = () => {
     try {
       await axios.post("http://localhost:3001/users/verify", {
         email: userInfo.email,
+      }, {
+        withCredentials: true
       });
       e.target.disabled = true;
       emailCodeInput.current.readOnly = false;
@@ -177,7 +181,9 @@ const Join = () => {
           email: userInfo.email,
           secret: userInfo.code,
         }
-      );
+        , {
+          withCredentials: true
+        });
       // 이메일 인증 요청 시 버튼 비활성화
       e.target.disabled = true;
       emailCodeInput.current.readOnly = true;

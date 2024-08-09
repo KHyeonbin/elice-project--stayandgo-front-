@@ -10,6 +10,8 @@ import ReservationModal from "../components/reservation/ReservationModal";
 import {optionsRoomArr, personArr, childArr, mainLocationArr} from '../util/data/arrayStaticData';
 import { useRecoilValue } from "recoil";
 import loginState from "../atoms/loginState";
+import { Navigate, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Container = styled.div`
     width: 100%;
@@ -178,9 +180,11 @@ const CategoryCheckbox = styled(Checkbox.Group)`
 `
 const CategoryCheckboxOption = styled(Checkbox)`
     // 체크'박스' css 
+    // input 체크 후 hover 시에도 배경, 테두리 유지
+    // css 레벨에서 우선순위를 최상위로 높임 : !important
     .ant-checkbox-input:checked + .ant-checkbox-inner {
-        background-color: #E61E51;
-        border: 1px solid #F0586F;
+        background-color: #E61E51 !important;
+        border: 1px solid #F0586F !important;
     }
 `
 const InputTextArea = styled.textarea`
@@ -216,6 +220,14 @@ const SubmitButton = styled.button`
 
 const PostUpload = () => {
     const loginUser = useRecoilValue(loginState);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if(!loginUser.is_logined){
+          alert('로그인이 필요한 페이지입니다.');
+          navigate('/');
+          return;
+        }
+      },[])
 
     // 등록 데이터 state
     const [data, setData] = useState({
@@ -536,7 +548,47 @@ const PostUpload = () => {
     const onSubmitPost = async (e) => {
         e.preventDefault();
 
-
+        const subImagesArray = Array.from(data.sub_images);
+        const mainImageArray = Array.from(data.main_image);
+        // 파일 이름에 공백이 포함되어 있는지 확인
+        if (
+            subImagesArray.some(file => file.name.includes(" ")) ||
+            mainImageArray.some(file => file.name.includes(" "))
+        ) {
+            alert("이미지 파일 이름에 공백은 포함될 수 없습니다.");
+            return;
+        }
+        // 파일 이름 길이가 20자를 초과하는지 확인
+        if (
+            subImagesArray.some(file => file.name.length > 20) ||
+            mainImageArray.some(file => file.name.length > 20)
+        ) {
+            alert("이미지 파일 이름은 20자 이내여야 합니다.");
+            return;
+        }
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사하는 정규 표현식
+        const unsafePattern = /[<>:"/\\|?*\u007F-\uFFFF]/;
+        // 유니코드 + 한글 + 특수 문자가 포함되어 있는지 검사
+        let hasUnsafeCharacters = false;
+        for (const v of subImagesArray) {
+            if (unsafePattern.test(v.name)) {
+                hasUnsafeCharacters = true;
+                break; 
+            }
+        }
+        if (!hasUnsafeCharacters) {
+            for (const v of mainImageArray) {
+                if (unsafePattern.test(v.name)) {
+                    hasUnsafeCharacters = true;
+                    break;
+                }
+            }
+        }
+        if (hasUnsafeCharacters) {
+            alert("파일 이름에 유니코드 + 한글 + 특수 문자가 포함되어 있습니다.");
+            return;
+        }
+        
 
         if(!data.main_image || !data.title || data.price < 1000 || !data.main_location
             || !data.sub_location || !data.contents || !data.host_intro){
@@ -575,14 +627,16 @@ const PostUpload = () => {
         
         myPostUpload(formData)
         .then(res => {
-            console.log(res)
-            if(res.data.code === 200){
+            if(res.data && res.data.code === 200){
                 // 성공 모달 창을 띄우며 메인 페이지로 이동(모달 및 메인 페이지 이동은 ~Modal 컴포넌트 활용)
                 setshowFinishModal(true);
             } else {
-                alert(res.data.message);
+                alert(res?.data?.message);
             }
-        }); 
+        })
+        .catch(e => {
+            console.log(e);
+        });
     };
 
     // enter 클릭 시에는 폼이 제출되지 않음.
@@ -597,6 +651,10 @@ const PostUpload = () => {
     return (
         <Container>
             <SubHeader/>
+            <motion.div 
+                initial={{ opacity: 0, transform: 'translateX(100%)' }}
+                animate={{ opacity: 1, transform: 'translateX(0)' }}
+                transition={{ duration: 0.3 }}>
                 <ImageUploadForm onSubmit={onSubmitPost} onKeyDown={onHandleEnter}>
                     <ImageUploadLabel htmlFor="inputFileOne" $isUpload={isUpload} $newImg={labelBackground}>
                         <MainImageSpan $isUpload={isUpload}>숙소 대표 이미지를 추가하세요 !</MainImageSpan>
@@ -661,6 +719,7 @@ const PostUpload = () => {
                     <OutlineDiv />
                     <SubmitButton>등록</SubmitButton>
                 </ImageUploadForm>
+            </motion.div>
             <Footer/>
             {showFinishModal && <ReservationModal message="숙소 등록이 완료되었습니다 !"
                 onClose={() => setshowFinishModal(false)} />}
